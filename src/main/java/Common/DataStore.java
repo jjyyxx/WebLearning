@@ -1,71 +1,41 @@
 package Common;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.sun.jna.platform.win32.WinCrypt;
+import com.sun.jna.platform.win32.WinDef;
+import platform.win.Crypt32;
+
 import java.util.prefs.Preferences;
 
 public class DataStore {
-    private static final String AppName = "WebLearningClient";
-    private static Path workingDir;
-    private static Map<String, String> config = new HashMap<>();
+    public static final Preferences prefs = Preferences.userNodeForPackage(DataStore.class);
+    private static final byte[] fakeDef = new byte[1];
 
-    private static final Preferences prefs = Preferences.userNodeForPackage(DataStore.class);
-
-    private static final String test;
-
-    static {
-        test = "";
-        String dataDir = System.getenv("AppData");
-        if (dataDir == null) {
-            dataDir = System.getProperty("user.home");
+    public static void putEncrypt(String key, String value) {
+        WinCrypt.DATA_BLOB in = new WinCrypt.DATA_BLOB(value);
+        WinCrypt.DATA_BLOB out = new WinCrypt.DATA_BLOB();
+        if (Crypt32.CryptProtectData(in, null, null, null, null, new WinDef.DWORD(0), out)) {
+            prefs.putByteArray(key, out.getData());
+        } else {
+            prefs.put(key, "");
         }
-        workingDir = Paths.get(dataDir, AppName);
-        if (!Files.exists(workingDir)) {
-            try {
-                Files.createDirectory(workingDir);
-            } catch (IOException ignored) {}
+    }
+
+    public static String getDecrypt(String key, String defaultValue) {
+        WinCrypt.DATA_BLOB in = new WinCrypt.DATA_BLOB(prefs.getByteArray(key, fakeDef));
+        WinCrypt.DATA_BLOB out = new WinCrypt.DATA_BLOB();
+        if (Crypt32.CryptUnprotectData(in, null, null, null, null, new WinDef.DWORD(0), out)) {
+            byte[] bytes = out.getData();
+            return new String(bytes, 0, bytes.length - 1);
+        } else {
+            return defaultValue;
         }
-        try {
-            stringToConfig(Files.readAllLines(workingDir.resolve("app.cfg")));
-        } catch (IOException ignored) {}
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                Files.write(workingDir.resolve("app.cfg"), configToString().getBytes());
-            } catch (IOException ignored) {}
-        }));
     }
 
     public static void put(String key, String value) {
-        config.put(key, value);
-    }
-
-    public static String get(String key) {
-        return config.get(key);
+        prefs.put(key, value);
     }
 
     public static String get(String key, String defaultValue) {
-        return config.getOrDefault(key, defaultValue);
-    }
-
-    private static String configToString() {
-        StringBuilder builder = new StringBuilder();
-        config.forEach((s1, s2) -> {
-            builder.append(s1).append(":::").append(s2).append("\n");
-        });
-        return builder.toString();
-    }
-
-    private static void stringToConfig(List<String> entries) {
-        for (String entry : entries) {
-            String[] kv = entry.split(":::");
-            if (kv.length == 2) {
-                config.put(kv[0], kv[1]);
-            }
-        }
+        return prefs.get(key, defaultValue);
     }
 }

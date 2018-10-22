@@ -20,7 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import platform.win.Imm;
+import platform.win.Imm32;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -93,7 +93,7 @@ public class Controller implements Initializable {
         authenticate(name, pass)
                 .thenAccept(ignored -> {
                     DataStore.put("username", name);
-                    DataStore.put("password", pass);
+                    DataStore.putEncrypt("password", pass);
                     Platform.runLater(() -> {
                         snackBar.show("登录成功！", "success", 3000);
                         afterLogin();
@@ -135,21 +135,20 @@ public class Controller implements Initializable {
                 if (hwnd == null) {
                     hwnd = User32.INSTANCE.FindWindow(null, "网络学堂");
                 }
-                himc = Imm.ImmAssociateContext(hwnd, null);
+                himc = Imm32.ImmAssociateContext(hwnd, null);
             } else {
-                Imm.ImmAssociateContext(hwnd, himc);
+                Imm32.ImmAssociateContext(hwnd, himc);
             }
         });
-        Pointer b = Imm.ImmAssociateContext(hwnd, null);
-//        WebLearning.Endpoints.authenticate(DataStore.get("username", ""), DataStore.get("password", ""))
-//                .thenAccept(ignored -> afterLogin())
-//                .exceptionally(e -> {
-//                    e.printStackTrace();
-//                    return null;
-//                });
+        WebLearning.Endpoints.authenticate(DataStore.get("username", ""), DataStore.getDecrypt("password", ""))
+                .thenAccept(ignored -> afterLogin())
+                .exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
     }
 
-    void afterLogin() {
+    private void afterLogin() {
         switchPane(coursePane);
 
         nodesList.setVisible(true);
@@ -165,12 +164,12 @@ public class Controller implements Initializable {
         });
     }
 
-    void toggleSpinner(boolean show) {
+    private void toggleSpinner(boolean show) {
         mask.setVisible(show);
         spinner.setVisible(show);
     }
 
-    void switchPane(Pane nextPane) {
+    private void switchPane(Pane nextPane) {
         ObservableList<Node> children = main.getChildren();
         children.get(children.size() - 1).setVisible(false);
         nextPane.toFront();
