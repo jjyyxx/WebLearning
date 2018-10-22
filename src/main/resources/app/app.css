@@ -1,0 +1,48 @@
+.round-button {
+    -fx-background-radius: 32px;
+}
+
+.jfx-snackbar-content {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-border-radius: 5px;
+}
+
+.jfx-snackbar-content:error {
+    -fx-background-color: #ff4444;
+}
+
+.jfx-snackbar-content:success {
+    -fx-background-color: #00C851;
+}
+
+.jfx-snackbar-toast {
+    -fx-text-fill: white;
+}
+
+.separator *.line {
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+}
+
+#loginPane {
+    -fx-pref-height: 545;
+    -fx-pref-width: 1000;
+    -fx-background-color: #eeeeee;
+    /*-fx-background-image: url(app/thu-logo.png);*/
+    /*-fx-background-position: left top, center;*/
+    /*-fx-background-repeat: no-repeat;*/
+    /*-fx-background-size: cover, auto;*/
+}
+
+#flow {
+    -fx-pref-height: 545.0;
+    -fx-pref-width: 1000.0;
+}
+
+#mask {
+    -fx-pref-height: 545.0;
+    -fx-pref-width: 1000.0;
+    -fx-opacity: 0.5;
+    -fx-background-color: #fff;
+}

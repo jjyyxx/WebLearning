@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import app.controls.Logo?>
+<?import app.controls.QuickButtonList?>
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.materialicons.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
+    <children>
+        <JFXToolbar fx:id="TopBar" onMouseDragged="#topBarDragging" onMousePressed="#topBarPressed" prefHeight="55.0" prefWidth="1000.0" style="-fx-background-color: #2962ff;">
+            <left>
+                <Label prefHeight="32.0" prefWidth="212.0" style="-fx-padding: 0 0 0 30;" text="网络学堂客户端" textFill="WHITE" BorderPane.alignment="CENTER">
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                </Label>
+            </left>
+            <right>
+                <Pane prefHeight="55.0" prefWidth="194.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <JFXButton fx:id="closeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="149.0" layoutY="8.0" onAction="#close" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+                            <graphic>
+                                <MaterialIconView fill="WHITE" glyphName="CLOSE" size="24" wrappingWidth="24.0" />
+                            </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="minimizeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="108.0" layoutY="8.0" onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+                            <graphic>
+                                <MaterialIconView fill="WHITE" glyphName="REMOVE" size="24" wrappingWidth="24.0" />
+                            </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="settingButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="67.0" layoutY="8.0" onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+                            <graphic>
+                                <MaterialIconView fill="WHITE" glyphName="SETTINGS" size="24" wrappingWidth="24.0" />
+                            </graphic>
+                        </JFXButton>
+                    </children>
+                </Pane>
+            </right>
+        </JFXToolbar>
+        <StackPane fx:id="main" layoutY="55.0" prefHeight="545.0" prefWidth="1000.0">
+            <children>
+                <Pane fx:id="coursePane" prefHeight="545.0" prefWidth="1000.0">
+                    <children>
+                        <JFXListView fx:id="courseList" prefHeight="545.0" prefWidth="223.0" />
+                    </children>
+                </Pane>
+                <Pane fx:id="loginPane">
+                    <children>
+                        <Pane layoutX="120.0" layoutY="155.0">
+                            <children>
+                                <JFXTextField fx:id="username" focusColor="#0039cb" labelFloat="true" layoutX="42.0" onAction="#login" promptText="用户名">
+                                    <font>
+                                        <Font size="20.0" />
+                                    </font>
+                                </JFXTextField>
+                                <JFXPasswordField fx:id="password" focusColor="#0039cb" labelFloat="true" layoutX="42.0" layoutY="91.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" promptText="密码">
+                                    <font>
+                                        <Font size="20.0" />
+                                    </font>
+                                </JFXPasswordField>
+                                <JFXButton fx:id="login" buttonType="RAISED" layoutX="42.0" layoutY="194.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" ripplerFill="#1e5dfc" style="-fx-background-color: #0039cb;" text="登录" textFill="WHITE">
+                                    <font>
+                                        <Font size="20.0" />
+                                    </font>
+                                </JFXButton>
+                                <MaterialIconView glyphName="PERSON" layoutY="37.0" size="32" />
+                                <MaterialIconView glyphName="VPN_KEY" layoutY="128.0" size="32" />
+                            </children>
+                        </Pane>
+                        <VBox layoutX="564.0" layoutY="100.0" prefHeight="365.0" prefWidth="390.0" spacing="20.0">
+                            <children>
+                                <Pane prefHeight="95.0" prefWidth="390.0">
+                                    <children>
+                                        <MaterialIconView glyphName="LOCK" layoutX="28.0" layoutY="70.0" size="36" />
+                                        <Label layoutX="95.0" layoutY="18.0" text="安全">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="信息仅在本机与网络学堂间传输，不经过任何第三方。" wrapText="true">
+                                            <font>
+                                                <Font size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </Pane>
+                                <Pane prefHeight="95.0" prefWidth="390.0">
+                                    <children>
+                                        <MaterialIconView glyphName="CHECK_CIRCLE" layoutX="28.0" layoutY="70.0" size="36" />
+                                        <Label layoutX="95.0" layoutY="18.0" text="便捷">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="96.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="无需重复登录，操作简单快捷，轻松获取各类教学信息。" wrapText="true">
+                                            <font>
+                                                <Font size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </Pane>
+                                <Pane prefHeight="95.0" prefWidth="390.0">
+                                    <children>
+                                        <MaterialIconView glyphName="TRENDING_UP" layoutX="28.0" layoutY="70.0" size="36" />
+                                        <Label layoutX="95.0" layoutY="18.0" text="高效">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </Label>
+                                        <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="添加文件批量下载，通知聚合，消息提醒及DDL警示等功能，高效使用网络学堂。" wrapText="true">
+                                            <font>
+                                                <Font size="15.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </Pane>
+                            </children>
+                        </VBox>
+                        <Pane layoutX="364.0" layoutY="124.0" prefHeight="283.0" prefWidth="286.0">
+                            <Logo fill="#8f078126" scaleX="0.6" scaleY="0.6" />
+                        </Pane>
+                    </children>
+                </Pane>
+            </children>
+        </StackPane>
+        <Pane fx:id="mask" layoutY="55.0" pickOnBounds="false" visible="false" />
+        <StackPane fx:id="flow" layoutY="55.0" pickOnBounds="false">
+            <children>
+                <QuickButtonList fx:id="nodesList" visible="false" StackPane.alignment="BOTTOM_RIGHT">
+                    <StackPane.margin>
+                        <Insets bottom="50.0" right="50.0" />
+                    </StackPane.margin>
+                </QuickButtonList>
+                <StackPane fx:id="spinner" visible="false">
+                    <JFXSpinner radius="30" />
+                </StackPane>
+            </children>
+        </StackPane>
+    </children>
+</Pane>
