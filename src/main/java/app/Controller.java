@@ -1,9 +1,9 @@
 package app;
 
-import Common.AuthException;
-import Common.DataStore;
-import WebLearning.CourseData;
-import WebLearning.Endpoints;
+import common.AuthException;
+import common.DataStore;
+import weblearning.CourseData;
+import weblearning.Endpoints;
 import app.controls.QuickButtonList;
 import com.jfoenix.controls.*;
 import com.sun.jna.Pointer;
@@ -25,7 +25,7 @@ import platform.win.Imm32;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static WebLearning.Endpoints.authenticate;
+import static weblearning.Endpoints.authenticate;
 
 public class Controller implements Initializable {
     private double sceneX;
@@ -126,7 +126,7 @@ public class Controller implements Initializable {
         children.forEach(node -> node.setVisible(false));
         children.get(children.size() - 1).setVisible(true);
         try {
-            Class.forName("WebLearning.Endpoints");
+            Class.forName("weblearning.Endpoints");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -140,7 +140,7 @@ public class Controller implements Initializable {
                 Imm32.ImmAssociateContext(hwnd, himc);
             }
         });
-        WebLearning.Endpoints.authenticate(DataStore.get("username", ""), DataStore.getDecrypt("password", ""))
+        weblearning.Endpoints.authenticate(DataStore.get("username", ""), DataStore.getDecrypt("password", ""))
                 .thenAccept(ignored -> afterLogin())
                 .exceptionally(e -> {
                     e.printStackTrace();

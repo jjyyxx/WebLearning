@@ -1,7 +1,7 @@
-package WebLearning;
+package weblearning;
 
-import Common.AuthException;
-import Common.SingleHostHttpClient;
+import common.AuthException;
+import common.SingleHostHttpClient;
 import okhttp3.HttpUrl;
 import okhttp3.RequestBody;
 import okhttp3.Response;

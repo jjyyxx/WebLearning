@@ -1,4 +1,4 @@
-package WebLearning;
+package weblearning;
 
 import org.jsoup.nodes.Element;
 

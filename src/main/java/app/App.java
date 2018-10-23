@@ -7,24 +7,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class Main extends Application {
+public class App extends Application {
+    private static final String TITLE = "网络学堂";
+    private static final int WIDTH = 1000;
+    private static final int HEIGHT = 600;
+
     @Override
     public void start(Stage stage) throws Exception{
         stage.initStyle(StageStyle.UNDECORATED);
-
+        stage.setTitle(TITLE);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("app.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStage(stage);
-        stage.setTitle("网络学堂");
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
         stage.setScene(scene);
         stage.show();
-
         stage.setOnCloseRequest(e -> System.exit(0));
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

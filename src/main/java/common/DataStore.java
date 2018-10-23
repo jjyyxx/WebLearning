@@ -1,4 +1,4 @@
-package Common;
+package common;
 
 import com.sun.jna.platform.win32.WinCrypt;
 import com.sun.jna.platform.win32.WinDef;

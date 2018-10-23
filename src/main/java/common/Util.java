@@ -1,4 +1,4 @@
-package Common;
+package common;
 
 import org.jsoup.nodes.Element;
 

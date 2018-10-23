@@ -1,4 +1,4 @@
-package WebLearning;
+package weblearning;
 
 import okhttp3.*;
 import org.jsoup.nodes.Element;
@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static Common.Util.*;
+import static common.Util.*;
 
 public class Operation {
     private static final String DETAIL = "MultiLanguage/lesson/student/hom_wk_detail.jsp";
