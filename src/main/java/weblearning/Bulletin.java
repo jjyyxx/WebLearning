@@ -1,11 +1,11 @@
-package WebLearning;
+package weblearning;
 
 import okhttp3.Response;
 import org.jsoup.nodes.Element;
 
 import java.util.concurrent.CompletableFuture;
 
-import static Common.Util.getArg;
+import static common.Util.getArg;
 
 public class Bulletin {
     private static final Client client = Client.getInstance();

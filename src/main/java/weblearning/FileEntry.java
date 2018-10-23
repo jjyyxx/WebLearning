@@ -1,4 +1,4 @@
-package WebLearning;
+package weblearning;
 
 import org.jsoup.nodes.Element;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static Common.Util.getArg;
+import static common.Util.getArg;
 
 public class FileEntry {
     private static final Client client = Client.getInstance();

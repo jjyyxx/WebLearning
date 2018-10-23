@@ -1,4 +1,4 @@
-package WebLearning;
+package weblearning;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static Common.Util.toLinkedMap;
+import static common.Util.toLinkedMap;
 
 public class CourseData {
     private static final Pattern courseIdPattern = Pattern.compile("course_id=(\\d+)");
