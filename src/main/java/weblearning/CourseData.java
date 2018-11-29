@@ -142,6 +142,10 @@ public class CourseData {
     public SemesterData getSemester() {
         return semester;
     }
+
+    public void update(String operations, String notices, String files) {
+
+    }
 }
 
 enum SemesterType {

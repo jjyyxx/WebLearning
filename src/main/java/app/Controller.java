@@ -1,5 +1,6 @@
 package app;
 
+import app.controls.CourseItem;
 import app.controls.QuickButtonList;
 import com.jfoenix.controls.*;
 import common.AuthException;
@@ -10,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -25,6 +25,10 @@ import java.util.ResourceBundle;
 import static weblearning.Endpoints.authenticate;
 
 public class Controller implements Initializable {
+    public JFXTreeTableView bulletinTable;
+    public JFXTreeTableColumn bulletinTitle;
+    public JFXTreeTableColumn bulletinPublisher;
+    public JFXTreeTableColumn bulletinDate;
     private double sceneX;
     private double sceneY;
 
@@ -38,7 +42,7 @@ public class Controller implements Initializable {
     @FXML private QuickButtonList nodesList;
     @FXML private Pane mask;
     @FXML private StackPane spinner;
-    @FXML private JFXListView<Label> courseList;
+    @FXML private JFXListView<CourseItem> courseList;
     @FXML private JFXToolbar TopBar;
     @FXML private JFXButton closeButton;
     @FXML private JFXButton minimizeButton;
@@ -108,19 +112,22 @@ public class Controller implements Initializable {
     }
 
     private void afterLogin() {
+        Endpoints.getCurriculum().thenAccept(courseData -> {
+            Platform.runLater(() -> {
+                toggleSpinner(false);
+                ObservableList<CourseItem> items = courseList.getItems();
+                for (CourseData each : courseData.values()) {
+                    items.add(new CourseItem(each));
+                }
+            });
+        }).exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+        });
         Platform.runLater(() -> {
             snackBar.show("登录成功！", "success", 3000);
             switchPane(coursePane);
             nodesList.setVisible(true);
-            Endpoints.getCurriculum().thenAccept(courseData -> {
-                toggleSpinner(false);
-                for (CourseData each : courseData) {
-                    courseList.getItems().add(new Label(each.getName()));
-                }
-            }).exceptionally(e -> {
-                e.printStackTrace();
-                return null;
-            });
         });
     }
 

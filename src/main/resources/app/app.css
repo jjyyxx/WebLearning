@@ -46,3 +46,10 @@
     -fx-opacity: 0.5;
     -fx-background-color: #fff;
 }
+
+#courseList .scroll-bar .increment-arrow,
+#courseList .scroll-bar .decrement-arrow,
+#courseList .scroll-bar .increment-button,
+#courseList .scroll-bar .decrement-button {
+    -fx-padding:0;
+}
