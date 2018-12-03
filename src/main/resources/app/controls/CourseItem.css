@@ -1,0 +1,23 @@
+.icon {
+    -fx-fill: #111111;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+.icons-badge .badge-pane {
+    -fx-background-color: #ff4081;
+    -fx-background-radius: 18;
+    -fx-pref-width: 18;
+    -fx-pref-height: 18;
+    -fx-alignment: center;
+}
+
+.icons-badge Label {
+    -fx-font-weight: BOLD;
+    -fx-font-size: 12;
+    -fx-text-fill: WHITE;
+}
+
+.hide .badge-pane {
+    visibility: false;
+}

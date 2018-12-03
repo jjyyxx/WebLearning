@@ -1,5 +1,10 @@
 package weblearning;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
@@ -11,29 +16,30 @@ import java.util.regex.Pattern;
 
 import static common.Util.getArg;
 
-public class FileEntry {
+public class FileEntry extends RecursiveTreeObject<FileEntry> {
     private static final Client client = Client.getInstance();
     private static final String url = "uploadFile/downloadFile_student.jsp";
     private static final Pattern filenamePattern = Pattern.compile("filename=\"([^\"]*)\"$");
 
     private String args;
-    private String title;
-    private String description;
-    private String size;
-    private String uploadTime;
-    private boolean isRead;
+    public final StringProperty title = new SimpleStringProperty();
+    public final StringProperty description = new SimpleStringProperty();
+    public final StringProperty size = new SimpleStringProperty();
+    public final StringProperty uploadTime = new SimpleStringProperty();
+    public final BooleanProperty isRead = new SimpleBooleanProperty();
 
     private FileEntry(String url, String title, String description, String size, String uploadTime, String state) {
         this.args = getArg(url);
-        this.title = title;
-        this.description = description;
-        this.size = size;
-        this.uploadTime = uploadTime;
-        this.isRead = state.equals("新文件");
+        this.title.set(title);
+        this.description.set(description);
+        this.size.set(size);
+        this.uploadTime.set(uploadTime);
+        this.isRead.set(!state.equals("新文件"));
     }
 
     public CompletableFuture<Boolean> download(Path dir) {
         return client.getRawAsync(client.makeUrl(url, args)).thenApply(response -> {
+            this.isRead.set(true);
             String contentDisposition = response.header("Content-Disposition");
             Matcher matcher = filenamePattern.matcher(contentDisposition);
             matcher.find();

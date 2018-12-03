@@ -2,23 +2,24 @@ package weblearning;
 
 import org.jsoup.nodes.Element;
 
+import java.io.Serializable;
 import java.util.function.BiFunction;
 
-public class Information {
-    private String number;
-    private String index;
-    private String name;
-    private String credit;
-    private String classHour;
-    private String group;
-    private String classPresident;
-    private Teacher teacher;
-    private String teachingMaterial;
-    private String referenceBooks;
-    private String assessmentMethod;
-    private String teachingMethod;
-    private String introduction;
-    private String calendar;
+public class Information implements Serializable {
+    public String number;
+    public String index;
+    public String name;
+    public String credit;
+    public String classHour;
+    public String group;
+    public String classPresident;
+    public Teacher teacher;
+    public String teachingMaterial;
+    public String referenceBooks;
+    public String assessmentMethod;
+    public String teachingMethod;
+    public String introduction;
+    public String calendar;
 
     static Information from(Element element) {
         Information info = new Information();

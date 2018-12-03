@@ -1,5 +1,7 @@
 package weblearning;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -30,14 +32,14 @@ public class CourseData {
     private String name;
     private boolean isNewVer;
     private SemesterData semester;
-    private int unsubmittedOperations;
-    private int unreadBulletins;
-    private int unreadFiles;
+    public final IntegerProperty unsubmittedOperations = new SimpleIntegerProperty();
+    public final IntegerProperty unreadBulletins = new SimpleIntegerProperty();
+    public final IntegerProperty unreadFiles = new SimpleIntegerProperty();
 
     CourseData(String url, String name, String unsubmittedOperations, String unreadBulletins, String unreadFiles) {
-        this.unsubmittedOperations = Integer.valueOf(unsubmittedOperations);
-        this.unreadBulletins = Integer.valueOf(unreadBulletins);
-        this.unreadFiles = Integer.valueOf(unreadFiles);
+        this.unsubmittedOperations.set(Integer.valueOf(unsubmittedOperations));
+        this.unreadBulletins.set(Integer.valueOf(unreadBulletins));
+        this.unreadFiles.set(Integer.valueOf(unreadFiles));
         isNewVer = url.startsWith("http://learn.cic.tsinghua.edu.cn");
         if (isNewVer) {
             id = url.substring(54);
@@ -63,14 +65,22 @@ public class CourseData {
         return client.getAsync(client.makeUrl(BULLETIN, "course_id=" + id)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box");
             Elements entries = tableBox.getElementsByTag("tr");
-            return entries.subList(1, entries.size())
-                    .stream()
-                    .map(Bulletin::from)
-                    .toArray(Bulletin[]::new);
+            if (entries.size() == 0) {
+                return new Bulletin[]{};
+            }
+            Bulletin[] bulletins = new Bulletin[entries.size() - 1];
+            for (int i = 1; i < entries.size(); i++) {
+                Bulletin bulletin = Bulletin.from(entries.get(i));
+                if (!bulletin.isRead.get()) {
+                    bulletin.isRead.addListener((o, oV, nV) -> unreadBulletins.set(unreadBulletins.get() - 1));
+                }
+                bulletins[i - 1] = bulletin;
+            }
+            return bulletins;
         });
     }
 
-    public CompletableFuture<Information> resolveInfomation() {
+    public CompletableFuture<Information> resolveInformation() {
         return client.getAsync(client.makeUrl(INFOMATION, "course_id=" + id)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box").child(0);
             return Information.from(tableBox);
@@ -85,7 +95,15 @@ public class CourseData {
             while ((nextGroup = document.getElementById("ImageTab" + ++num)) != null) {
                 Elements entries = document.getElementById("Layer" + num).child(0).child(0).children();
                 entries.remove(0);
-                map.put(nextGroup.text(), entries.stream().map(FileEntry::from).toArray(FileEntry[]::new));
+                FileEntry[] fileEntries = new FileEntry[entries.size()];
+                for (int i = 0; i < entries.size(); i++) {
+                    FileEntry fileEntry = FileEntry.from(entries.get(i));
+                    if (!fileEntry.isRead.get()) {
+                        fileEntry.isRead.addListener((o, oV, nV) -> unreadFiles.set(unreadFiles.get() - 1));
+                    }
+                    fileEntries[i] = fileEntry;
+                }
+                map.put(nextGroup.text(), fileEntries);
             }
             return map;
         });
@@ -103,7 +121,15 @@ public class CourseData {
         return client.getAsync(client.makeUrl(OPERATION, "course_id=" + id)).thenApply(document -> {
             Elements entries = document.getElementById("table_box").nextElementSibling().child(0).children();
             entries.remove(entries.size() - 1);
-            return entries.stream().map(Operation::from).toArray(Operation[]::new);
+            Operation[] operations = new Operation[entries.size()];
+            for (int i = 0; i < entries.size(); i++) {
+                Operation operation = Operation.from(entries.get(i));
+                if (!operation.isHandedIn.get()) {
+                    operation.isHandedIn.addListener((o, oV, nV) -> unsubmittedOperations.set(unsubmittedOperations.get() - 1));
+                }
+                operations[i] = operation;
+            }
+            return operations;
         });
     }
 
@@ -113,18 +139,6 @@ public class CourseData {
             entries.remove(entries.size() - 1);
             return entries.stream().collect(toLinkedMap(e -> e.child(0).text(), e -> e.child(1).text()));
         });
-    }
-
-    public int getUnsubmittedOperations() {
-        return unsubmittedOperations;
-    }
-
-    public int getUnreadFiles() {
-        return unreadFiles;
-    }
-
-    public int getUnreadBulletins() {
-        return unreadBulletins;
     }
 
     public boolean isNewVer() {

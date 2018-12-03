@@ -1,42 +1,59 @@
 package weblearning;
 
-import okhttp3.Response;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.jsoup.nodes.Element;
 
 import java.util.concurrent.CompletableFuture;
 
 import static common.Util.getArg;
 
-public class Bulletin {
+public class Bulletin extends RecursiveTreeObject<Bulletin> {
     private static final Client client = Client.getInstance();
 
     private static final String BULLETIN = "MultiLanguage/public/bbs/note_reply.jsp";
 
     private String args;
-    private String name;
-    private String publisher;
-    private String time;
-    private boolean isRead;
-
-    private String content;
+    public final StringProperty name = new SimpleStringProperty();
+    public final StringProperty publisher = new SimpleStringProperty();
+    public final StringProperty time = new SimpleStringProperty();
+    public final BooleanProperty isRead = new SimpleBooleanProperty();
+    public boolean contentResolved = false;
+    public final StringProperty content = new SimpleStringProperty();
 
     private Bulletin(String url, String name, String publisher, String time, String state) {
         this.args = getArg(url);
-        this.name = name;
-        this.publisher = publisher;
-        this.time = time;
-        this.isRead = state.equals("已读");
+        this.name.set(name);
+        this.publisher.set(publisher);
+        this.time.set(time);
+        this.isRead.set(state.equals("已读"));
+        this.content.set("");
     }
 
-    public CompletableFuture<String> resolveContent() {
+    public CompletableFuture<StringProperty> resolveContent() {
+        if (this.contentResolved) {
+            return CompletableFuture.completedFuture(content);
+        }
         return client.getAsync(client.makeUrl(BULLETIN, args)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box");
-            return this.content = tableBox.child(0).child(0).child(1).text();
+            this.content.set(tableBox.child(0).child(1).text().substring(3));
+            contentResolved = true;
+            if (!isRead.get()) isRead.set(true);
+            return this.content;
         });
     }
 
     public CompletableFuture<Void> markAsRead() {
-        return client.getRawAsync(client.makeUrl(BULLETIN, args)).thenAccept(Response::close);
+        if (isRead.get()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return client.getRawAsync(client.makeUrl(BULLETIN, args)).thenAccept(response -> {
+            isRead.set(true);
+            response.close();
+        });
     }
 
     static Bulletin from(Element entry) {

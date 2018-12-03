@@ -1,11 +1,17 @@
 package weblearning;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import okhttp3.*;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.Random;
@@ -15,7 +21,7 @@ import java.util.regex.Pattern;
 
 import static common.Util.*;
 
-public class Operation {
+public class Operation extends RecursiveTreeObject<Operation> {
     private static final String DETAIL = "MultiLanguage/lesson/student/hom_wk_detail.jsp";
     private static final String SUBMIT = "MultiLanguage/lesson/student/hom_wk_submit.jsp";
     private static final String REVIEW = "MultiLanguage/lesson/student/hom_wk_view.jsp";
@@ -28,11 +34,12 @@ public class Operation {
     private static final Client client = Client.getInstance();
 
     private String args;
-    private String title;
-    private String effectiveDate;
-    private String deadline;
-    private boolean isHandedIn;
-    private String size;
+    public final StringProperty title = new SimpleStringProperty();
+    public final StringProperty effectiveDate = new SimpleStringProperty();
+    public final StringProperty deadline = new SimpleStringProperty();
+    public final BooleanProperty isHandedIn = new SimpleBooleanProperty();
+    public final StringProperty size = new SimpleStringProperty();
+
     private String submitArgs;
     private boolean submitDisabled;
     private String reviewArgs;
@@ -59,11 +66,11 @@ public class Operation {
 
     public Operation(String url, String title, String effectiveDate, String deadline, boolean isHandedIn, String size, String submitUrl, boolean submitDisabled, String reviewUrl, boolean reviewDisabled) {
         this.args = getArg(url);
-        this.title = title;
-        this.effectiveDate = effectiveDate;
-        this.deadline = deadline;
-        this.isHandedIn = isHandedIn;
-        this.size = size;
+        this.title.set(title);
+        this.effectiveDate.set(effectiveDate);
+        this.deadline.set(deadline);
+        this.isHandedIn.set(isHandedIn);
+        this.size.set(size);
         this.submitArgs = getArg(submitUrl);
         this.submitDisabled = submitDisabled;
         this.reviewArgs = getArg(reviewUrl);
@@ -131,7 +138,7 @@ public class Operation {
                                 formBuilder.add("post_rec_homewk_detail", content).add("Submit", "提交").add("tj", "");
                                 return client.postRawAsync(client.makeUrl(HANDIN), formBuilder.build());
                             }).thenAccept(response -> {
-                                isHandedIn = true;
+                                isHandedIn.set(true);
                                 response.close();
                             });
                 });
@@ -151,7 +158,7 @@ public class Operation {
                     return client.postRawAsync(client.makeUrl(HANDIN), builder.build());
                 }).thenAccept(response -> {
                     response.close();
-                    isHandedIn = true;
+                    isHandedIn.set(true);
                 });
     }
 
@@ -163,9 +170,9 @@ public class Operation {
                 if (!matcher.find()) {
                     return CompletableFuture.completedFuture(null);
                 }
-                return client.getRawAsync(client.makeUrl(DELETE, "course_id=" + URLEncoder.encode(matcher.group(3), "UTF-8")
-                        + "&file_id=" + URLEncoder.encode(matcher.group(0), "UTF-8")
-                        + "&filepath=" + URLEncoder.encode(matcher.group(2), "UTF-8")
+                return client.getRawAsync(client.makeUrl(DELETE, "course_id=" + URLEncoder.encode(matcher.group(3), StandardCharsets.UTF_8)
+                        + "&file_id=" + URLEncoder.encode(matcher.group(0), StandardCharsets.UTF_8)
+                        + "&filepath=" + URLEncoder.encode(matcher.group(2), StandardCharsets.UTF_8)
                         + "&backurl="))
                         .thenAccept(Response::close);
             } catch (IOException e) {

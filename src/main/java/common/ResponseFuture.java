@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 public class ResponseFuture implements Callback {
-    public final CompletableFuture<Response> future = new CompletableFuture<>();
+    final CompletableFuture<Response> future = new CompletableFuture<>();
 
     @Override
     public void onFailure(Call call, IOException e) {
@@ -16,7 +16,7 @@ public class ResponseFuture implements Callback {
     }
 
     @Override
-    public void onResponse(Call call, Response response) throws IOException {
+    public void onResponse(Call call, Response response) {
         future.complete(response);
     }
 }

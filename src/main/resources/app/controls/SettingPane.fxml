@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+         prefWidth="467.0" type="Pane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="app.controls.SettingPane">
+  <JFXToggleButton fx:id="autologin" layoutX="127.0" layoutY="30.0" text="                           自动登录"/>
+  <JFXToggleButton fx:id="autostart" layoutX="127.0" layoutY="88.0" text="                           开机自启"/>
+  <JFXButton fx:id="closeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="426.0"
+             prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;"
+             styleClass="round-button" text=" ">
+    <graphic>
+      <MaterialIconView glyphName="CLOSE" size="24" wrappingWidth="24.0">
+        <font>
+          <Font size="24.0"/>
+        </font>
+      </MaterialIconView>
+    </graphic>
+  </JFXButton>
+</fx:root>
