@@ -1,6 +1,7 @@
 package app;
 
 import app.controls.CourseItem;
+import app.controls.InformationPane;
 import app.controls.QuickButtonList;
 import app.controls.SettingPane;
 import com.jfoenix.controls.*;
@@ -18,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -35,6 +37,7 @@ import static weblearning.Endpoints.authenticate;
 
 public class Controller implements Initializable {
     private static final double ITEM_HEIGHT = 68.125;
+    @FXML private InformationPane courseInfo;
     @FXML private ScrollPane courseListScrollPane;
     @FXML private JFXTreeTableView<Operation> workTable;
     @FXML private JFXTreeTableColumn<Operation, String> workName;
@@ -47,11 +50,10 @@ public class Controller implements Initializable {
     @FXML private JFXTreeTableColumn<FileEntry, String> fileSize;
     @FXML private JFXTreeTableColumn<FileEntry, Boolean> fileRead;
     @FXML private Label bulletinContent;
-    @FXML private Label courseInfo;
     @FXML private JFXTreeTableView<Bulletin> bulletinTable;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinTitle;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinDate;
-    @FXML private JFXTreeTableColumn<Bulletin, Boolean> bulletinRead;
+    @FXML private JFXTreeTableColumn<Bulletin, String> bulletinRead;
     private double sceneX;
     private double sceneY;
 
@@ -70,6 +72,7 @@ public class Controller implements Initializable {
     @FXML private JFXTextField username;
     @FXML private JFXPasswordField password;
     @FXML private JFXButton login;
+    private boolean dirtyUpdateFlag = false;
 
     @FXML private void close(ActionEvent event) {
         stage.close();
@@ -115,6 +118,50 @@ public class Controller implements Initializable {
         children.forEach(node -> node.setVisible(false));
         children.get(children.size() - 1).setVisible(true);
 
+        // bulletin
+        bulletinRead.setCellValueFactory(p -> bulletinRead.validateValue(p) ? p.getValue().getValue().isRead : bulletinRead.getComputedValue(p)); // TODO: shall be optimized
+        bulletinTitle.setCellValueFactory(p -> bulletinTitle.validateValue(p) ? p.getValue().getValue().name : bulletinTitle.getComputedValue(p));
+        bulletinDate.setCellValueFactory(p -> bulletinDate.validateValue(p) ? p.getValue().getValue().time : bulletinDate.getComputedValue(p));
+        bulletinTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
+            if (dirtyUpdateFlag) return;
+            if (nV == null) {
+                bulletinContent.setText("");
+            } else {
+                RecursiveTreeObject value = nV.getValue();
+                if (value instanceof Bulletin) {
+                    nV.getValue().resolveContent().thenAccept(stringProperty -> Platform.runLater(() -> {
+                        boolean[] e = new boolean[2];
+                        ObservableList<TreeItem<Bulletin>> item1 = bulletinTable.getRoot().getChildren();
+                        for (int i = 0; i < item1.size(); i++) {
+                            e[i] = item1.get(i).isExpanded();
+                        }
+                        bulletinTable.reGroup();
+                        ObservableList<TreeItem<Bulletin>> item2 = bulletinTable.getRoot().getChildren();
+                        for (int i = 0; i < item2.size(); i++) {
+                            item2.get(i).setExpanded(e[i]);
+                        }
+                        bulletinContent.setText(stringProperty.get());
+                    }));
+                } else {
+                    // Platform.runLater(() -> nV.setExpanded(!nV.isExpanded()));
+                }
+            }
+        });
+
+        // file
+        fileCheck.setCellValueFactory(p -> p.getValue().getValue().title);
+        fileName.setCellValueFactory(p -> p.getValue().getValue().title);
+        fileDate.setCellValueFactory(p -> p.getValue().getValue().uploadTime);
+        fileSize.setCellValueFactory(p -> p.getValue().getValue().size);
+        fileRead.setCellValueFactory(p -> p.getValue().getValue().isRead);
+
+        // work
+        workName.setCellValueFactory(p -> p.getValue().getValue().title);
+        workDue.setCellValueFactory(p -> p.getValue().getValue().deadline);
+        workDone.setCellValueFactory(p -> p.getValue().getValue().isHandedIn);
+
+        JFXScrollPane.smoothScrolling(courseListScrollPane);
+
         try {
             Class.forName("weblearning.Endpoints");
         } catch (ClassNotFoundException e) {
@@ -136,47 +183,39 @@ public class Controller implements Initializable {
     private void afterLogin() {
         Endpoints.getCurriculum().thenAccept(courseData -> Platform.runLater(() -> {
             toggleSpinner(false);
-            JFXScrollPane.smoothScrolling(courseListScrollPane);
             courseList.setPrefHeight(courseData.size() * ITEM_HEIGHT);
             ObservableList<CourseItem> items = courseList.getItems();
             for (CourseData each : courseData.values()) {
                 items.add(new CourseItem(each));
             }
 
-            // bulletin
-            bulletinTitle.setCellValueFactory(p -> p.getValue().getValue().name);
-            bulletinDate.setCellValueFactory(p -> p.getValue().getValue().time);
-            bulletinRead.setCellValueFactory(p -> p.getValue().getValue().isRead); // TODO: shall be optimized
-
-            // file
-            fileCheck.setCellValueFactory(p -> p.getValue().getValue().title);
-            fileName.setCellValueFactory(p -> p.getValue().getValue().title);
-            fileDate.setCellValueFactory(p -> p.getValue().getValue().uploadTime);
-            fileSize.setCellValueFactory(p -> p.getValue().getValue().size);
-            fileRead.setCellValueFactory(p -> p.getValue().getValue().isRead);
-
-            // work
-            workName.setCellValueFactory(p -> p.getValue().getValue().title);
-            workDue.setCellValueFactory(p -> p.getValue().getValue().deadline);
-            workDone.setCellValueFactory(p -> p.getValue().getValue().isHandedIn);
-
             courseList.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
+                // info TODO: remove comment
+                // newValue.courseData.resolveInformation().thenAccept(courseInfo::setInformation);
+
+                // bulletin
                 bulletinContent.setText("");
-                newValue.courseData.resolveInformation().thenAccept(information -> Platform.runLater(() -> courseInfo.setText(information.name + information.introduction)));
                 newValue.courseData.resolveBulletins().thenAccept(bulletins -> Platform.runLater(() -> {
+                    dirtyUpdateFlag = true;
+                    bulletinTable.unGroup(bulletinRead);
                     ObservableList<Bulletin> bulletinList = FXCollections.observableArrayList(Arrays.asList(bulletins));
                     final TreeItem<Bulletin> root = new RecursiveTreeItem<>(bulletinList, RecursiveTreeObject::getChildren);
-                    bulletinTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
-                        if (nV == null) {
-                            bulletinContent.setText("");
-                        } else {
-                            nV.getValue().resolveContent().thenAccept(stringProperty -> Platform.runLater(() -> bulletinContent.setText(stringProperty.get())));
-                        }
-                    });
                     bulletinTable.setRoot(root);
                     bulletinTable.setShowRoot(false);
                     bulletinTable.setEditable(false);
+                    bulletinTable.group(bulletinRead);
+                    for (TreeItem<Bulletin> child : bulletinTable.getRoot().getChildren()) {
+                        child.setExpanded(true);
+                    }
+                    bulletinTable.getSortOrder().clear();
+                    bulletinTable.getSortOrder().add(bulletinRead);
+                    bulletinRead.setSortType(TreeTableColumn.SortType.ASCENDING);
+                    bulletinRead.setSortable(true);
+                    dirtyUpdateFlag = false;
+                    bulletinTable.getSelectionModel().clearSelection();
                 }));
+
+                // file
                 newValue.courseData.resolveFileEntries().thenAccept(stringMap -> Platform.runLater(() -> {
                     // FIXME: shall use group
                     List<FileEntry> fileEntries = new ArrayList<>();
@@ -189,6 +228,8 @@ public class Controller implements Initializable {
                     fileTable.setShowRoot(false);
                     fileTable.setEditable(false);
                 }));
+
+                // operation
                 newValue.courseData.resolveOperations().thenAccept(operations -> Platform.runLater(() -> {
                     ObservableList<Operation> operationList = FXCollections.observableArrayList(Arrays.asList(operations));
                     final TreeItem<Operation> root = new RecursiveTreeItem<>(operationList, RecursiveTreeObject::getChildren);
@@ -203,6 +244,7 @@ public class Controller implements Initializable {
             e.printStackTrace();
             return null;
         });
+
         Platform.runLater(() -> {
             snackBar.show("登录成功！", "success", 3000);
             switchPane(coursePane);

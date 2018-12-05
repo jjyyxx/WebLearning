@@ -71,7 +71,7 @@ public class CourseData {
             Bulletin[] bulletins = new Bulletin[entries.size() - 1];
             for (int i = 1; i < entries.size(); i++) {
                 Bulletin bulletin = Bulletin.from(entries.get(i));
-                if (!bulletin.isRead.get()) {
+                if (!bulletin.isRead.get().equals(Bulletin.TRUE)) {
                     bulletin.isRead.addListener((o, oV, nV) -> unreadBulletins.set(unreadBulletins.get() - 1));
                 }
                 bulletins[i - 1] = bulletin;
