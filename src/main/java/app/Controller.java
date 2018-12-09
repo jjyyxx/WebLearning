@@ -4,6 +4,7 @@ import app.controls.CourseItem;
 import app.controls.InformationPane;
 import app.controls.QuickButtonList;
 import app.controls.SettingPane;
+import background.Notification;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import common.AuthException;
@@ -136,11 +137,16 @@ public class Controller implements Initializable {
             if (nV == null) {
                 bulletinContent.setText("");
                 bulletinTitle1.setText("");
+                bulletAlertButton.setDisable(true);
             } else {
                 RecursiveTreeObject value = nV.getValue();
                 if (value instanceof Bulletin) {
                     bulletinTitle1.setText(nV.getValue().name.get());
                     nV.getValue().resolveContent().thenAccept(stringProperty -> Platform.runLater(() -> bulletinContent.setText(stringProperty.get())));
+                    bulletAlertButton.setDisable(false);
+                    bulletAlertButton.setOnAction(actionEvent -> {
+                        Util.requestTime(main, date -> Notification.addNotification(nV.getValue().name.get(), nV.getValue().content.get(), date));
+                    });
                 }
             }
         });
