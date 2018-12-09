@@ -1,22 +1,18 @@
 package weblearning;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jsoup.nodes.Element;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static common.Util.getArg;
 
 public class FileEntry extends RecursiveTreeObject<FileEntry> {
+    public static final String TRUE = "已读";
     private static final Client client = Client.getInstance();
     private static final String url = "uploadFile/downloadFile_student.jsp";
     private static final Pattern filenamePattern = Pattern.compile("filename=\"([^\"]*)\"$");
@@ -26,7 +22,7 @@ public class FileEntry extends RecursiveTreeObject<FileEntry> {
     public final StringProperty description = new SimpleStringProperty();
     public final StringProperty size = new SimpleStringProperty();
     public final StringProperty uploadTime = new SimpleStringProperty();
-    public final BooleanProperty isRead = new SimpleBooleanProperty();
+    public final StringProperty isRead = new SimpleStringProperty();
 
     private FileEntry(String url, String title, String description, String size, String uploadTime, String state) {
         this.args = getArg(url);
@@ -34,22 +30,13 @@ public class FileEntry extends RecursiveTreeObject<FileEntry> {
         this.description.set(description);
         this.size.set(size);
         this.uploadTime.set(uploadTime);
-        this.isRead.set(!state.equals("新文件"));
+        this.isRead.set(state);
     }
 
     public CompletableFuture<Boolean> download(Path dir) {
-        return client.getRawAsync(client.makeUrl(url, args)).thenApply(response -> {
-            this.isRead.set(true);
-            String contentDisposition = response.header("Content-Disposition");
-            Matcher matcher = filenamePattern.matcher(contentDisposition);
-            matcher.find();
-            String filename = matcher.group(1);
-            try {
-                Files.copy(response.body().byteStream(), dir.resolve(filename));
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
+        return Endpoints.download(dir, url, args).thenApply(aBoolean -> {
+            this.isRead.set(TRUE);
+            return aBoolean;
         });
     }
 
@@ -60,7 +47,7 @@ public class FileEntry extends RecursiveTreeObject<FileEntry> {
         String description = entry.child(2).text();
         String size = entry.child(3).text();
         String time = entry.child(4).text();
-        String state = entry.child(5).text();
+        String state = entry.child(5).text().equals("新文件") ? "未读" : "已读";
         return new FileEntry(href, title, description, size, time, state);
     }
 }

@@ -131,3 +131,22 @@
 .scroll-pane .corner {
     -fx-background-insets: 0;
 }
+
+.tree-table-cell {
+    -fx-wrap-text: true;
+}
+
+#workTable .scroll-bar .increment-arrow,
+#workTable .scroll-bar .decrement-arrow,
+#workTable .scroll-bar .increment-button,
+#workTable .scroll-bar .decrement-button,
+#bulletinTable .scroll-bar .increment-arrow,
+#bulletinTable .scroll-bar .decrement-arrow,
+#bulletinTable .scroll-bar .increment-button,
+#bulletinTable .scroll-bar .decrement-button,
+#fileTable .scroll-bar .increment-arrow,
+#fileTable .scroll-bar .decrement-arrow,
+#fileTable .scroll-bar .increment-button,
+#fileTable .scroll-bar .decrement-button {
+    -fx-padding:0;
+}

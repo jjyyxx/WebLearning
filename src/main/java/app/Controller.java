@@ -16,10 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -28,28 +25,39 @@ import platform.win.Imm32;
 import weblearning.*;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static weblearning.Endpoints.authenticate;
 
 public class Controller implements Initializable {
     private static final double ITEM_HEIGHT = 68.125;
+    public JFXToggleButton separateByCourse;
+    public JFXToggleButton removePostfix;
+    public JFXButton batchDownload;
+    public JFXButton fileDownload;
+    public Label fileName1;
+    public Label fileDescription;
+
+    public JFXTextArea workRequirement;
+    public Hyperlink workRequirementAttachment;
+    public JFXTextArea workContent;
+    public JFXTextField workAttachment;
+    public JFXButton workCommit;
+
     @FXML private InformationPane courseInfo;
     @FXML private ScrollPane courseListScrollPane;
     @FXML private JFXTreeTableView<Operation> workTable;
     @FXML private JFXTreeTableColumn<Operation, String> workName;
     @FXML private JFXTreeTableColumn<Operation, String> workDue;
-    @FXML private JFXTreeTableColumn<Operation, Boolean> workDone;
+    @FXML private JFXTreeTableColumn<Operation, String> workDone;
     @FXML private JFXTreeTableView<FileEntry> fileTable;
-    @FXML private JFXTreeTableColumn<FileEntry, String> fileCheck;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileName;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileDate;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileSize;
-    @FXML private JFXTreeTableColumn<FileEntry, Boolean> fileRead;
+    @FXML private JFXTreeTableColumn<FileEntry, String> fileRead;
     @FXML private Label bulletinContent;
+    @FXML private Label bulletinTitle1;
+    @FXML private JFXButton bulletAlertButton;
     @FXML private JFXTreeTableView<Bulletin> bulletinTable;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinTitle;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinDate;
@@ -126,39 +134,63 @@ public class Controller implements Initializable {
             if (dirtyUpdateFlag) return;
             if (nV == null) {
                 bulletinContent.setText("");
+                bulletinTitle1.setText("");
             } else {
                 RecursiveTreeObject value = nV.getValue();
                 if (value instanceof Bulletin) {
-                    nV.getValue().resolveContent().thenAccept(stringProperty -> Platform.runLater(() -> {
-                        boolean[] e = new boolean[2];
-                        ObservableList<TreeItem<Bulletin>> item1 = bulletinTable.getRoot().getChildren();
-                        for (int i = 0; i < item1.size(); i++) {
-                            e[i] = item1.get(i).isExpanded();
-                        }
-                        bulletinTable.reGroup();
-                        ObservableList<TreeItem<Bulletin>> item2 = bulletinTable.getRoot().getChildren();
-                        for (int i = 0; i < item2.size(); i++) {
-                            item2.get(i).setExpanded(e[i]);
-                        }
-                        bulletinContent.setText(stringProperty.get());
-                    }));
-                } else {
-                    // Platform.runLater(() -> nV.setExpanded(!nV.isExpanded()));
+                    bulletinTitle1.setText(nV.getValue().name.get());
+                    nV.getValue().resolveContent().thenAccept(stringProperty -> Platform.runLater(() -> bulletinContent.setText(stringProperty.get())));
                 }
             }
         });
 
         // file
-        fileCheck.setCellValueFactory(p -> p.getValue().getValue().title);
-        fileName.setCellValueFactory(p -> p.getValue().getValue().title);
-        fileDate.setCellValueFactory(p -> p.getValue().getValue().uploadTime);
-        fileSize.setCellValueFactory(p -> p.getValue().getValue().size);
-        fileRead.setCellValueFactory(p -> p.getValue().getValue().isRead);
+        fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        fileName.setCellValueFactory(p -> fileName.validateValue(p) ? p.getValue().getValue().title : fileName.getComputedValue(p));
+        fileDate.setCellValueFactory(p -> fileDate.validateValue(p) ? p.getValue().getValue().uploadTime : fileSize.getComputedValue(p));
+        fileSize.setCellValueFactory(p -> fileSize.validateValue(p) ? p.getValue().getValue().size : fileSize.getComputedValue(p));
+        fileRead.setCellValueFactory(p -> fileRead.validateValue(p) ? p.getValue().getValue().isRead : fileRead.getComputedValue(p));
+        fileTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
+            if (dirtyUpdateFlag) return;
+            if (nV == null) {
+                fileDescription.setText("");
+                fileName.setText("");
+            } else {
+                RecursiveTreeObject value = nV.getValue();
+                if (value instanceof FileEntry) {
+                    fileName1.setText(nV.getValue().title.get());
+                    fileDescription.setText(nV.getValue().description.get());
+                }
+            }
+        });
 
         // work
-        workName.setCellValueFactory(p -> p.getValue().getValue().title);
-        workDue.setCellValueFactory(p -> p.getValue().getValue().deadline);
-        workDone.setCellValueFactory(p -> p.getValue().getValue().isHandedIn);
+        workName.setCellValueFactory(p -> workName.validateValue(p) ? p.getValue().getValue().title : workName.getComputedValue(p));
+        workDue.setCellValueFactory(p -> workDue.validateValue(p) ? p.getValue().getValue().deadline : workDue.getComputedValue(p));
+        workDone.setCellValueFactory(p -> workDone.validateValue(p) ? p.getValue().getValue().isHandedIn : workDone.getComputedValue(p));
+        workTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
+            if (dirtyUpdateFlag) return;
+            if (nV == null) {
+                workRequirement.setText("");
+                workRequirementAttachment.setDisable(true);
+            } else {
+                RecursiveTreeObject value = nV.getValue();
+                if (value instanceof Operation) {
+                    nV.getValue().resolveDetail().thenAccept(aVoid -> Platform.runLater(() -> {
+                        workRequirement.setText(nV.getValue().getDescription());
+                        if (nV.getValue().isAttachmentExists()) {
+                            workRequirementAttachment.setText(nV.getValue().getAttachmentName());
+                            workRequirementAttachment.setDisable(false);
+                            workRequirementAttachment.setOnAction(actionEvent -> {
+                                // nV.getValue().downloadRequirementAttachment();
+                            });
+                        } else {
+                            workRequirementAttachment.setDisable(true);
+                        }
+                    }));
+                }
+            }
+        });
 
         JFXScrollPane.smoothScrolling(courseListScrollPane);
 
@@ -194,7 +226,8 @@ public class Controller implements Initializable {
                 // newValue.courseData.resolveInformation().thenAccept(courseInfo::setInformation);
 
                 // bulletin
-                bulletinContent.setText("");
+                // bulletinContent.setText("");
+                // bulletinTitle1.setText("");
                 newValue.courseData.resolveBulletins().thenAccept(bulletins -> Platform.runLater(() -> {
                     dirtyUpdateFlag = true;
                     bulletinTable.unGroup(bulletinRead);
@@ -217,25 +250,48 @@ public class Controller implements Initializable {
 
                 // file
                 newValue.courseData.resolveFileEntries().thenAccept(stringMap -> Platform.runLater(() -> {
-                    // FIXME: shall use group
+                    dirtyUpdateFlag = true;
+                    fileTable.unGroup(fileRead);
                     List<FileEntry> fileEntries = new ArrayList<>();
-                    for (FileEntry[] value : stringMap.values()) {
-                        fileEntries.addAll(Arrays.asList(value));
+                    for (Map.Entry<String, FileEntry[]> value : stringMap.entrySet()) {
+                        fileEntries.addAll(Arrays.asList(value.getValue()));
                     }
                     ObservableList<FileEntry> fileList = FXCollections.observableArrayList(fileEntries);
                     final TreeItem<FileEntry> root = new RecursiveTreeItem<>(fileList, RecursiveTreeObject::getChildren);
                     fileTable.setRoot(root);
                     fileTable.setShowRoot(false);
                     fileTable.setEditable(false);
+                    fileTable.group(fileRead);
+                    for (TreeItem<FileEntry> child : fileTable.getRoot().getChildren()) {
+                        child.setExpanded(true);
+                    }
+                    fileTable.getSortOrder().clear();
+                    fileTable.getSortOrder().add(fileRead);
+                    fileRead.setSortType(TreeTableColumn.SortType.ASCENDING);
+                    fileRead.setSortable(true);
+                    dirtyUpdateFlag = false;
+                    fileTable.getSelectionModel().clearSelection();
                 }));
 
                 // operation
                 newValue.courseData.resolveOperations().thenAccept(operations -> Platform.runLater(() -> {
+                    dirtyUpdateFlag = true;
+                    workTable.unGroup(workDone);
                     ObservableList<Operation> operationList = FXCollections.observableArrayList(Arrays.asList(operations));
                     final TreeItem<Operation> root = new RecursiveTreeItem<>(operationList, RecursiveTreeObject::getChildren);
                     workTable.setRoot(root);
                     workTable.setShowRoot(false);
                     workTable.setEditable(false);
+                    workTable.group(workDone);
+                    for (TreeItem<Operation> child : workTable.getRoot().getChildren()) {
+                        child.setExpanded(true);
+                    }
+                    workTable.getSortOrder().clear();
+                    workTable.getSortOrder().add(workDone);
+                    workDone.setSortType(TreeTableColumn.SortType.ASCENDING);
+                    workDone.setSortable(true);
+                    dirtyUpdateFlag = false;
+                    workTable.getSelectionModel().clearSelection();
                 }));
             });
 
@@ -275,5 +331,8 @@ public class Controller implements Initializable {
         JFXDialog setting = new JFXDialog();
         setting.setContent(new SettingPane(t -> setting.close()));
         setting.show(main);
+    }
+
+    @FXML public void addAlert(ActionEvent actionEvent) {
     }
 }

@@ -5,11 +5,14 @@
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import com.jfoenix.controls.JFXToolbar?>
 <?import com.jfoenix.controls.JFXTreeTableColumn?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
@@ -22,30 +25,40 @@
 
 <!--<?import app.controls.InformationPane?>-->
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
-  <JFXToolbar fx:id="TopBar" onMouseDragged="#topBarDragging" onMousePressed="#topBarPressed" prefHeight="55.0" prefWidth="1000.0" style="-fx-background-color: #2962ff;">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="600.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/10.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
+  <JFXToolbar fx:id="TopBar" onMouseDragged="#topBarDragging" onMousePressed="#topBarPressed" prefHeight="55.0"
+              prefWidth="1000.0" style="-fx-background-color: #2962ff;">
     <left>
-      <Label prefHeight="32.0" prefWidth="212.0" style="-fx-padding: 0 0 0 30;" text="网络学堂客户端" textFill="WHITE" BorderPane.alignment="CENTER">
+      <Label prefHeight="32.0" prefWidth="212.0" style="-fx-padding: 0 0 0 30;" text="网络学堂客户端" textFill="WHITE"
+             BorderPane.alignment="CENTER">
         <font>
-          <Font size="24.0" />
+          <Font size="24.0"/>
         </font>
       </Label>
     </left>
     <right>
       <Pane prefHeight="55.0" prefWidth="194.0" BorderPane.alignment="CENTER">
-        <JFXButton fx:id="closeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="149.0" layoutY="8.0" onAction="#close" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+        <JFXButton fx:id="closeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="149.0" layoutY="8.0"
+                   onAction="#close" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
+                   style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="CLOSE" size="24" wrappingWidth="24.0" />
+            <MaterialIconView fill="WHITE" glyphName="CLOSE" size="24" wrappingWidth="24.0"/>
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="minimizeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="108.0" layoutY="8.0" onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+        <JFXButton fx:id="minimizeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="108.0" layoutY="8.0"
+                   onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
+                   style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="REMOVE" size="24" wrappingWidth="24.0" />
+            <MaterialIconView fill="WHITE" glyphName="REMOVE" size="24" wrappingWidth="24.0"/>
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="settingButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="67.0" layoutY="8.0" onAction="#openSetting" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+        <JFXButton fx:id="settingButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="67.0" layoutY="8.0"
+                   onAction="#openSetting" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
+                   style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="SETTINGS" size="24" wrappingWidth="24.0" />
+            <MaterialIconView fill="WHITE" glyphName="SETTINGS" size="24" wrappingWidth="24.0"/>
           </graphic>
         </JFXButton>
       </Pane>
@@ -54,7 +67,7 @@
   <StackPane fx:id="main" layoutY="55.0" prefHeight="545.0" prefWidth="1000.0">
     <Pane fx:id="coursePane" prefHeight="545.0" prefWidth="1000.0">
       <ScrollPane fx:id="courseListScrollPane" hbarPolicy="NEVER" prefHeight="545.0" prefWidth="260.0">
-        <JFXListView fx:id="courseList" minHeight="545.0" minWidth="260.0" prefHeight="2000" prefWidth="260.0" />
+        <JFXListView fx:id="courseList" minHeight="545.0" minWidth="260.0" prefHeight="2000" prefWidth="260.0"/>
       </ScrollPane>
       <JFXTabPane layoutX="260.0" prefHeight="545.0" prefWidth="740.0" tabClosingPolicy="UNAVAILABLE">
         <Tab text="课程信息">
@@ -66,101 +79,185 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <JFXTreeTableView fx:id="bulletinTable" prefHeight="512.0" prefWidth="398.0">
               <columns>
-                <JFXTreeTableColumn fx:id="bulletinRead" minWidth="19.0" prefWidth="58.0" resizable="false" text="" />
-                <JFXTreeTableColumn fx:id="bulletinTitle" minWidth="133" prefWidth="255.0" resizable="false" text="标题" />
-                <JFXTreeTableColumn fx:id="bulletinDate" minWidth="68.0" prefWidth="84.0" resizable="false" text="日期" />
+                <JFXTreeTableColumn fx:id="bulletinRead" minWidth="19.0" prefWidth="58.0" resizable="false"/>
+                <JFXTreeTableColumn fx:id="bulletinTitle" minWidth="133" prefWidth="255.0" resizable="false" text="标题"/>
+                <JFXTreeTableColumn fx:id="bulletinDate" minWidth="68.0" prefWidth="84.0" resizable="false" text="日期"/>
               </columns>
             </JFXTreeTableView>
-            <Label fx:id="bulletinContent" layoutX="397.0" prefHeight="512.0" prefWidth="343.0" text="Label" />
+            <Pane layoutX="397.0" prefHeight="512.0" prefWidth="300.0">
+              <Label fx:id="bulletinContent" alignment="TOP_LEFT" layoutX="8.0" layoutY="113.0" prefHeight="398.0"
+                     prefWidth="328.0" wrapText="true"/>
+              <Label fx:id="bulletinTitle1" layoutX="56.0" layoutY="6.0" prefHeight="80.0" prefWidth="233.0"
+                     wrapText="true">
+                <font>
+                  <Font name="System Bold" size="16.0"/>
+                </font>
+              </Label>
+              <JFXButton fx:id="bulletAlertButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="295.0"
+                         layoutY="26.0" onAction="#addAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
+                         style="-fx-background-color: #2962ff;" text=" ">
+                <graphic>
+                  <MaterialIconView fill="WHITE" glyphName="ADD_ALERT" size="24" wrappingWidth="24.0"/>
+                </graphic>
+              </JFXButton>
+              <Label layoutX="9.0" layoutY="86.0" prefHeight="24.0" prefWidth="51.0" text="正文：">
+                <font>
+                  <Font name="System Bold" size="16.0"/>
+                </font>
+              </Label>
+              <Label layoutX="9.0" layoutY="35.0" text="标题：">
+                <font>
+                  <Font name="System Bold" size="16.0"/>
+                </font>
+              </Label>
+            </Pane>
           </AnchorPane>
         </Tab>
         <Tab text="课程文件">
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-            <JFXTreeTableView fx:id="fileTable" prefHeight="512.0" prefWidth="740.0">
+            <JFXTreeTableView fx:id="fileTable" prefHeight="512.0" prefWidth="440.0">
               <columns>
-                <JFXTreeTableColumn fx:id="fileCheck" minWidth="133" prefWidth="209.0" resizable="false" text="多选" />
-                <JFXTreeTableColumn fx:id="fileName" minWidth="133" prefWidth="209.0" resizable="false" text="名称" />
-                <JFXTreeTableColumn fx:id="fileDate" minWidth="77.0" prefWidth="92.0" resizable="false" text="日期" />
-                <JFXTreeTableColumn fx:id="fileSize" minWidth="29.0" prefWidth="98.0" resizable="false" text="大小" />
-                <JFXTreeTableColumn fx:id="fileRead" minWidth="29.0" prefWidth="98.0" resizable="false" text="已读？" />
+                <JFXTreeTableColumn fx:id="fileRead" minWidth="29.0" prefWidth="72.0" resizable="false"/>
+                <JFXTreeTableColumn fx:id="fileName" prefWidth="183.0" resizable="false" text="名称"/>
+                <JFXTreeTableColumn fx:id="fileDate" minWidth="0.0" prefWidth="109.0" resizable="false" text="日期"/>
+                <JFXTreeTableColumn fx:id="fileSize" minWidth="0.0" prefWidth="75.0" resizable="false" text="大小"/>
               </columns>
             </JFXTreeTableView>
+            <Pane layoutX="440.0" prefHeight="512.0" prefWidth="300.0">
+              <Label layoutX="14.0" layoutY="35.0" text="文件名：">
+                <font>
+                  <Font name="System Bold" size="16.0"/>
+                </font>
+              </Label>
+              <Label fx:id="fileDescription" alignment="TOP_LEFT" layoutX="8.0" layoutY="228.0" prefHeight="283.0"
+                     prefWidth="286.0" wrapText="true"/>
+              <Label layoutX="14.0" layoutY="197.0" prefHeight="24.0" prefWidth="51.0" text="描述：">
+                <font>
+                  <Font name="System Bold" size="16.0"/>
+                </font>
+              </Label>
+              <Label fx:id="fileName1" layoutX="78.0" layoutY="6.0" prefHeight="80.0" prefWidth="212.0" wrapText="true">
+                <font>
+                  <Font name="System Bold" size="16.0"/>
+                </font>
+              </Label>
+              <JFXButton fx:id="fileDownload" graphicTextGap="0.0" layoutX="15.0" layoutY="94.0" onAction="#addAlert"
+                         prefHeight="41.0" prefWidth="139.0" ripplerFill="#0039cb"
+                         style="-fx-background-color: #2962ff;" text="     文件下载" textFill="WHITE">
+                <graphic>
+                  <MaterialIconView fill="WHITE" glyphName="CLOUD_DOWNLOAD" size="24" wrappingWidth="24.0"/>
+                </graphic>
+                <font>
+                  <Font name="System Bold" size="14.0"/>
+                </font>
+              </JFXButton>
+              <JFXButton fx:id="batchDownload" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="14.0"
+                         layoutY="148.0" onAction="#addAlert" prefHeight="41.0" prefWidth="110.0" ripplerFill="#0039cb"
+                         style="-fx-background-color: #2962ff;" text="批量下载" textFill="WHITE">
+                <font>
+                  <Font name="System Bold" size="14.0"/>
+                </font>
+              </JFXButton>
+              <JFXToggleButton fx:id="separateByCourse" layoutX="142.0" layoutY="140.0" text="分课程目录下载"/>
+              <JFXToggleButton fx:id="removePostfix" layoutX="154.0" layoutY="86.0" text="去除随机后缀"/>
+            </Pane>
           </AnchorPane>
         </Tab>
         <Tab text="课程作业">
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-            <JFXTreeTableView fx:id="workTable" prefHeight="512.0" prefWidth="740.0">
+            <JFXTreeTableView fx:id="workTable" prefHeight="512.0" prefWidth="402.0">
               <columns>
-                <JFXTreeTableColumn fx:id="workName" minWidth="133" prefWidth="209.0" resizable="false" text="名称" />
-                <JFXTreeTableColumn fx:id="workDue" minWidth="77.0" prefWidth="92.0" resizable="false" text="截止日期" />
-                <JFXTreeTableColumn fx:id="workDone" minWidth="29.0" prefWidth="98.0" resizable="false" text="完成？" />
-                <!--<JFXTreeTableColumn fx:id="workAttachment" minWidth="29.0" prefWidth="98.0" resizable="false" text="附件" />-->
+                <JFXTreeTableColumn fx:id="workDone" minWidth="29.0" prefWidth="85.0" resizable="false"/>
+                <JFXTreeTableColumn fx:id="workName" minWidth="133" prefWidth="222.0" resizable="false" text="名称"/>
+                <JFXTreeTableColumn fx:id="workDue" minWidth="77.0" prefWidth="94.0" resizable="false" text="截止日期"/>
               </columns>
             </JFXTreeTableView>
+            <JFXTextArea fx:id="workRequirement" editable="false" labelFloat="true" layoutX="416.0" layoutY="17.0"
+                         prefHeight="152.0" prefWidth="316.0" promptText="作业要求"/>
+            <Label layoutX="416.0" layoutY="186.0" text="作业附件："/>
+            <Hyperlink fx:id="workRequirementAttachment" layoutX="485.0" layoutY="183.0" prefHeight="21.0" prefWidth="244.0" text="Hyperlink"/>
+            <JFXTextField fx:id="workAttachment" editable="false" labelFloat="true" layoutX="412.0" layoutY="474.0"
+                          prefHeight="23.0" prefWidth="229.0" promptText="上传作业附件"/>
+            <JFXTextArea fx:id="workContent" labelFloat="true" layoutX="412.0" layoutY="229.0" prefHeight="221.0"
+                         prefWidth="318.0" promptText="上交作业内容"/>
+            <JFXButton fx:id="workCommit" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="653.0" layoutY="465.0"
+                       onAction="#addAlert" prefHeight="36.0" prefWidth="77.0" ripplerFill="#0039cb"
+                       style="-fx-background-color: #2962ff;" text="提交" textFill="WHITE">
+              <font>
+                <Font name="System Bold" size="14.0"/>
+              </font>
+            </JFXButton>
           </AnchorPane>
         </Tab>
         <Tab text="课程讨论">
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
         </Tab>
       </JFXTabPane>
     </Pane>
     <Pane fx:id="loginPane" visible="false">
       <Pane layoutX="120.0" layoutY="155.0">
-        <JFXTextField fx:id="username" focusColor="#0039cb" labelFloat="true" layoutX="42.0" onAction="#login" promptText="用户名">
+        <JFXTextField fx:id="username" focusColor="#0039cb" labelFloat="true" layoutX="42.0" onAction="#login"
+                      promptText="用户名">
           <font>
-            <Font size="20.0" />
+            <Font size="20.0"/>
           </font>
         </JFXTextField>
-        <JFXPasswordField fx:id="password" focusColor="#0039cb" labelFloat="true" layoutX="42.0" layoutY="91.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" promptText="密码">
+        <JFXPasswordField fx:id="password" focusColor="#0039cb" labelFloat="true" layoutX="42.0" layoutY="91.0"
+                          onAction="#login" prefHeight="41.0" prefWidth="244.0" promptText="密码">
           <font>
-            <Font size="20.0" />
+            <Font size="20.0"/>
           </font>
         </JFXPasswordField>
-        <JFXButton fx:id="login" buttonType="RAISED" layoutX="42.0" layoutY="194.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" ripplerFill="#1e5dfc" style="-fx-background-color: #0039cb;" text="登录" textFill="WHITE">
+        <JFXButton fx:id="login" buttonType="RAISED" layoutX="42.0" layoutY="194.0" onAction="#login" prefHeight="41.0"
+                   prefWidth="244.0" ripplerFill="#1e5dfc" style="-fx-background-color: #0039cb;" text="登录"
+                   textFill="WHITE">
           <font>
-            <Font size="20.0" />
+            <Font size="20.0"/>
           </font>
         </JFXButton>
-        <MaterialIconView glyphName="PERSON" layoutY="37.0" size="32" />
-        <MaterialIconView glyphName="VPN_KEY" layoutY="128.0" size="32" />
+        <MaterialIconView glyphName="PERSON" layoutY="37.0" size="32"/>
+        <MaterialIconView glyphName="VPN_KEY" layoutY="128.0" size="32"/>
       </Pane>
       <VBox layoutX="564.0" layoutY="100.0" prefHeight="365.0" prefWidth="390.0" spacing="20.0">
         <Pane prefHeight="95.0" prefWidth="390.0">
-          <MaterialIconView glyphName="LOCK" layoutX="28.0" layoutY="70.0" size="36" />
+          <MaterialIconView glyphName="LOCK" layoutX="28.0" layoutY="70.0" size="36"/>
           <Label layoutX="95.0" layoutY="18.0" text="安全">
             <font>
-              <Font size="18.0" />
+              <Font size="18.0"/>
             </font>
           </Label>
-          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="信息仅在本机与网络学堂间传输，不经过任何第三方。" wrapText="true">
+          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="信息仅在本机与网络学堂间传输，不经过任何第三方。"
+                 wrapText="true">
             <font>
-              <Font size="15.0" />
+              <Font size="15.0"/>
             </font>
           </Label>
         </Pane>
         <Pane prefHeight="95.0" prefWidth="390.0">
-          <MaterialIconView glyphName="CHECK_CIRCLE" layoutX="28.0" layoutY="70.0" size="36" />
+          <MaterialIconView glyphName="CHECK_CIRCLE" layoutX="28.0" layoutY="70.0" size="36"/>
           <Label layoutX="95.0" layoutY="18.0" text="便捷">
             <font>
-              <Font size="18.0" />
+              <Font size="18.0"/>
             </font>
           </Label>
-          <Label layoutX="96.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="无需重复登录，操作简单快捷，轻松获取各类教学信息。" wrapText="true">
+          <Label layoutX="96.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="无需重复登录，操作简单快捷，轻松获取各类教学信息。"
+                 wrapText="true">
             <font>
-              <Font size="15.0" />
+              <Font size="15.0"/>
             </font>
           </Label>
         </Pane>
         <Pane prefHeight="95.0" prefWidth="390.0">
-          <MaterialIconView glyphName="TRENDING_UP" layoutX="28.0" layoutY="70.0" size="36" />
+          <MaterialIconView glyphName="TRENDING_UP" layoutX="28.0" layoutY="70.0" size="36"/>
           <Label layoutX="95.0" layoutY="18.0" text="高效">
             <font>
-              <Font size="18.0" />
+              <Font size="18.0"/>
             </font>
           </Label>
-          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="添加文件批量下载，通知聚合，消息提醒及DDL警示等功能，高效使用网络学堂。" wrapText="true">
+          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0"
+                 text="添加文件批量下载，通知聚合，消息提醒及DDL警示等功能，高效使用网络学堂。" wrapText="true">
             <font>
-              <Font size="15.0" />
+              <Font size="15.0"/>
             </font>
           </Label>
         </Pane>
@@ -169,10 +266,10 @@
       </Pane>
     </Pane>
   </StackPane>
-  <Pane fx:id="mask" layoutY="55.0" pickOnBounds="false" visible="false" />
-  <StackPane fx:id="flow" layoutY="55.0" pickOnBounds="false">
+  <Pane fx:id="mask" layoutY="55.0" pickOnBounds="false" visible="false"/>
+  <StackPane fx:id="flow" layoutY="55.0" pickOnBounds="false" visible="false">
     <StackPane fx:id="spinner" visible="false">
-      <JFXSpinner radius="30" />
+      <JFXSpinner radius="30"/>
     </StackPane>
   </StackPane>
 </Pane>

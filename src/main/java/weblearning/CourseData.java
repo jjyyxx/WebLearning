@@ -98,7 +98,7 @@ public class CourseData {
                 FileEntry[] fileEntries = new FileEntry[entries.size()];
                 for (int i = 0; i < entries.size(); i++) {
                     FileEntry fileEntry = FileEntry.from(entries.get(i));
-                    if (!fileEntry.isRead.get()) {
+                    if (!fileEntry.isRead.get().equals(FileEntry.TRUE)) {
                         fileEntry.isRead.addListener((o, oV, nV) -> unreadFiles.set(unreadFiles.get() - 1));
                     }
                     fileEntries[i] = fileEntry;
@@ -119,12 +119,16 @@ public class CourseData {
 
     public CompletableFuture<Operation[]> resolveOperations() {
         return client.getAsync(client.makeUrl(OPERATION, "course_id=" + id)).thenApply(document -> {
-            Elements entries = document.getElementById("table_box").nextElementSibling().child(0).children();
+            Element tableBox = document.getElementById("table_box");
+            if (tableBox == null) {
+                return new Operation[]{};
+            }
+            Elements entries = tableBox.nextElementSibling().child(0).children();
             entries.remove(entries.size() - 1);
             Operation[] operations = new Operation[entries.size()];
             for (int i = 0; i < entries.size(); i++) {
                 Operation operation = Operation.from(entries.get(i));
-                if (!operation.isHandedIn.get()) {
+                if (!operation.isHandedIn.get().equals(Operation.TRUE)) {
                     operation.isHandedIn.addListener((o, oV, nV) -> unsubmittedOperations.set(unsubmittedOperations.get() - 1));
                 }
                 operations[i] = operation;

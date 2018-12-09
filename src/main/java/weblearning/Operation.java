@@ -1,8 +1,6 @@
 package weblearning;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
@@ -13,6 +11,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +21,7 @@ import java.util.regex.Pattern;
 import static common.Util.*;
 
 public class Operation extends RecursiveTreeObject<Operation> {
+    public static final String TRUE = "已经提交";
     private static final String DETAIL = "MultiLanguage/lesson/student/hom_wk_detail.jsp";
     private static final String SUBMIT = "MultiLanguage/lesson/student/hom_wk_submit.jsp";
     private static final String REVIEW = "MultiLanguage/lesson/student/hom_wk_view.jsp";
@@ -37,7 +37,7 @@ public class Operation extends RecursiveTreeObject<Operation> {
     public final StringProperty title = new SimpleStringProperty();
     public final StringProperty effectiveDate = new SimpleStringProperty();
     public final StringProperty deadline = new SimpleStringProperty();
-    public final BooleanProperty isHandedIn = new SimpleBooleanProperty();
+    public final StringProperty isHandedIn = new SimpleStringProperty();
     public final StringProperty size = new SimpleStringProperty();
 
     private String submitArgs;
@@ -64,7 +64,7 @@ public class Operation extends RecursiveTreeObject<Operation> {
     private String remarkAttachmentName;
     private String remarkAttachmentArgs;
 
-    public Operation(String url, String title, String effectiveDate, String deadline, boolean isHandedIn, String size, String submitUrl, boolean submitDisabled, String reviewUrl, boolean reviewDisabled) {
+    public Operation(String url, String title, String effectiveDate, String deadline, String isHandedIn, String size, String submitUrl, boolean submitDisabled, String reviewUrl, boolean reviewDisabled) {
         this.args = getArg(url);
         this.title.set(title);
         this.effectiveDate.set(effectiveDate);
@@ -100,6 +100,10 @@ public class Operation extends RecursiveTreeObject<Operation> {
 
             detailsResolved = true;
         });
+    }
+
+    public CompletableFuture<Boolean> downloadRequirementAttachment(Path dir) {
+        return Endpoints.download(dir, DOWNLOAD, attachmentArgs);
     }
 
     public CompletableFuture<Void> submit(String content, File file) throws IllegalArgumentException {
@@ -138,7 +142,7 @@ public class Operation extends RecursiveTreeObject<Operation> {
                                 formBuilder.add("post_rec_homewk_detail", content).add("Submit", "提交").add("tj", "");
                                 return client.postRawAsync(client.makeUrl(HANDIN), formBuilder.build());
                             }).thenAccept(response -> {
-                                isHandedIn.set(true);
+                                isHandedIn.set(TRUE);
                                 response.close();
                             });
                 });
@@ -158,7 +162,7 @@ public class Operation extends RecursiveTreeObject<Operation> {
                     return client.postRawAsync(client.makeUrl(HANDIN), builder.build());
                 }).thenAccept(response -> {
                     response.close();
-                    isHandedIn.set(true);
+                    isHandedIn.set(TRUE);
                 });
     }
 
@@ -199,6 +203,26 @@ public class Operation extends RecursiveTreeObject<Operation> {
                 });
     }
 
+    public boolean isSubmitDisabled() {
+        return submitDisabled;
+    }
+
+    public boolean isReviewDisabled() {
+        return reviewDisabled;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getAttachmentName() {
+        return attachmentName;
+    }
+
+    public boolean isAttachmentExists() {
+        return attachmentExists;
+    }
+
     public static Operation from(Element entry) {
         Element link = entry.child(0).child(0);
         String href = link.attr("href");
@@ -213,6 +237,6 @@ public class Operation extends RecursiveTreeObject<Operation> {
         Element reviewLink = entry.child(5).child(1);
         String reviewUrl = reviewLink.attr("onclick");
         boolean reviewDisabled = isDisabled(reviewLink);
-        return new Operation(href, title, effectiveDate, deadline, state.equals("已经提交"), size, submitUrl, submitDisabled, reviewUrl, reviewDisabled);
+        return new Operation(href, title, effectiveDate, deadline, state, size, submitUrl, submitDisabled, reviewUrl, reviewDisabled);
     }
 }
