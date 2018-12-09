@@ -25,6 +25,7 @@ import platform.win.Imm32;
 import weblearning.*;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 
 import static weblearning.Endpoints.authenticate;
@@ -35,8 +36,8 @@ public class Controller implements Initializable {
     public JFXToggleButton removePostfix;
     public JFXButton batchDownload;
     public JFXButton fileDownload;
-    public Label fileName1;
-    public Label fileDescription;
+    public JFXTextField fileName1;
+    public JFXTextArea fileDescription;
 
     public JFXTextArea workRequirement;
     public Hyperlink workRequirementAttachment;
@@ -55,8 +56,8 @@ public class Controller implements Initializable {
     @FXML private JFXTreeTableColumn<FileEntry, String> fileDate;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileSize;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileRead;
-    @FXML private Label bulletinContent;
-    @FXML private Label bulletinTitle1;
+    @FXML private JFXTextArea bulletinContent;
+    @FXML private JFXTextField bulletinTitle1;
     @FXML private JFXButton bulletAlertButton;
     @FXML private JFXTreeTableView<Bulletin> bulletinTable;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinTitle;
@@ -163,6 +164,8 @@ public class Controller implements Initializable {
                 }
             }
         });
+        separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
+        removePostfix.selectedProperty().bindBidirectional(Settings.INSTANCE.removePostfix);
 
         // work
         workName.setCellValueFactory(p -> workName.validateValue(p) ? p.getValue().getValue().title : workName.getComputedValue(p));
@@ -172,6 +175,7 @@ public class Controller implements Initializable {
             if (dirtyUpdateFlag) return;
             if (nV == null) {
                 workRequirement.setText("");
+                workRequirementAttachment.setText("");
                 workRequirementAttachment.setDisable(true);
             } else {
                 RecursiveTreeObject value = nV.getValue();
@@ -182,9 +186,13 @@ public class Controller implements Initializable {
                             workRequirementAttachment.setText(nV.getValue().getAttachmentName());
                             workRequirementAttachment.setDisable(false);
                             workRequirementAttachment.setOnAction(actionEvent -> {
-                                // nV.getValue().downloadRequirementAttachment();
+                                Path path = Util.requestDir();
+                                if (path != null) {
+                                    nV.getValue().downloadRequirementAttachment(path);
+                                }
                             });
                         } else {
+                            workRequirementAttachment.setText("");
                             workRequirementAttachment.setDisable(true);
                         }
                     }));

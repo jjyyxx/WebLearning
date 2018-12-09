@@ -16,6 +16,8 @@ public class SettingPane extends Pane {
     public JFXToggleButton autologin;
     public JFXToggleButton autostart;
     public JFXButton closeButton;
+    public JFXToggleButton separateByCourse;
+    public JFXToggleButton removePostfix;
     // TODO: associate it with preference
 
     public SettingPane(EventHandler<ActionEvent> closeHandler) {
@@ -32,5 +34,7 @@ public class SettingPane extends Pane {
         autostart.setSelected(Settings.INSTANCE.autostart.get());
         Settings.INSTANCE.autologin.bind(autologin.selectedProperty());
         Settings.INSTANCE.autostart.bind(autostart.selectedProperty());
+        separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
+        removePostfix.selectedProperty().bindBidirectional(Settings.INSTANCE.removePostfix);
     }
 }
