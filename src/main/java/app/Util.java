@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -17,18 +18,33 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 public class Util {
-    static Path requestDir() {
+    static Path requestDir(Path initialDir) {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("选择目标文件夹");
+        if (initialDir != null) {
+            chooser.setInitialDirectory(initialDir.toFile());
+        }
         File file = chooser.showDialog(App.stage);
         return file == null ? null : file.toPath();
     }
 
-    static Path requestDir(Path initialDir) {
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("选择目标文件夹");
-        chooser.setInitialDirectory(initialDir.toFile());
-        File file = chooser.showDialog(App.stage);
+    static Path requestOpenFile(Path initialDir) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("选择打开的文件");
+        if (initialDir != null) {
+            chooser.setInitialDirectory(initialDir.toFile());
+        }
+        File file = chooser.showOpenDialog(App.stage);
+        return file == null ? null : file.toPath();
+    }
+
+    static Path requestSaveFile(Path initialDir) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("选择保存的文件");
+        if (initialDir != null) {
+            chooser.setInitialDirectory(initialDir.toFile());
+        }
+        File file = chooser.showSaveDialog(App.stage);
         return file == null ? null : file.toPath();
     }
 

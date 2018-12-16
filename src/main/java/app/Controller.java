@@ -4,6 +4,7 @@ import app.controls.CourseItem;
 import app.controls.InformationPane;
 import app.controls.QuickButtonList;
 import app.controls.SettingPane;
+import background.DownloadManager;
 import background.Notification;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -25,8 +26,11 @@ import javafx.stage.Stage;
 import platform.win.Imm32;
 import weblearning.*;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static weblearning.Endpoints.authenticate;
@@ -45,6 +49,8 @@ public class Controller implements Initializable {
     public JFXTextArea workContent;
     public JFXTextField workAttachment;
     public JFXButton workCommit;
+    public JFXTextField workName1;
+    public JFXButton workAlert;
 
     @FXML private InformationPane courseInfo;
     @FXML private ScrollPane courseListScrollPane;
@@ -59,7 +65,7 @@ public class Controller implements Initializable {
     @FXML private JFXTreeTableColumn<FileEntry, String> fileRead;
     @FXML private JFXTextArea bulletinContent;
     @FXML private JFXTextField bulletinTitle1;
-    @FXML private JFXButton bulletAlertButton;
+    @FXML private JFXButton bulletinAlertButton;
     @FXML private JFXTreeTableView<Bulletin> bulletinTable;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinTitle;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinDate;
@@ -83,6 +89,7 @@ public class Controller implements Initializable {
     @FXML private JFXPasswordField password;
     @FXML private JFXButton login;
     private boolean dirtyUpdateFlag = false;
+    private boolean choosingFile = false;
 
     @FXML private void close(ActionEvent event) {
         stage.close();
@@ -135,21 +142,19 @@ public class Controller implements Initializable {
         bulletinTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
             if (dirtyUpdateFlag) return;
             if (nV == null) {
-                bulletinContent.setText("");
-                bulletinTitle1.setText("");
-                bulletAlertButton.setDisable(true);
+                stateSwitch(0, true);
             } else {
-                RecursiveTreeObject value = nV.getValue();
-                if (value instanceof Bulletin) {
-                    bulletinTitle1.setText(nV.getValue().name.get());
-                    nV.getValue().resolveContent().thenAccept(stringProperty -> Platform.runLater(() -> bulletinContent.setText(stringProperty.get())));
-                    bulletAlertButton.setDisable(false);
-                    bulletAlertButton.setOnAction(actionEvent -> {
-                        Util.requestTime(main, date -> Notification.addNotification(nV.getValue().name.get(), nV.getValue().content.get(), date));
-                    });
+                if (nV.getValue() instanceof Bulletin) {
+                    Bulletin value = nV.getValue();
+                    stateSwitch(0, false);
+                    bulletinTitle1.setText(value.name.get());
+                    value.resolveContent().thenAccept(stringProperty -> Platform.runLater(() -> bulletinContent.setText(stringProperty.get())));
+                } else {
+                    stateSwitch(0, true);
                 }
             }
         });
+        stateSwitch(0, true);
 
         // file
         fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -160,16 +165,19 @@ public class Controller implements Initializable {
         fileTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
             if (dirtyUpdateFlag) return;
             if (nV == null) {
-                fileDescription.setText("");
-                fileName.setText("");
+                stateSwitch(1, true);
             } else {
-                RecursiveTreeObject value = nV.getValue();
-                if (value instanceof FileEntry) {
-                    fileName1.setText(nV.getValue().title.get());
-                    fileDescription.setText(nV.getValue().description.get());
+                if (nV.getValue() instanceof FileEntry) {
+                    FileEntry value = nV.getValue();
+                    stateSwitch(1, false);
+                    fileName1.setText(value.title.get());
+                    fileDescription.setText(value.description.get());
+                } else {
+                    stateSwitch(1, true);
                 }
             }
         });
+        stateSwitch(1, true);
         separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
         removePostfix.selectedProperty().bindBidirectional(Settings.INSTANCE.removePostfix);
 
@@ -180,39 +188,49 @@ public class Controller implements Initializable {
         workTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
             if (dirtyUpdateFlag) return;
             if (nV == null) {
-                workRequirement.setText("");
-                workRequirementAttachment.setText("");
-                workRequirementAttachment.setDisable(true);
+                stateSwitch(2, true);
             } else {
-                RecursiveTreeObject value = nV.getValue();
-                if (value instanceof Operation) {
-                    nV.getValue().resolveDetail().thenAccept(aVoid -> Platform.runLater(() -> {
-                        workRequirement.setText(nV.getValue().getDescription());
-                        if (nV.getValue().isAttachmentExists()) {
-                            workRequirementAttachment.setText(nV.getValue().getAttachmentName());
+                if (nV.getValue() instanceof Operation) {
+                    Operation value = nV.getValue();
+                    stateSwitch(2, false);
+                    workName1.setText(value.title.get());
+                    try {
+                        workCommit.setDisable(new SimpleDateFormat("yyyy-MM-dd").parse(value.deadline.get()).compareTo(new Date()) < 0);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    value.resolveDetail().thenAccept(aVoid -> Platform.runLater(() -> {
+                        workRequirement.setText(value.getDescription());
+                        if (value.isAttachmentExists()) {
+                            workRequirementAttachment.setText(value.getAttachmentName());
                             workRequirementAttachment.setDisable(false);
-                            workRequirementAttachment.setOnAction(actionEvent -> {
-                                Path path = Util.requestDir();
-                                if (path != null) {
-                                    nV.getValue().downloadRequirementAttachment(path);
-                                }
-                            });
                         } else {
                             workRequirementAttachment.setText("");
                             workRequirementAttachment.setDisable(true);
                         }
                     }));
+                } else {
+                    stateSwitch(2, true);
                 }
+            }
+        });
+        stateSwitch(2, true);
+        workCommit.setDisable(true);
+        workAttachment.setEditable(false);
+        workAttachment.focusedProperty().addListener((o, oV, nV) -> {
+            if (nV && !choosingFile) {
+                choosingFile = true;
+                workAttachment.setText("");
+                Path file = Util.requestOpenFile(null);
+                if (file != null) {
+                    workAttachment.setText(file.toString());
+                }
+                choosingFile = false;
+                workCommit.requestFocus();
             }
         });
 
         JFXScrollPane.smoothScrolling(courseListScrollPane);
-
-        try {
-            Class.forName("weblearning.Endpoints");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
         password.focusedProperty().addListener((observable, oldValue, newValue) -> Imm32.set(newValue));
         if (Settings.INSTANCE.autologin.get()) {
@@ -314,7 +332,6 @@ public class Controller implements Initializable {
             e.printStackTrace();
             return null;
         });
-
         Platform.runLater(() -> {
             snackBar.show("登录成功！", "success", 3000);
             switchPane(coursePane);
@@ -347,6 +364,64 @@ public class Controller implements Initializable {
         setting.show(main);
     }
 
-    @FXML public void addAlert(ActionEvent actionEvent) {
+    @FXML public void addBulletinAlert(ActionEvent actionEvent) {
+        Bulletin currentBulletin = bulletinTable.getSelectionModel().getSelectedItem().getValue();
+        Util.requestTime(main, date -> Notification.addNotification(currentBulletin.name.get(), currentBulletin.content.get(), date));
+    }
+
+    public void addWorkAlert(ActionEvent actionEvent) {
+        Operation currentOperation = workTable.getSelectionModel().getSelectedItem().getValue();
+        Util.requestTime(main, date -> Notification.addNotification(currentOperation.title.get(), "", date));
+    }
+
+    public void download(ActionEvent event) {
+        TreeItem<FileEntry> selectedItem = fileTable.getSelectionModel().getSelectedItem();
+        FileEntry entry = selectedItem.getValue();
+        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get(), entry);
+    }
+
+    public void batchDownload(ActionEvent event) {
+        ObservableList<TreeItem<FileEntry>> selectedItems = fileTable.getSelectionModel().getSelectedItems();
+        FileEntry[] entries = new FileEntry[selectedItems.size()];
+        for (int i = 0; i < entries.length; i++) {
+            entries[i] = selectedItems.get(i).getValue();
+        }
+        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get(), entries);
+    }
+
+    public void commit(ActionEvent event) {
+        String file = workAttachment.getText();
+        String text = workContent.getText();
+        Operation operation = workTable.getSelectionModel().getSelectedItem().getValue();
+        (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file))).thenAccept(aVoid -> Platform.runLater(() -> snackBar.show("提交成功！", "success", 3000)));
+    }
+
+    public void attachmentDownload(ActionEvent event) {
+        Path path = Util.requestDir(null);
+        if (path != null) {
+            workTable.getSelectionModel().getSelectedItem().getValue().downloadRequirementAttachment(path);
+        }
+    }
+
+    private void stateSwitch(int type, boolean state) {
+        switch (type) {
+            case 0:
+                bulletinContent.setText("");
+                bulletinTitle1.setText("");
+                bulletinAlertButton.setDisable(state);
+                break;
+            case 1:
+                fileDescription.setText("");
+                fileName1.setText("");
+                fileDownload.setDisable(state);
+                batchDownload.setDisable(state);
+                break;
+            case 2:
+                workName1.setText("");
+                workRequirement.setText("");
+                workRequirementAttachment.setText("");
+                workAlert.setDisable(state);
+                break;
+        }
     }
 }
