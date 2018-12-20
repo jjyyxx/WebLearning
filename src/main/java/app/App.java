@@ -4,11 +4,12 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class App extends Application {
-    public static Stage stage;
+    static Stage stage;
     private static final String TITLE = "网络学堂";
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
@@ -16,6 +17,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         App.stage = stage;
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/icon.png")));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(TITLE);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("app.fxml"));

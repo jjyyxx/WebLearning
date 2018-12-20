@@ -1,8 +1,6 @@
 package app;
 
 import app.controls.CourseItem;
-import app.controls.InformationPane;
-import app.controls.QuickButtonList;
 import app.controls.SettingPane;
 import background.DownloadManager;
 import background.Notification;
@@ -51,8 +49,9 @@ public class Controller implements Initializable {
     public JFXButton workCommit;
     public JFXTextField workName1;
     public JFXButton workAlert;
+    public JFXButton refreshButton;
+    public JFXButton openInBrowserButton;
 
-    @FXML private InformationPane courseInfo;
     @FXML private ScrollPane courseListScrollPane;
     @FXML private JFXTreeTableView<Operation> workTable;
     @FXML private JFXTreeTableColumn<Operation, String> workName;
@@ -80,7 +79,6 @@ public class Controller implements Initializable {
     @FXML private StackPane main;
     @FXML private Pane loginPane;
     @FXML private Pane coursePane;
-    @FXML private QuickButtonList nodesList;
     @FXML private Pane mask;
     @FXML private StackPane spinner;
     @FXML private JFXListView<CourseItem> courseList;
@@ -254,12 +252,7 @@ public class Controller implements Initializable {
             }
 
             courseList.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
-                // info TODO: remove comment
-                // newValue.courseData.resolveInformation().thenAccept(courseInfo::setInformation);
-
                 // bulletin
-                // bulletinContent.setText("");
-                // bulletinTitle1.setText("");
                 newValue.courseData.resolveBulletins().thenAccept(bulletins -> Platform.runLater(() -> {
                     dirtyUpdateFlag = true;
                     bulletinTable.unGroup(bulletinRead);
@@ -423,5 +416,21 @@ public class Controller implements Initializable {
                 workAlert.setDisable(state);
                 break;
         }
+    }
+
+    public void openBrowser(ActionEvent event) {
+
+    }
+
+    public void refresh(ActionEvent event) {
+
+    }
+
+    public void openProfile(ActionEvent event) {
+
+    }
+
+    public void openInbox(ActionEvent event) {
+
     }
 }

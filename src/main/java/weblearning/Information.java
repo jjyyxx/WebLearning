@@ -2,10 +2,9 @@ package weblearning;
 
 import org.jsoup.nodes.Element;
 
-import java.io.Serializable;
 import java.util.function.BiFunction;
 
-public class Information implements Serializable {
+public class Information {
     public String number;
     public String index;
     public String name;

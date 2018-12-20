@@ -23,8 +23,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<!--<?import app.controls.InformationPane?>-->
-
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="600.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/10.0.1"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
@@ -39,26 +37,40 @@
       </Label>
     </left>
     <right>
-      <Pane prefHeight="55.0" prefWidth="194.0" BorderPane.alignment="CENTER">
-        <JFXButton fx:id="closeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="149.0" layoutY="8.0"
-                   onAction="#close" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                   style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+      <Pane prefHeight="55.0" prefWidth="214.0" BorderPane.alignment="CENTER">
+        <JFXButton fx:id="closeButton" contentDisplay="GRAPHIC_ONLY" layoutX="165.0" layoutY="8.0" onAction="#close"
+                   prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;"
+                   styleClass="round-button">
           <graphic>
             <MaterialIconView fill="WHITE" glyphName="CLOSE" size="24" wrappingWidth="24.0"/>
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="minimizeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="108.0" layoutY="8.0"
+        <JFXButton fx:id="minimizeButton" contentDisplay="GRAPHIC_ONLY" layoutX="132.0" layoutY="8.0"
                    onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                   style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+                   style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
             <MaterialIconView fill="WHITE" glyphName="REMOVE" size="24" wrappingWidth="24.0"/>
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="settingButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="67.0" layoutY="8.0"
+        <JFXButton fx:id="settingButton" contentDisplay="GRAPHIC_ONLY" layoutX="98.0" layoutY="8.0"
                    onAction="#openSetting" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                   style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
+                   style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
             <MaterialIconView fill="WHITE" glyphName="SETTINGS" size="24" wrappingWidth="24.0"/>
+          </graphic>
+        </JFXButton>
+        <JFXButton fx:id="profileButton" contentDisplay="GRAPHIC_ONLY" layoutX="61.0" layoutY="9.0"
+                   onAction="#openProfile" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
+                   style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+          <graphic>
+            <MaterialIconView fill="WHITE" glyphName="PERSON" size="24" wrappingWidth="24.0"/>
+          </graphic>
+        </JFXButton>
+        <JFXButton fx:id="inboxButton" contentDisplay="GRAPHIC_ONLY" layoutX="20.0" layoutY="9.0" onAction="#openInbox"
+                   prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;"
+                   styleClass="round-button">
+          <graphic>
+            <MaterialIconView fill="WHITE" glyphName="INBOX" layoutX="28.0" layoutY="70.0" size="24"/>
           </graphic>
         </JFXButton>
       </Pane>
@@ -70,11 +82,6 @@
         <JFXListView fx:id="courseList" minHeight="545.0" minWidth="260.0" prefHeight="2000" prefWidth="260.0"/>
       </ScrollPane>
       <JFXTabPane layoutX="260.0" prefHeight="545.0" prefWidth="740.0" tabClosingPolicy="UNAVAILABLE">
-        <Tab text="课程信息">
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-            <!--<InformationPane fx:id="courseInfo" prefHeight="221.0" prefWidth="305.0" text="Label" />-->
-          </AnchorPane>
-        </Tab>
         <Tab text="课程公告">
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <JFXTreeTableView fx:id="bulletinTable" prefHeight="512.0" prefWidth="398.0">
@@ -85,9 +92,9 @@
               </columns>
             </JFXTreeTableView>
             <Pane layoutX="397.0" prefHeight="512.0" prefWidth="344.0">
-              <JFXButton fx:id="bulletinAlertButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="295.0"
-                         layoutY="26.0" onAction="#addBulletinAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                         style="-fx-background-color: #2962ff;" text=" ">
+              <JFXButton fx:id="bulletinAlertButton" contentDisplay="GRAPHIC_ONLY" layoutX="295.0" layoutY="26.0"
+                         onAction="#addBulletinAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
+                         style="-fx-background-color: #2962ff;">
                 <graphic>
                   <MaterialIconView fill="WHITE" glyphName="ADD_ALERT" size="24" wrappingWidth="24.0"/>
                 </graphic>
@@ -110,9 +117,9 @@
               </columns>
             </JFXTreeTableView>
             <Pane layoutX="440.0" prefHeight="512.0" prefWidth="300.0">
-              <JFXButton fx:id="fileDownload" graphicTextGap="0.0" layoutX="14.0" layoutY="74.0" onAction="#download"
-                         prefHeight="41.0" prefWidth="139.0" ripplerFill="#0039cb"
-                         style="-fx-background-color: #2962ff;" text="     文件下载" textFill="WHITE">
+              <JFXButton fx:id="fileDownload" layoutX="14.0" layoutY="74.0" onAction="#download" prefHeight="41.0"
+                         prefWidth="139.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="     文件下载"
+                         textFill="WHITE">
                 <graphic>
                   <MaterialIconView fill="WHITE" glyphName="CLOUD_DOWNLOAD" size="24" wrappingWidth="24.0"/>
                 </graphic>
@@ -120,9 +127,9 @@
                   <Font name="System Bold" size="14.0"/>
                 </font>
               </JFXButton>
-              <JFXButton fx:id="batchDownload" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="14.0"
-                         layoutY="128.0" onAction="#batchDownload" prefHeight="41.0" prefWidth="110.0"
-                         ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="批量下载" textFill="WHITE">
+              <JFXButton fx:id="batchDownload" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="128.0"
+                         onAction="#batchDownload" prefHeight="41.0" prefWidth="110.0" ripplerFill="#0039cb"
+                         style="-fx-background-color: #2962ff;" text="批量下载" textFill="WHITE">
                 <font>
                   <Font name="System Bold" size="14.0"/>
                 </font>
@@ -152,7 +159,7 @@
                           prefHeight="23.0" prefWidth="229.0" promptText="上传作业附件"/>
             <JFXTextArea fx:id="workContent" labelFloat="true" layoutX="412.0" layoutY="246.0" prefHeight="204.0"
                          prefWidth="318.0" promptText="上交作业内容"/>
-            <JFXButton fx:id="workCommit" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="653.0" layoutY="465.0"
+            <JFXButton fx:id="workCommit" contentDisplay="GRAPHIC_ONLY" layoutX="653.0" layoutY="465.0"
                        onAction="#commit" prefHeight="36.0" prefWidth="77.0" ripplerFill="#0039cb"
                        style="-fx-background-color: #2962ff;" text="提交" textFill="WHITE">
               <font>
@@ -163,9 +170,9 @@
                        onAction="#attachmentDownload" prefHeight="21.0" prefWidth="244.0" text="无附件"/>
             <JFXTextField fx:id="workName1" labelFloat="true" layoutX="416.0" layoutY="15.0" prefHeight="23.0"
                           prefWidth="260.0" promptText="作业标题"/>
-            <JFXButton fx:id="workAlert" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="689.0" layoutY="7.0"
+            <JFXButton fx:id="workAlert" contentDisplay="GRAPHIC_ONLY" layoutX="689.0" layoutY="7.0"
                        onAction="#addWorkAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                       style="-fx-background-color: #2962ff;" text=" ">
+                       style="-fx-background-color: #2962ff;">
               <graphic>
                 <MaterialIconView fill="WHITE" glyphName="ADD_ALERT" size="24" wrappingWidth="24.0"/>
               </graphic>
@@ -173,6 +180,19 @@
           </AnchorPane>
         </Tab>
       </JFXTabPane>
+      <JFXButton fx:id="refreshButton" contentDisplay="GRAPHIC_ONLY" layoutX="962.0" layoutY="2.0" onAction="#refresh"
+                 prefHeight="30.0" prefWidth="7.0" style="-jfx-disable-visual-focus: true;">
+        <graphic>
+          <MaterialIconView fill="WHITE" glyphName="REFRESH" size="20"/>
+        </graphic>
+      </JFXButton>
+      <JFXButton fx:id="openInBrowserButton" contentDisplay="GRAPHIC_ONLY" layoutX="926.0" layoutY="2.0"
+                 onAction="#openBrowser" prefHeight="30.0" prefWidth="32.0" style="-jfx-disable-visual-focus: true;"
+      >
+        <graphic>
+          <MaterialIconView fill="WHITE" glyphName="OPEN_IN_BROWSER" size="20"/>
+        </graphic>
+      </JFXButton>
     </Pane>
     <Pane fx:id="loginPane" visible="false">
       <Pane layoutX="120.0" layoutY="155.0">

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class CourseItem extends Pane {
-    private static final URL fxml = QuickButtonList.class.getResource("/app/controls/CourseItem.fxml");
+    private static final URL fxml = CourseItem.class.getResource("/app/controls/CourseItem.fxml");
     @FXML private Label name;
     @FXML private JFXBadge announcement;
     @FXML private JFXBadge file;
