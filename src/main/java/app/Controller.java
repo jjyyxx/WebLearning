@@ -45,7 +45,7 @@ public class Controller implements Initializable {
 
     private static final double ITEM_HEIGHT = 68.125;
     public JFXToggleButton separateByCourse;
-    public JFXToggleButton removePostfix;
+    public JFXButton fileOpen;
     public JFXButton batchDownload;
     public JFXButton fileDownload;
     public JFXTextField fileName1;
@@ -100,6 +100,8 @@ public class Controller implements Initializable {
     private boolean choosingFile = false;
     private JFXTreeTableView currentTable;
 
+    private List<Path> tempPaths = new ArrayList<>();
+
     @FXML private void close(ActionEvent event) {
         stage.close();
         System.exit(0);
@@ -138,6 +140,14 @@ public class Controller implements Initializable {
     }
 
     @Override public void initialize(URL location, ResourceBundle resources) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                for (Path tempPath : tempPaths) {
+                    Files.deleteIfExists(tempPath);
+                }
+            } catch (IOException ignored) {}
+        }));
+
         snackBar = new JFXSnackbar(root);
 
         ObservableList<Node> children = main.getChildren();
@@ -203,7 +213,6 @@ public class Controller implements Initializable {
         });
         stateSwitch(1, true);
         separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
-        removePostfix.selectedProperty().bindBidirectional(Settings.INSTANCE.removePostfix);
 
         // work
         workName.setCellValueFactory(p -> workName.validateValue(p) ? p.getValue().getValue().title : workName.getComputedValue(p));
@@ -386,19 +395,28 @@ public class Controller implements Initializable {
         Util.requestTime(main, date -> Notification.addNotification(currentOperation.title.get(), "", date));
     }
 
-    public void download(ActionEvent event) {
-        TreeItem<FileEntry> selectedItem = fileTable.getSelectionModel().getSelectedItem();
-        FileEntry entry = selectedItem.getValue();
-        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get().courseData, entry);
+    public void download(boolean batch, boolean open) {
+        FileEntry[] entries;
+        if (batch) {
+            ObservableList<TreeItem<FileEntry>> selectedItems = fileTable.getSelectionModel().getSelectedItems();
+            entries = new FileEntry[selectedItems.size()];
+            for (int i = 0; i < entries.length; i++) {
+                entries[i] = selectedItems.get(i).getValue();
+            }
+        } else {
+            TreeItem<FileEntry> selectedItem = fileTable.getSelectionModel().getSelectedItem();
+            entries = new FileEntry[]{ selectedItem.getValue() };
+        }
+        CourseData courseData = courseList.getSelectionModel().selectedItemProperty().get().courseData;
+        DownloadManager.enqueue(courseData, entries, open);
+    }
+
+    public void fileDownload(ActionEvent event) {
+        download(false, false);
     }
 
     public void batchDownload(ActionEvent event) {
-        ObservableList<TreeItem<FileEntry>> selectedItems = fileTable.getSelectionModel().getSelectedItems();
-        FileEntry[] entries = new FileEntry[selectedItems.size()];
-        for (int i = 0; i < entries.length; i++) {
-            entries[i] = selectedItems.get(i).getValue();
-        }
-        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get().courseData, entries);
+        download(true, false);
     }
 
     public void commit(ActionEvent event) {
@@ -427,6 +445,7 @@ public class Controller implements Initializable {
                 fileName1.setText("");
                 fileDownload.setDisable(state);
                 batchDownload.setDisable(state);
+                fileOpen.setDisable(state);
                 break;
             case 2:
                 workName1.setText("");
@@ -454,6 +473,7 @@ public class Controller implements Initializable {
                     .replace("PASS", DataStore.getDecrypt("password", ""))
                     .replace("URL", url);
             Path tempFile = Files.createTempFile(null, ".html");
+            tempPaths.add(tempFile);
             Files.write(tempFile, content.getBytes(StandardCharsets.UTF_8));
             Desktop.getDesktop().browse(tempFile.toUri());
         } catch (IOException e) {
@@ -477,5 +497,9 @@ public class Controller implements Initializable {
         JFXDialog setting = new JFXDialog();
         setting.setContent(new SettingPane(t -> setting.close()));
         setting.show(main);
+    }
+
+    public void fileOpen(ActionEvent event) {
+        download(false, true);
     }
 }

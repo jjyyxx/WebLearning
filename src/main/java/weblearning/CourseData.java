@@ -5,8 +5,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -20,7 +18,7 @@ public class CourseData {
     private static final Pattern courseNamePattern = Pattern.compile("^(.*)\\((.+)\\)$");
 
     private static final String BULLETIN = "MultiLanguage/public/bbs/getnoteid_student.jsp";
-    private static final String INFOMATION = "MultiLanguage/lesson/student/course_info.jsp";
+    private static final String INFORMATION = "MultiLanguage/lesson/student/course_info.jsp";
     private static final String FILE = "MultiLanguage/lesson/student/download.jsp";
     private static final String RESOURCE = "MultiLanguage/lesson/student/ware_list.jsp";
     private static final String OPERATION = "MultiLanguage/lesson/student/hom_wk_brw.jsp";
@@ -30,13 +28,9 @@ public class CourseData {
 
 
     private static final Client client = Client.getInstance();
-    //TODO:gai diao
-    public static Path defaultDir = Paths.get("D:/desktop/test");
 
     private String id;
     private String name;
-    //TODO:gai diao
-    private Path lastDir = Paths.get("D:/desktop/test");
 
     private boolean isNewVer;
     private SemesterData semester;
@@ -69,16 +63,6 @@ public class CourseData {
         }
     }
 
-    public void setLastDir(Path lastDir)
-    {
-        this.lastDir = lastDir;
-    }
-
-    public Path getLastDir()
-    {
-        return lastDir;
-    }
-
     public CompletableFuture<Bulletin[]> resolveBulletins() {
         return client.getAsync(client.makeUrl(BULLETIN, "course_id=" + id)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box");
@@ -99,7 +83,7 @@ public class CourseData {
     }
 
     public CompletableFuture<Information> resolveInformation() {
-        return client.getAsync(client.makeUrl(INFOMATION, "course_id=" + id)).thenApply(document -> {
+        return client.getAsync(client.makeUrl(INFORMATION, "course_id=" + id)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box").child(0);
             return Information.from(tableBox);
         });

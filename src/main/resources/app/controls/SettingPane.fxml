@@ -10,7 +10,6 @@
   <JFXToggleButton fx:id="autologin" layoutX="127.0" layoutY="30.0" text="                           自动登录" />
   <JFXToggleButton fx:id="autostart" layoutX="127.0" layoutY="88.0" text="                           开机自启" />
   <JFXToggleButton fx:id="separateByCourse" layoutX="127.0" layoutY="146.0" text="                 分课程目录下载" />
-  <JFXToggleButton fx:id="removePostfix" layoutX="127.0" layoutY="204.0" text="                    去除随机后缀" />
   <JFXButton fx:id="closeButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="426.0" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button" text=" ">
     <graphic>
       <MaterialIconView glyphName="CLOSE" size="24" wrappingWidth="24.0">

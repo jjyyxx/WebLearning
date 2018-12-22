@@ -17,8 +17,6 @@ public class SettingPane extends Pane {
     public JFXToggleButton autostart;
     public JFXButton closeButton;
     public JFXToggleButton separateByCourse;
-    public JFXToggleButton removePostfix;
-    // TODO: associate it with preference
 
     public SettingPane(EventHandler<ActionEvent> closeHandler) {
         FXMLLoader fxmlLoader = new FXMLLoader(fxml);
@@ -35,6 +33,5 @@ public class SettingPane extends Pane {
         Settings.INSTANCE.autologin.bind(autologin.selectedProperty());
         Settings.INSTANCE.autostart.bind(autostart.selectedProperty());
         separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
-        removePostfix.selectedProperty().bindBidirectional(Settings.INSTANCE.removePostfix);
     }
 }

@@ -6,7 +6,9 @@ import weblearning.Client;
 import weblearning.CourseData;
 import weblearning.FileEntry;
 
+import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -14,72 +16,70 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DownloadManager {
+    static class DownloadInfo {
+        private final InputStream inputStream;
+        private final Path dir;
+        private final String name;
+        private final String ext;
+        private final Path path;
+
+        public DownloadInfo(Path dir, String name, String ext, InputStream inputStream) {
+            this.dir = dir;
+            this.name = name;
+            this.ext = ext;
+            this.inputStream = inputStream;
+            this.path = getUnexistPath();
+        }
+
+        public Path getUnexistPath() {
+            Path path = dir.resolve(name + ext);
+            int x = 0;
+            while (Files.exists(path)) {
+                path = dir.resolve(name + "(" + ++x + ")" + ext);
+            }
+            return path;
+        }
+    }
 
     private static final Client client = Client.getInstance();
-    private static final Pattern filenamePattern = Pattern.compile("filename=\"([^\"]*)\"$");
+    private static final Pattern filenamePattern = Pattern.compile("filename=\".*(\\.\\w+)\"$");
 
-
-    public static CompletableFuture<Boolean> download(Path dir, HttpUrl url, String filename) {
+    public static CompletableFuture<DownloadInfo> download(Path dir, HttpUrl url, String filename) {
         return client.getRawAsync(url).thenApply(response -> {
             String contentDisposition = response.header("Content-Disposition");
             Matcher matcher = filenamePattern.matcher(contentDisposition);
             matcher.find();
-            String[] preparaionSuffix = matcher.group(1).split("\\.");
-            String suffix = preparaionSuffix[preparaionSuffix.length-1];
-
-            try {
-                Files.copy(response.body().byteStream(), dir.resolve(filename+"."+suffix));
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
+            String suffix = matcher.group(1);
+            return new DownloadInfo(dir, filename, suffix, response.body().byteStream());
         });
     }
 
-    public static void enqueue(CourseData courseData, FileEntry entry) {
-        Path saveDir = getPath(courseData);
-        if (saveDir == null)
-        {
-            return;
-        }
-        download(saveDir,entry.getURL(),entry.title.get());
-
-    }
-
-    public static void enqueue(CourseData courseData, FileEntry[] entries) {
-        Path saveDir = getPath(courseData);
-        if (saveDir == null)
-        {
-            return;
-        }
-        for(FileEntry entry:entries)
-        {
-            download(saveDir,entry.getURL(),entry.title.get());
-
-        }
-    }
-
-    private static Path getPath(CourseData courseData)
-    {
+    public static void enqueue(CourseData courseData, FileEntry[] entries, boolean open) {
         Path saveDir;
-        if(Settings.INSTANCE.separateByCourse.get())
-        {
-            saveDir = app.Util.requestDir(courseData.getLastDir());
-            if (saveDir == null)
-            {
-                return null;
+        if (Settings.INSTANCE.separateByCourse.get()) {
+            saveDir = app.Util.requestDir(Settings.INSTANCE.coursePathMap.get(courseData.getName()));
+            if (saveDir == null) {
+                return;
             }
-            courseData.setLastDir(saveDir);
-        }
-        else
-        {
-            saveDir = app.Util.requestDir(CourseData.defaultDir);
-            if (saveDir == null)
-            {
-                return null;
+            Settings.INSTANCE.coursePathMap.put(courseData.getName(), saveDir);
+        } else {
+            saveDir = app.Util.requestDir(Settings.INSTANCE.coursePathMap.get("DEFAULT"));
+            if (saveDir == null) {
+                return;
             }
-            CourseData.defaultDir=saveDir;
+            Settings.INSTANCE.coursePathMap.put("DEFAULT", saveDir);
         }
-        return saveDir;
+        for (FileEntry entry : entries) {
+            download(saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
+                try {
+                    Files.copy(downloadInfo.inputStream, downloadInfo.path);
+                    if (open) {
+                        Desktop.getDesktop().open(downloadInfo.path.toFile());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 }
