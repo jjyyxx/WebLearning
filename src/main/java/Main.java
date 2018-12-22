@@ -1,5 +1,4 @@
-import app.App;
-import javafx.application.Platform;
+import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,6 +8,6 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        Platform.startup(App::launch);
+        Application.launch(app.App.class);
     }
 }

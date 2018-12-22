@@ -1,15 +1,17 @@
 package weblearning;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import common.Navigable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import okhttp3.HttpUrl;
 import org.jsoup.nodes.Element;
 
 import java.util.concurrent.CompletableFuture;
 
 import static common.Util.getArg;
 
-public class Bulletin extends RecursiveTreeObject<Bulletin> {
+public class Bulletin extends RecursiveTreeObject<Bulletin> implements Navigable {
     public static final String TRUE = "已读";
     private static final Client client = Client.getInstance();
 
@@ -38,7 +40,7 @@ public class Bulletin extends RecursiveTreeObject<Bulletin> {
         if (this.contentResolved) {
             return CompletableFuture.completedFuture(content);
         }
-        return client.getAsync(client.makeUrl(BULLETIN, args)).thenApply(document -> {
+        return client.getAsync(getURL()).thenApply(document -> {
             Element tableBox = document.getElementById("table_box");
             this.content.set(tableBox.child(0).child(1).text().substring(3));
             contentResolved = true;
@@ -65,5 +67,9 @@ public class Bulletin extends RecursiveTreeObject<Bulletin> {
         String time = entry.child(3).text();
         String state = entry.child(4).text();
         return new Bulletin(href, title, publisher, time, state);
+    }
+
+    @Override public HttpUrl getURL() {
+        return client.makeUrl(BULLETIN, args);
     }
 }

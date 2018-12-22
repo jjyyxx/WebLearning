@@ -39,7 +39,8 @@ public class Notification {
 
     static {
         tray = SystemTray.getSystemTray();
-        icon = new TrayIcon(Toolkit.getDefaultToolkit().getImage(Notification.class.getResource("/icon.png")));
+        icon = new TrayIcon(Toolkit.getDefaultToolkit().getImage(Notification.class.getResource("/main.png")));
+        icon.setImageAutoSize(true);
         icon.setToolTip(TITLE);
         try {
             tray.add(icon);

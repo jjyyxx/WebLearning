@@ -1,6 +1,7 @@
 package weblearning;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import common.Navigable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import okhttp3.*;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
 
 import static common.Util.*;
 
-public class Operation extends RecursiveTreeObject<Operation> {
+public class Operation extends RecursiveTreeObject<Operation> implements Navigable {
     public static final String TRUE = "已经提交";
     private static final String DETAIL = "MultiLanguage/lesson/student/hom_wk_detail.jsp";
     private static final String SUBMIT = "MultiLanguage/lesson/student/hom_wk_submit.jsp";
@@ -238,5 +239,9 @@ public class Operation extends RecursiveTreeObject<Operation> {
         String reviewUrl = reviewLink.attr("onclick");
         boolean reviewDisabled = isDisabled(reviewLink);
         return new Operation(href, title, effectiveDate, deadline, state, size, submitUrl, submitDisabled, reviewUrl, reviewDisabled);
+    }
+
+    @Override public HttpUrl getURL() {
+        return client.makeUrl(DETAIL, args);
     }
 }

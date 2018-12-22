@@ -1,8 +1,10 @@
 package weblearning;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import common.Navigable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import okhttp3.HttpUrl;
 import org.jsoup.nodes.Element;
 
 import java.nio.file.Path;
@@ -11,10 +13,10 @@ import java.util.regex.Pattern;
 
 import static common.Util.getArg;
 
-public class FileEntry extends RecursiveTreeObject<FileEntry> {
+public class FileEntry extends RecursiveTreeObject<FileEntry> implements Navigable {
     public static final String TRUE = "已读";
     private static final Client client = Client.getInstance();
-    private static final String url = "uploadFile/downloadFile_student.jsp";
+    private static final String DOWNLOAD = "uploadFile/downloadFile_student.jsp";
     private static final Pattern filenamePattern = Pattern.compile("filename=\"([^\"]*)\"$");
 
     private String args;
@@ -34,7 +36,7 @@ public class FileEntry extends RecursiveTreeObject<FileEntry> {
     }
 
     public CompletableFuture<Boolean> download(Path dir) {
-        return Endpoints.download(dir, url, args).thenApply(aBoolean -> {
+        return Endpoints.download(dir, DOWNLOAD, args).thenApply(aBoolean -> {
             this.isRead.set(TRUE);
             return aBoolean;
         });
@@ -49,5 +51,9 @@ public class FileEntry extends RecursiveTreeObject<FileEntry> {
         String time = entry.child(4).text();
         String state = entry.child(5).text().equals("新文件") ? "未读" : "已读";
         return new FileEntry(href, title, description, size, time, state);
+    }
+
+    @Override public HttpUrl getURL() {
+        return client.makeUrl(DOWNLOAD, args);
     }
 }
