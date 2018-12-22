@@ -17,7 +17,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         App.stage = stage;
-        stage.getIcons().add(new Image(App.class.getResourceAsStream("/icon.png")));
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/main.png")));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(TITLE);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("app.fxml"));

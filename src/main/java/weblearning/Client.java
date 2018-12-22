@@ -19,7 +19,7 @@ public class Client extends SingleHostHttpClient {
 
     private static final Client ourInstance = new Client();
 
-    static Client getInstance() {
+    public static Client getInstance() {
         return ourInstance;
     }
 
@@ -33,7 +33,7 @@ public class Client extends SingleHostHttpClient {
         return response;
     }
 
-    CompletableFuture<Response> getRawAsync(HttpUrl url) {
+    public CompletableFuture<Response> getRawAsync(HttpUrl url) {
         return super.getBaseAsync(url).thenCompose(this::wrapResponse);
     }
 
