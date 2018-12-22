@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 public class Util {
-    static Path requestDir(Path initialDir) {
+    public static Path requestDir(Path initialDir) {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("选择目标文件夹");
         if (initialDir != null) {
@@ -28,7 +28,7 @@ public class Util {
         return file == null ? null : file.toPath();
     }
 
-    static Path requestOpenFile(Path initialDir) {
+    public static Path requestOpenFile(Path initialDir) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("选择打开的文件");
         if (initialDir != null) {
@@ -38,7 +38,7 @@ public class Util {
         return file == null ? null : file.toPath();
     }
 
-    static Path requestSaveFile(Path initialDir) {
+    public static Path requestSaveFile(Path initialDir) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("选择保存的文件");
         if (initialDir != null) {

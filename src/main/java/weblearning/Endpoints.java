@@ -5,13 +5,9 @@ import okhttp3.Response;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Endpoints {
@@ -64,18 +60,7 @@ public class Endpoints {
     }
 
     private static final Pattern filenamePattern = Pattern.compile("filename=\"([^\"]*)\"$");
-    public static CompletableFuture<Boolean> download(Path dir, String url, String args) {
-        return client.getRawAsync(client.makeUrl(url, args)).thenApply(response -> {
-            String contentDisposition = response.header("Content-Disposition");
-            Matcher matcher = filenamePattern.matcher(contentDisposition);
-            matcher.find();
-            String filename = matcher.group(1);
-            try {
-                Files.copy(response.body().byteStream(), dir.resolve(filename));
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        });
-    }
+
+
+
 }

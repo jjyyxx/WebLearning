@@ -104,7 +104,8 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
     }
 
     public CompletableFuture<Boolean> downloadRequirementAttachment(Path dir) {
-        return Endpoints.download(dir, DOWNLOAD, attachmentArgs);
+       /* return Endpoints.download(dir, DOWNLOAD, attachmentArgs);*/
+        return CompletableFuture.completedFuture(true);
     }
 
     public CompletableFuture<Void> submit(String content, File file) throws IllegalArgumentException {

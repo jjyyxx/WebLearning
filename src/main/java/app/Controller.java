@@ -389,7 +389,7 @@ public class Controller implements Initializable {
     public void download(ActionEvent event) {
         TreeItem<FileEntry> selectedItem = fileTable.getSelectionModel().getSelectedItem();
         FileEntry entry = selectedItem.getValue();
-        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get(), entry);
+        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get().courseData, entry);
     }
 
     public void batchDownload(ActionEvent event) {
@@ -398,7 +398,7 @@ public class Controller implements Initializable {
         for (int i = 0; i < entries.length; i++) {
             entries[i] = selectedItems.get(i).getValue();
         }
-        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get(), entries);
+        DownloadManager.enqueue(courseList.getSelectionModel().selectedItemProperty().get().courseData, entries);
     }
 
     public void commit(ActionEvent event) {

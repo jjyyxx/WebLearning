@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -26,10 +28,16 @@ public class CourseData {
     private static final String FAQ = "MultiLanguage/public/bbs/getbbsid_student.jsp";
     private static final String DISCUSSION = "MultiLanguage/public/bbs/gettalkid_student.jsp";
 
+
     private static final Client client = Client.getInstance();
+    //TODO:gai diao
+    public static Path defaultDir = Paths.get("D:/desktop/test");
 
     private String id;
     private String name;
+    //TODO:gai diao
+    private Path lastDir = Paths.get("D:/desktop/test");
+
     private boolean isNewVer;
     private SemesterData semester;
     public final IntegerProperty unsubmittedOperations = new SimpleIntegerProperty();
@@ -59,6 +67,16 @@ public class CourseData {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void setLastDir(Path lastDir)
+    {
+        this.lastDir = lastDir;
+    }
+
+    public Path getLastDir()
+    {
+        return lastDir;
     }
 
     public CompletableFuture<Bulletin[]> resolveBulletins() {
