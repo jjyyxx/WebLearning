@@ -54,6 +54,13 @@
     -fx-padding:0;
 }
 
+.noscroll .scroll-bar .increment-arrow,
+.noscroll .scroll-bar .decrement-arrow,
+.noscroll .scroll-bar .increment-button,
+.noscroll .scroll-bar .decrement-button {
+    -fx-padding:0;
+}
+
 .scroll-pane {
     -fx-background-color:transparent;
 }

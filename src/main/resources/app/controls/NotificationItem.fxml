@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<fx:root prefHeight="40.0" prefWidth="350.0" stylesheets="@CourseItem.css" type="Pane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controls.NotificationItem">
+  <Label fx:id="name" layoutX="51.0" layoutY="4.0" prefHeight="32.0" prefWidth="294.0">
+    <font>
+      <Font size="15" />
+    </font>
+  </Label>
+  <MaterialIconView fx:id="icon" glyphName="ANNOUNCEMENT" layoutX="14.0" layoutY="32.0" size="24" styleClass="icon" />
+</fx:root>

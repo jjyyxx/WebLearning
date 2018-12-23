@@ -1,25 +1,21 @@
 package app.controls;
 
 import com.jfoenix.controls.JFXToggleButton;
-import common.DataStore;
 import common.Settings;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
-import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 
-public class SettingPane extends Pane {
-    private static final URL fxml = SettingPane.class.getResource("/app/controls/SettingPane.fxml");
-    public static final SettingPane INSTANCE = new SettingPane();
+public class DownloadPane extends Pane {
+    private static final URL fxml = DownloadPane.class.getResource("/app/controls/SettingPane.fxml");
+    public static final DownloadPane INSTANCE = new DownloadPane();
     public JFXToggleButton autologin;
     public JFXToggleButton autostart;
     public JFXToggleButton separateByCourse;
 
-    private SettingPane() {
+    private DownloadPane() {
         FXMLLoader fxmlLoader = new FXMLLoader(fxml);
         fxmlLoader.setRoot(this);
         fxmlLoader.setControllerFactory(ignored -> this);
@@ -33,28 +29,5 @@ public class SettingPane extends Pane {
         Settings.INSTANCE.autologin.bind(autologin.selectedProperty());
         Settings.INSTANCE.autostart.bind(autostart.selectedProperty());
         separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
-    }
-
-    public void logout() {
-        DataStore.put("username", "");
-        DataStore.putEncrypt("password", "");
-        Platform.exit();
-        System.exit(0);
-    }
-
-    public void about() {
-        try {
-            Desktop.getDesktop().browse(URI.create("https://github.com/jjyyxx/WebLearning"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void issue() {
-        try {
-            Desktop.getDesktop().browse(URI.create("https://github.com/jjyyxx/WebLearning/issues"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

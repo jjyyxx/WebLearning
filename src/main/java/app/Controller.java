@@ -1,9 +1,9 @@
 package app;
 
-import app.controls.CourseItem;
-import app.controls.SettingPane;
+import app.controls.*;
 import background.DownloadManager;
 import background.Notification;
+import background.NotificationType;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import common.AuthException;
@@ -148,6 +148,11 @@ public class Controller implements Initializable {
                 }
             } catch (IOException ignored) {}
         }));
+        try {
+            Class.forName("app.controls.InboxPane");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         snackBar = new JFXSnackbar(root);
 
@@ -388,12 +393,12 @@ public class Controller implements Initializable {
 
     @FXML public void addBulletinAlert(ActionEvent actionEvent) {
         Bulletin currentBulletin = bulletinTable.getSelectionModel().getSelectedItem().getValue();
-        Util.requestTime(main, date -> Notification.addNotification(currentBulletin.name.get(), currentBulletin.content.get(), date));
+        Util.requestTime(main, date -> Notification.addNotification(currentBulletin.name.get(), currentBulletin.content.get(), date, NotificationType.ANNOUNCEMENT));
     }
 
     public void addWorkAlert(ActionEvent actionEvent) {
         Operation currentOperation = workTable.getSelectionModel().getSelectedItem().getValue();
-        Util.requestTime(main, date -> Notification.addNotification(currentOperation.title.get(), "", date));
+        Util.requestTime(main, date -> Notification.addNotification(currentOperation.title.get(), "", date, NotificationType.ASSIGNMENT));
     }
 
     public void download(boolean batch, boolean open) {
@@ -478,25 +483,21 @@ public class Controller implements Initializable {
 
     public void openSetting(ActionEvent event) {
         dialog.setContent(SettingPane.INSTANCE);
-        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
         dialog.show(main);
     }
 
     public void openProfile(ActionEvent event) {
-        dialog.setContent(SettingPane.INSTANCE);
-        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
+        dialog.setContent(ProfilePane.INSTANCE);
         dialog.show(main);
     }
 
     public void openInbox(ActionEvent event) {
-        dialog.setContent(SettingPane.INSTANCE);
-        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
+        dialog.setContent(InboxPane.INSTANCE);
         dialog.show(main);
     }
 
     public void openDownload(ActionEvent event) {
-        dialog.setContent(SettingPane.INSTANCE);
-        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
+        dialog.setContent(DownloadPane.INSTANCE);
         dialog.show(main);
     }
 

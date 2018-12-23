@@ -23,61 +23,45 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="600.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/10.0.1"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
-  <JFXToolbar fx:id="TopBar" onMouseDragged="#topBarDragging" onMousePressed="#topBarPressed" prefHeight="55.0"
-              prefWidth="1000.0" style="-fx-background-color: #2962ff;">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
+  <JFXToolbar fx:id="TopBar" onMouseDragged="#topBarDragging" onMousePressed="#topBarPressed" prefHeight="55.0" prefWidth="1000.0" style="-fx-background-color: #2962ff;">
     <left>
-      <Label prefHeight="32.0" prefWidth="212.0" style="-fx-padding: 0 0 0 30;" text="网络学堂客户端" textFill="WHITE"
-             BorderPane.alignment="CENTER">
+      <Label prefHeight="32.0" prefWidth="212.0" style="-fx-padding: 0 0 0 30;" text="网络学堂客户端" textFill="WHITE" BorderPane.alignment="CENTER">
         <font>
-          <Font size="24.0"/>
+          <Font size="24.0" />
         </font>
       </Label>
     </left>
     <right>
       <Pane prefHeight="55.0" prefWidth="251.0" BorderPane.alignment="CENTER">
-        <JFXButton fx:id="closeButton" contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="8.0" onAction="#close"
-                   prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;"
-                   styleClass="round-button">
+        <JFXButton fx:id="closeButton" contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="8.0" onAction="#close" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="CLOSE" size="24" wrappingWidth="24.0"/>
+            <MaterialIconView fill="WHITE" glyphName="CLOSE" size="24" wrappingWidth="24.0" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="minimizeButton" contentDisplay="GRAPHIC_ONLY" layoutX="168.0" layoutY="8.0"
-                   onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                   style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton fx:id="minimizeButton" contentDisplay="GRAPHIC_ONLY" layoutX="168.0" layoutY="8.0" onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="REMOVE" size="24" wrappingWidth="24.0"/>
+            <MaterialIconView fill="WHITE" glyphName="REMOVE" size="24" wrappingWidth="24.0" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="settingButton" contentDisplay="GRAPHIC_ONLY" layoutX="134.0" layoutY="8.0"
-                   onAction="#openSetting" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                   style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton fx:id="settingButton" contentDisplay="GRAPHIC_ONLY" layoutX="134.0" layoutY="8.0" onAction="#openSetting" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="SETTINGS" size="24" wrappingWidth="24.0"/>
+            <MaterialIconView fill="WHITE" glyphName="SETTINGS" size="24" wrappingWidth="24.0" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="profileButton" contentDisplay="GRAPHIC_ONLY" layoutX="99.0" layoutY="9.0"
-                   onAction="#openProfile" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                   style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton fx:id="profileButton" contentDisplay="GRAPHIC_ONLY" layoutX="99.0" layoutY="9.0" onAction="#openProfile" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="PERSON" size="24" wrappingWidth="24.0"/>
+            <MaterialIconView fill="WHITE" glyphName="PERSON" size="24" wrappingWidth="24.0" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="inboxButton" contentDisplay="GRAPHIC_ONLY" layoutX="64.0" layoutY="9.0" onAction="#openInbox"
-                   prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;"
-                   styleClass="round-button">
+        <JFXButton fx:id="inboxButton" contentDisplay="GRAPHIC_ONLY" layoutX="64.0" layoutY="9.0" onAction="#openInbox" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="INBOX" layoutX="28.0" layoutY="70.0" size="24"/>
+            <MaterialIconView fill="WHITE" glyphName="INBOX" layoutX="28.0" layoutY="70.0" size="24" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="downloadButton" contentDisplay="GRAPHIC_ONLY" layoutX="30.0" layoutY="9.0"
-                   onAction="#openDownload" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                   style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton fx:id="downloadButton" contentDisplay="GRAPHIC_ONLY" layoutX="30.0" layoutY="9.0" onAction="#openDownload" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
-            <MaterialIconView fill="WHITE" glyphName="CLOUD_DOWNLOAD" layoutX="28.0" layoutY="70.0" size="24"/>
+            <MaterialIconView fill="WHITE" glyphName="CLOUD_DOWNLOAD" layoutX="28.0" layoutY="70.0" size="24" />
           </graphic>
         </JFXButton>
       </Pane>
@@ -86,30 +70,26 @@
   <StackPane fx:id="main" layoutY="55.0" prefHeight="545.0" prefWidth="1000.0">
     <Pane fx:id="coursePane" prefHeight="545.0" prefWidth="1000.0">
       <ScrollPane fx:id="courseListScrollPane" hbarPolicy="NEVER" prefHeight="545.0" prefWidth="260.0">
-        <JFXListView fx:id="courseList" minHeight="545.0" minWidth="260.0" prefHeight="2000" prefWidth="260.0"/>
+        <JFXListView fx:id="courseList" minHeight="545.0" minWidth="260.0" prefHeight="2000" prefWidth="260.0" />
       </ScrollPane>
       <JFXTabPane fx:id="mainTabs" layoutX="260.0" prefHeight="545.0" prefWidth="740.0" tabClosingPolicy="UNAVAILABLE">
         <Tab text="课程公告">
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <JFXTreeTableView fx:id="bulletinTable" prefHeight="512.0" prefWidth="398.0">
               <columns>
-                <JFXTreeTableColumn fx:id="bulletinRead" minWidth="19.0" prefWidth="58.0" resizable="false"/>
-                <JFXTreeTableColumn fx:id="bulletinTitle" minWidth="133" prefWidth="255.0" resizable="false" text="标题"/>
-                <JFXTreeTableColumn fx:id="bulletinDate" minWidth="68.0" prefWidth="84.0" resizable="false" text="日期"/>
+                <JFXTreeTableColumn fx:id="bulletinRead" minWidth="19.0" prefWidth="58.0" resizable="false" />
+                <JFXTreeTableColumn fx:id="bulletinTitle" minWidth="133" prefWidth="255.0" resizable="false" text="标题" />
+                <JFXTreeTableColumn fx:id="bulletinDate" minWidth="68.0" prefWidth="84.0" resizable="false" text="日期" />
               </columns>
             </JFXTreeTableView>
             <Pane layoutX="397.0" prefHeight="512.0" prefWidth="344.0">
-              <JFXButton fx:id="bulletinAlertButton" contentDisplay="GRAPHIC_ONLY" layoutX="295.0" layoutY="26.0"
-                         onAction="#addBulletinAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                         style="-fx-background-color: #2962ff;">
+              <JFXButton fx:id="bulletinAlertButton" contentDisplay="GRAPHIC_ONLY" layoutX="295.0" layoutY="26.0" onAction="#addBulletinAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;">
                 <graphic>
-                  <MaterialIconView fill="WHITE" glyphName="ADD_ALERT" size="24" wrappingWidth="24.0"/>
+                  <MaterialIconView fill="WHITE" glyphName="ADD_ALERT" size="24" wrappingWidth="24.0" />
                 </graphic>
               </JFXButton>
-              <JFXTextField fx:id="bulletinTitle1" editable="false" labelFloat="true" layoutX="14.0" layoutY="35.0"
-                            prefHeight="23.0" prefWidth="270.0" promptText="标题"/>
-              <JFXTextArea fx:id="bulletinContent" labelFloat="true" layoutX="14.0" layoutY="90.0" prefHeight="409.0"
-                           prefWidth="323.0" promptText="内容"/>
+              <JFXTextField fx:id="bulletinTitle1" editable="false" labelFloat="true" layoutX="14.0" layoutY="35.0" prefHeight="23.0" prefWidth="270.0" promptText="标题" />
+              <JFXTextArea fx:id="bulletinContent" editable="false" labelFloat="true" layoutX="14.0" layoutY="90.0" prefHeight="409.0" prefWidth="323.0" promptText="内容" />
             </Pane>
           </AnchorPane>
         </Tab>
@@ -117,42 +97,34 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <JFXTreeTableView fx:id="fileTable" prefHeight="512.0" prefWidth="440.0">
               <columns>
-                <JFXTreeTableColumn fx:id="fileRead" minWidth="29.0" prefWidth="72.0" resizable="false"/>
-                <JFXTreeTableColumn fx:id="fileName" prefWidth="183.0" resizable="false" text="名称"/>
-                <JFXTreeTableColumn fx:id="fileDate" minWidth="0.0" prefWidth="109.0" resizable="false" text="日期"/>
-                <JFXTreeTableColumn fx:id="fileSize" minWidth="0.0" prefWidth="75.0" resizable="false" text="大小"/>
+                <JFXTreeTableColumn fx:id="fileRead" minWidth="29.0" prefWidth="72.0" resizable="false" />
+                <JFXTreeTableColumn fx:id="fileName" prefWidth="183.0" resizable="false" text="名称" />
+                <JFXTreeTableColumn fx:id="fileDate" minWidth="0.0" prefWidth="109.0" resizable="false" text="日期" />
+                <JFXTreeTableColumn fx:id="fileSize" minWidth="0.0" prefWidth="75.0" resizable="false" text="大小" />
               </columns>
             </JFXTreeTableView>
             <Pane layoutX="440.0" prefHeight="512.0" prefWidth="300.0">
-              <JFXButton fx:id="fileDownload" layoutX="14.0" layoutY="74.0" onAction="#fileDownload" prefHeight="41.0"
-                         prefWidth="139.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="     文件下载"
-                         textFill="WHITE">
+              <JFXButton fx:id="fileDownload" layoutX="14.0" layoutY="74.0" onAction="#fileDownload" prefHeight="41.0" prefWidth="139.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="     文件下载" textFill="WHITE">
                 <graphic>
-                  <MaterialIconView fill="WHITE" glyphName="CLOUD_DOWNLOAD" size="24" wrappingWidth="24.0"/>
+                  <MaterialIconView fill="WHITE" glyphName="CLOUD_DOWNLOAD" size="24" wrappingWidth="24.0" />
                 </graphic>
                 <font>
-                  <Font name="System Bold" size="14.0"/>
+                  <Font name="System Bold" size="14.0" />
                 </font>
               </JFXButton>
-              <JFXButton fx:id="batchDownload" contentDisplay="TEXT_ONLY" layoutX="14.0" layoutY="128.0"
-                         onAction="#batchDownload" prefHeight="41.0" prefWidth="110.0" ripplerFill="#0039cb"
-                         style="-fx-background-color: #2962ff;" text="批量下载" textFill="WHITE">
+              <JFXButton fx:id="batchDownload" contentDisplay="TEXT_ONLY" layoutX="14.0" layoutY="128.0" onAction="#batchDownload" prefHeight="41.0" prefWidth="110.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="批量下载" textFill="WHITE">
                 <font>
-                  <Font name="System Bold" size="14.0"/>
+                  <Font name="System Bold" size="14.0" />
                 </font>
               </JFXButton>
-              <JFXButton fx:id="fileOpen" contentDisplay="TEXT_ONLY" layoutX="176.0" layoutY="74.0"
-                         onAction="#fileOpen" prefHeight="41.0" prefWidth="110.0" ripplerFill="#0039cb"
-                         style="-fx-background-color: #2962ff;" text="打开" textFill="WHITE">
+              <JFXButton fx:id="fileOpen" contentDisplay="TEXT_ONLY" layoutX="176.0" layoutY="74.0" onAction="#fileOpen" prefHeight="41.0" prefWidth="110.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="打开" textFill="WHITE">
                 <font>
-                  <Font name="System Bold" size="14.0"/>
+                  <Font name="System Bold" size="14.0" />
                 </font>
               </JFXButton>
-              <JFXToggleButton fx:id="separateByCourse" layoutX="136.0" layoutY="120.0" text="分课程目录下载"/>
-              <JFXTextField fx:id="fileName1" editable="false" labelFloat="true" layoutX="20.0" layoutY="27.0"
-                            prefHeight="23.0" prefWidth="269.0" promptText="文件名"/>
-              <JFXTextArea fx:id="fileDescription" labelFloat="true" layoutX="13.0" layoutY="188.0" prefHeight="308.0"
-                           prefWidth="277.0" promptText="文件描述"/>
+              <JFXToggleButton fx:id="separateByCourse" layoutX="136.0" layoutY="120.0" text="分课程目录下载" />
+              <JFXTextField fx:id="fileName1" editable="false" labelFloat="true" layoutX="20.0" layoutY="27.0" prefHeight="23.0" prefWidth="269.0" promptText="文件名" />
+              <JFXTextArea fx:id="fileDescription" editable="false" labelFloat="true" layoutX="13.0" layoutY="188.0" prefHeight="308.0" prefWidth="277.0" promptText="文件描述" />
             </Pane>
           </AnchorPane>
         </Tab>
@@ -160,116 +132,98 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <JFXTreeTableView fx:id="workTable" prefHeight="512.0" prefWidth="402.0">
               <columns>
-                <JFXTreeTableColumn fx:id="workDone" minWidth="29.0" prefWidth="85.0" resizable="false"/>
-                <JFXTreeTableColumn fx:id="workName" minWidth="133" prefWidth="222.0" resizable="false" text="名称"/>
-                <JFXTreeTableColumn fx:id="workDue" minWidth="77.0" prefWidth="94.0" resizable="false" text="截止日期"/>
+                <JFXTreeTableColumn fx:id="workDone" minWidth="29.0" prefWidth="85.0" resizable="false" />
+                <JFXTreeTableColumn fx:id="workName" minWidth="133" prefWidth="222.0" resizable="false" text="名称" />
+                <JFXTreeTableColumn fx:id="workDue" minWidth="77.0" prefWidth="94.0" resizable="false" text="截止日期" />
               </columns>
             </JFXTreeTableView>
-            <JFXTextArea fx:id="workRequirement" editable="false" labelFloat="true" layoutX="416.0" layoutY="62.0"
-                         prefHeight="147.0" prefWidth="316.0" promptText="作业要求"/>
-            <Label layoutX="414.0" layoutY="218.0" text="作业附件："/>
-            <JFXTextField fx:id="workAttachment" editable="false" labelFloat="true" layoutX="412.0" layoutY="474.0"
-                          prefHeight="23.0" prefWidth="229.0" promptText="上传作业附件"/>
-            <JFXTextArea fx:id="workContent" labelFloat="true" layoutX="412.0" layoutY="246.0" prefHeight="204.0"
-                         prefWidth="318.0" promptText="上交作业内容"/>
-            <JFXButton fx:id="workCommit" contentDisplay="TEXT_ONLY" layoutX="653.0" layoutY="465.0" onAction="#commit"
-                       prefHeight="36.0" prefWidth="77.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;"
-                       text="提交" textFill="WHITE">
+            <JFXTextArea fx:id="workRequirement" editable="false" labelFloat="true" layoutX="416.0" layoutY="62.0" prefHeight="147.0" prefWidth="316.0" promptText="作业要求" />
+            <Label layoutX="414.0" layoutY="218.0" text="作业附件：" />
+            <JFXTextField fx:id="workAttachment" editable="false" labelFloat="true" layoutX="412.0" layoutY="474.0" prefHeight="23.0" prefWidth="229.0" promptText="上传作业附件" />
+            <JFXTextArea fx:id="workContent" labelFloat="true" layoutX="412.0" layoutY="246.0" prefHeight="204.0" prefWidth="318.0" promptText="上交作业内容" />
+            <JFXButton fx:id="workCommit" contentDisplay="TEXT_ONLY" layoutX="653.0" layoutY="465.0" onAction="#commit" prefHeight="36.0" prefWidth="77.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="提交" textFill="WHITE">
               <font>
-                <Font name="System Bold" size="14.0"/>
+                <Font name="System Bold" size="14.0" />
               </font>
             </JFXButton>
-            <Hyperlink fx:id="workRequirementAttachment" disable="true" layoutX="485.0" layoutY="215.0"
-                       onAction="#attachmentDownload" prefHeight="21.0" prefWidth="244.0" text="无附件"/>
-            <JFXTextField fx:id="workName1" editable="false" labelFloat="true" layoutX="416.0" layoutY="15.0"
-                          prefHeight="23.0" prefWidth="260.0" promptText="作业标题"/>
-            <JFXButton fx:id="workAlert" contentDisplay="GRAPHIC_ONLY" layoutX="689.0" layoutY="7.0"
-                       onAction="#addWorkAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb"
-                       style="-fx-background-color: #2962ff;">
+            <Hyperlink fx:id="workRequirementAttachment" disable="true" layoutX="485.0" layoutY="215.0" onAction="#attachmentDownload" prefHeight="21.0" prefWidth="244.0" text="无附件" />
+            <JFXTextField fx:id="workName1" editable="false" labelFloat="true" layoutX="416.0" layoutY="15.0" prefHeight="23.0" prefWidth="260.0" promptText="作业标题" />
+            <JFXButton fx:id="workAlert" contentDisplay="GRAPHIC_ONLY" layoutX="689.0" layoutY="7.0" onAction="#addWorkAlert" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;">
               <graphic>
-                <MaterialIconView fill="WHITE" glyphName="ADD_ALERT" size="24" wrappingWidth="24.0"/>
+                <MaterialIconView fill="WHITE" glyphName="ADD_ALERT" size="24" wrappingWidth="24.0" />
               </graphic>
             </JFXButton>
           </AnchorPane>
         </Tab>
       </JFXTabPane>
-      <JFXButton fx:id="refreshButton" contentDisplay="GRAPHIC_ONLY" layoutX="962.0" layoutY="2.0" onAction="#refresh"
-                 prefHeight="30.0" prefWidth="7.0" style="-jfx-disable-visual-focus: true;">
+      <JFXButton fx:id="refreshButton" contentDisplay="GRAPHIC_ONLY" layoutX="962.0" layoutY="2.0" onAction="#refresh" prefHeight="30.0" prefWidth="7.0" style="-jfx-disable-visual-focus: true;">
         <graphic>
-          <MaterialIconView fill="WHITE" glyphName="REFRESH" size="20"/>
+          <MaterialIconView fill="WHITE" glyphName="REFRESH" size="20" />
         </graphic>
       </JFXButton>
-      <JFXButton fx:id="openInBrowserButton" contentDisplay="GRAPHIC_ONLY" layoutX="926.0" layoutY="2.0"
-                 onAction="#openBrowser" prefHeight="30.0" prefWidth="32.0" style="-jfx-disable-visual-focus: true;">
+      <JFXButton fx:id="openInBrowserButton" contentDisplay="GRAPHIC_ONLY" layoutX="926.0" layoutY="2.0" onAction="#openBrowser" prefHeight="30.0" prefWidth="32.0" style="-jfx-disable-visual-focus: true;">
         <graphic>
-          <MaterialIconView fill="WHITE" glyphName="OPEN_IN_BROWSER" size="20"/>
+          <MaterialIconView fill="WHITE" glyphName="OPEN_IN_BROWSER" size="20" />
         </graphic>
       </JFXButton>
     </Pane>
     <Pane fx:id="loginPane" visible="false">
       <Pane layoutX="120.0" layoutY="155.0">
-        <JFXTextField fx:id="username" focusColor="#0039cb" labelFloat="true" layoutX="42.0" onAction="#login"
-                      promptText="用户名">
+        <JFXTextField fx:id="username" focusColor="#0039cb" labelFloat="true" layoutX="42.0" onAction="#login" promptText="用户名">
           <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
           </font>
         </JFXTextField>
-        <JFXPasswordField fx:id="password" focusColor="#0039cb" labelFloat="true" layoutX="42.0" layoutY="91.0"
-                          onAction="#login" prefHeight="41.0" prefWidth="244.0" promptText="密码">
+        <JFXPasswordField fx:id="password" focusColor="#0039cb" labelFloat="true" layoutX="42.0" layoutY="91.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" promptText="密码">
           <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
           </font>
         </JFXPasswordField>
-        <JFXButton fx:id="login" buttonType="RAISED" layoutX="42.0" layoutY="194.0" onAction="#login" prefHeight="41.0"
-                   prefWidth="244.0" ripplerFill="#1e5dfc" style="-fx-background-color: #0039cb;" text="登录"
-                   textFill="WHITE">
+        <JFXButton fx:id="login" buttonType="RAISED" layoutX="42.0" layoutY="194.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" ripplerFill="#1e5dfc" style="-fx-background-color: #0039cb;" text="登录" textFill="WHITE">
           <font>
-            <Font size="20.0"/>
+            <Font size="20.0" />
           </font>
         </JFXButton>
-        <MaterialIconView glyphName="PERSON" layoutY="37.0" size="32"/>
-        <MaterialIconView glyphName="VPN_KEY" layoutY="128.0" size="32"/>
+        <MaterialIconView glyphName="PERSON" layoutY="37.0" size="32" />
+        <MaterialIconView glyphName="VPN_KEY" layoutY="128.0" size="32" />
       </Pane>
       <VBox layoutX="564.0" layoutY="100.0" prefHeight="365.0" prefWidth="390.0" spacing="20.0">
         <Pane prefHeight="95.0" prefWidth="390.0">
-          <MaterialIconView glyphName="LOCK" layoutX="28.0" layoutY="70.0" size="36"/>
+          <MaterialIconView glyphName="LOCK" layoutX="28.0" layoutY="70.0" size="36" />
           <Label layoutX="95.0" layoutY="18.0" text="安全">
             <font>
-              <Font size="18.0"/>
+              <Font size="18.0" />
             </font>
           </Label>
-          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="信息仅在本机与网络学堂间传输，不经过任何第三方。"
-                 wrapText="true">
+          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="信息仅在本机与网络学堂间传输，不经过任何第三方。" wrapText="true">
             <font>
-              <Font size="15.0"/>
+              <Font size="15.0" />
             </font>
           </Label>
         </Pane>
         <Pane prefHeight="95.0" prefWidth="390.0">
-          <MaterialIconView glyphName="CHECK_CIRCLE" layoutX="28.0" layoutY="70.0" size="36"/>
+          <MaterialIconView glyphName="CHECK_CIRCLE" layoutX="28.0" layoutY="70.0" size="36" />
           <Label layoutX="95.0" layoutY="18.0" text="便捷">
             <font>
-              <Font size="18.0"/>
+              <Font size="18.0" />
             </font>
           </Label>
-          <Label layoutX="96.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="无需重复登录，操作简单快捷，轻松获取各类教学信息。"
-                 wrapText="true">
+          <Label layoutX="96.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="无需重复登录，操作简单快捷，轻松获取各类教学信息。" wrapText="true">
             <font>
-              <Font size="15.0"/>
+              <Font size="15.0" />
             </font>
           </Label>
         </Pane>
         <Pane prefHeight="95.0" prefWidth="390.0">
-          <MaterialIconView glyphName="TRENDING_UP" layoutX="28.0" layoutY="70.0" size="36"/>
+          <MaterialIconView glyphName="TRENDING_UP" layoutX="28.0" layoutY="70.0" size="36" />
           <Label layoutX="95.0" layoutY="18.0" text="高效">
             <font>
-              <Font size="18.0"/>
+              <Font size="18.0" />
             </font>
           </Label>
-          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0"
-                 text="添加文件批量下载，通知聚合，消息提醒及DDL警示等功能，高效使用网络学堂。" wrapText="true">
+          <Label layoutX="95.0" layoutY="46.0" prefHeight="41.0" prefWidth="277.0" text="添加文件批量下载，通知聚合，消息提醒及DDL警示等功能，高效使用网络学堂。" wrapText="true">
             <font>
-              <Font size="15.0"/>
+              <Font size="15.0" />
             </font>
           </Label>
         </Pane>
@@ -278,10 +232,10 @@
       </Pane>
     </Pane>
   </StackPane>
-  <Pane fx:id="mask" layoutY="55.0" pickOnBounds="false" visible="false"/>
+  <Pane fx:id="mask" layoutY="55.0" pickOnBounds="false" visible="false" />
   <StackPane fx:id="flow" layoutY="55.0" pickOnBounds="false" visible="false">
     <StackPane fx:id="spinner" visible="false">
-      <JFXSpinner radius="30"/>
+      <JFXSpinner radius="30" />
     </StackPane>
   </StackPane>
 </Pane>

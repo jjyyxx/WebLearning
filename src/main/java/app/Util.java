@@ -48,9 +48,11 @@ public class Util {
         return file == null ? null : file.toPath();
     }
 
-    static void requestTime(StackPane main, Consumer<Date> consumer) {
-        Locale.setDefault(Locale.ENGLISH);
-        JFXDialog jfxDialog = new JFXDialog();
+    private static final JFXDialog jfxDialog;
+    private static Consumer<Date> consumer;
+
+    static {
+        jfxDialog = new JFXDialog();
         JFXDialogLayout layout = new JFXDialogLayout();
         layout.setHeading(new Label("请选择日期和时间"));
         JFXDatePicker jfxDatePicker = new JFXDatePicker();
@@ -64,6 +66,7 @@ public class Util {
                 jfxDialog.close();
                 Locale.setDefault(Locale.CHINA);
                 consumer.accept(Date.from(date.atTime(time).atZone(ZoneId.systemDefault()).toInstant()));
+                consumer = null;
             }
         });
         JFXButton cancel = new JFXButton();
@@ -71,11 +74,16 @@ public class Util {
         cancel.setOnAction(actionEvent -> {
             jfxDialog.close();
             Locale.setDefault(Locale.CHINA);
-            consumer.accept(null);
+            consumer = null;
         });
         layout.setBody(new VBox(jfxDatePicker, jfxTimePicker));
         layout.setActions(commit, cancel);
         jfxDialog.setContent(layout);
+    }
+
+    static void requestTime(StackPane main, Consumer<Date> consumer) {
+        Util.consumer = consumer;
+        Locale.setDefault(Locale.ENGLISH);
         jfxDialog.show(main);
     }
 }
