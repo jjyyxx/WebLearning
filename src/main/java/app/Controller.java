@@ -83,7 +83,7 @@ public class Controller implements Initializable {
     private double sceneY;
 
     private Stage stage;
-    private JFXSnackbar snackBar;
+    public static JFXSnackbar snackBar;
     private JFXDialog dialog = new JFXDialog();
 
     @FXML private Pane root;
@@ -433,10 +433,8 @@ public class Controller implements Initializable {
     }
 
     public void attachmentDownload(ActionEvent event) {
-        Path path = Util.requestDir(null);
-        if (path != null) {
-            workTable.getSelectionModel().getSelectedItem().getValue().downloadRequirementAttachment(path);
-        }
+        CourseData courseData = courseList.getSelectionModel().selectedItemProperty().get().courseData;
+        DownloadManager.enqueue(courseData, workTable.getSelectionModel().getSelectedItem().getValue());
     }
 
     private void stateSwitch(int type, boolean state) {
@@ -493,11 +491,6 @@ public class Controller implements Initializable {
 
     public void openInbox(ActionEvent event) {
         dialog.setContent(InboxPane.INSTANCE);
-        dialog.show(main);
-    }
-
-    public void openDownload(ActionEvent event) {
-        dialog.setContent(DownloadPane.INSTANCE);
         dialog.show(main);
     }
 

@@ -1,19 +1,30 @@
 package app.controls;
 
-import com.jfoenix.controls.JFXToggleButton;
-import common.Settings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
+import weblearning.Endpoints;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 
 public class ProfilePane extends Pane {
-    private static final URL fxml = ProfilePane.class.getResource("/app/controls/SettingPane.fxml");
+    private static final URL fxml = ProfilePane.class.getResource("/app/controls/ProfilePane.fxml");
     public static final ProfilePane INSTANCE = new ProfilePane();
-    public JFXToggleButton autologin;
-    public JFXToggleButton autostart;
-    public JFXToggleButton separateByCourse;
+
+    static {
+        Endpoints.getProfile().thenAccept(INSTANCE::setData);
+    }
+
+    private Map<String, String> profile;
+    private void setData(Map<String, String> profile) {
+        this.profile = profile;
+        refresh();
+    }
+
+    private void refresh() {
+
+    }
 
     private ProfilePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(fxml);
@@ -24,10 +35,5 @@ public class ProfilePane extends Pane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        autologin.setSelected(Settings.INSTANCE.autologin.get());
-        autostart.setSelected(Settings.INSTANCE.autostart.get());
-        Settings.INSTANCE.autologin.bind(autologin.selectedProperty());
-        Settings.INSTANCE.autostart.bind(autostart.selectedProperty());
-        separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
     }
 }

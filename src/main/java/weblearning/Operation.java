@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -103,9 +102,8 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
         });
     }
 
-    public CompletableFuture<Boolean> downloadRequirementAttachment(Path dir) {
-       /* return Endpoints.download(dir, DOWNLOAD, attachmentArgs);*/
-        return CompletableFuture.completedFuture(true);
+    public HttpUrl getAttachmentUrl() {
+       return client.makeUrl(DOWNLOAD, attachmentArgs);
     }
 
     public CompletableFuture<Void> submit(String content, File file) throws IllegalArgumentException {

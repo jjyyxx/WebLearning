@@ -1,10 +1,13 @@
 package background;
 
+import app.Controller;
+import com.jfoenix.controls.JFXSnackbar;
 import common.Settings;
 import okhttp3.HttpUrl;
 import weblearning.Client;
 import weblearning.CourseData;
 import weblearning.FileEntry;
+import weblearning.Operation;
 
 import java.awt.*;
 import java.io.IOException;
@@ -55,18 +58,15 @@ public class DownloadManager {
     }
 
     public static void enqueue(CourseData courseData, FileEntry[] entries, boolean open) {
-        Path saveDir;
-        if (Settings.INSTANCE.separateByCourse.get()) {
-            saveDir = app.Util.requestDir(Settings.INSTANCE.pathRegistry.get(courseData.getName()));
-            Settings.INSTANCE.pathRegistry.put(courseData.getName(), saveDir);
-        } else {
-            saveDir = app.Util.requestDir(Settings.INSTANCE.pathRegistry.get("DEFAULT"));
-            Settings.INSTANCE.pathRegistry.put("DEFAULT", saveDir);
+        Path saveDir = getPath(courseData);
+        if (saveDir == null) {
+            return;
         }
         for (FileEntry entry : entries) {
             download(saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
                 try {
                     Files.copy(downloadInfo.inputStream, downloadInfo.path);
+                    Controller.snackBar.enqueue(new JFXSnackbar.SnackbarEvent(downloadInfo.path + "下载完成", "success", null, 1000, false, null));
                     if (open) {
                         Desktop.getDesktop().open(downloadInfo.path.toFile());
                     }
@@ -75,5 +75,33 @@ public class DownloadManager {
                 }
             });
         }
+    }
+
+    private static Path getPath(CourseData courseData) {
+        Path saveDir;
+        if (Settings.INSTANCE.separateByCourse.get()) {
+            saveDir = app.Util.requestDir(Settings.INSTANCE.pathRegistry.get(courseData.getName()));
+            Settings.INSTANCE.pathRegistry.put(courseData.getName(), saveDir);
+        } else {
+            saveDir = app.Util.requestDir(Settings.INSTANCE.pathRegistry.get("DEFAULT"));
+            Settings.INSTANCE.pathRegistry.put("DEFAULT", saveDir);
+        }
+        return saveDir;
+    }
+
+    public static void enqueue(CourseData courseData, Operation operation) {
+        Path saveDir = getPath(courseData);
+        if (saveDir == null) {
+            return;
+        }
+        download(saveDir, operation.getAttachmentUrl(), operation.getAttachmentName()).thenAccept(downloadInfo -> {
+            try {
+                Files.copy(downloadInfo.inputStream, downloadInfo.path);
+                Controller.snackBar.enqueue(new JFXSnackbar.SnackbarEvent(downloadInfo.path + "下载完成", "success", null, 1000, false, null));
+                Desktop.getDesktop().open(downloadInfo.path.toFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

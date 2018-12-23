@@ -1,6 +1,7 @@
 package app;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,7 +10,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class App extends Application {
-    static Stage stage;
+    public static Stage stage;
     private static final String TITLE = "网络学堂";
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
@@ -17,6 +18,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         App.stage = stage;
+        Platform.setImplicitExit(false);
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/main.png")));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(TITLE);

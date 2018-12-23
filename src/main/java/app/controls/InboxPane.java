@@ -1,6 +1,7 @@
 package app.controls;
 
 import background.Notification;
+import background.NotificationObj;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
@@ -35,15 +36,15 @@ public class InboxPane extends Pane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        Notification.notifications.addListener((ListChangeListener<? super Notification.NotificationObj>) change -> {
+        Notification.notifications.addListener((ListChangeListener<? super NotificationObj>) change -> {
             ObservableList<NotificationItem> notificationItems = FXCollections.observableArrayList();
-            for (Notification.NotificationObj notificationObj : change.getList()) {
+            for (NotificationObj notificationObj : change.getList()) {
                 notificationItems.add(new NotificationItem(notificationObj));
             }
             Platform.runLater(() -> list.setItems(notificationItems));
         });
         ObservableList<NotificationItem> notificationItems = FXCollections.observableArrayList();
-        for (Notification.NotificationObj notificationObj : Notification.notifications) {
+        for (NotificationObj notificationObj : Notification.notifications) {
             notificationItems.add(new NotificationItem(notificationObj));
         }
         list.setItems(notificationItems);

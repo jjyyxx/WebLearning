@@ -1,6 +1,6 @@
 package app.controls;
 
-import background.Notification;
+import background.NotificationObj;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +14,9 @@ public class NotificationItem extends Pane {
     private static final URL fxml = CourseItem.class.getResource("/app/controls/NotificationItem.fxml");
     @FXML private MaterialIconView icon;
     @FXML private Label name;
-    public final Notification.NotificationObj notificationObj;
+    public final NotificationObj notificationObj;
 
-    public NotificationItem(Notification.NotificationObj notificationObj) {
+    public NotificationItem(NotificationObj notificationObj) {
         this.notificationObj = notificationObj;
         FXMLLoader fxmlLoader = new FXMLLoader(fxml);
         fxmlLoader.setRoot(this);

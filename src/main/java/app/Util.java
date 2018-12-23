@@ -67,6 +67,8 @@ public class Util {
                 Locale.setDefault(Locale.CHINA);
                 consumer.accept(Date.from(date.atTime(time).atZone(ZoneId.systemDefault()).toInstant()));
                 consumer = null;
+            } else {
+                Controller.snackBar.enqueue(new JFXSnackbar.SnackbarEvent("时间填写不完整或早于当前时间", "error"));
             }
         });
         JFXButton cancel = new JFXButton();
