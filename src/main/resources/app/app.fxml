@@ -150,6 +150,7 @@
             </JFXButton>
           </AnchorPane>
         </Tab>
+
       </JFXTabPane>
       <JFXButton fx:id="refreshButton" contentDisplay="GRAPHIC_ONLY" layoutX="962.0" layoutY="2.0" onAction="#refresh" prefHeight="30.0" prefWidth="7.0" style="-jfx-disable-visual-focus: true;">
         <graphic>
@@ -228,9 +229,7 @@
     </Pane>
   </StackPane>
   <Pane fx:id="mask" layoutY="55.0" pickOnBounds="false" visible="false" />
-  <StackPane fx:id="flow" layoutY="55.0" pickOnBounds="false" visible="false">
-    <StackPane fx:id="spinner" visible="false">
-      <JFXSpinner radius="30" />
-    </StackPane>
+  <StackPane fx:id="spinner" prefHeight="600.0" prefWidth="1000.0" visible="false">
+    <JFXSpinner radius="30" />
   </StackPane>
 </Pane>

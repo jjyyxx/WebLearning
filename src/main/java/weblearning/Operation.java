@@ -237,6 +237,9 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
         Element reviewLink = entry.child(5).child(1);
         String reviewUrl = reviewLink.attr("onclick");
         boolean reviewDisabled = isDisabled(reviewLink);
+//        if (state.equals("尚未提交") && Notification.notifications.filtered(notificationObj -> notificationObj.title.equals(title)).size() == 0) {
+//            Notification.addNotification(title, "", Date.from(LocalDateTime.parse(deadline).minusHours(6).atZone(ZoneId.systemDefault()).toInstant()), NotificationType.ASSIGNMENT);
+//        }
         return new Operation(href, title, effectiveDate, deadline, state, size, submitUrl, submitDisabled, reviewUrl, reviewDisabled);
     }
 

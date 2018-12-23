@@ -1,12 +1,14 @@
 package app;
 
-import app.controls.*;
+import app.controls.CourseItem;
+import app.controls.InboxPane;
+import app.controls.ProfilePane;
+import app.controls.SettingPane;
 import background.DownloadManager;
 import background.Notification;
 import background.NotificationType;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import common.AuthException;
 import common.DataStore;
 import common.Navigable;
 import common.Settings;
@@ -37,8 +39,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
-
-import static weblearning.Endpoints.authenticate;
 
 public class Controller implements Initializable {
     private static final String TEMPLATE = "<!doctypehtml><html lang=\"zh\"><meta charset=\"UTF-8\"><title>中转页</title><body><script>fetch(\"https://learn.tsinghua.edu.cn/MultiLanguage/lesson/teacher/loginteacher.jsp\",{credentials:\"include\",headers:{\"content-type\":\"application/x-www-form-urlencoded\"},body:\"userid=jyx17&userpass=DICKdiao123\",method:\"POST\",mode:\"no-cors\"}).then(()=>location.replace(\"URL\"))</script>";
@@ -116,18 +116,18 @@ public class Controller implements Initializable {
         String name = username.getText();
         String pass = password.getText();
         toggleSpinner(true);
-        authenticate(name, pass)
-                .thenAccept(ignored -> {
-                    DataStore.put("username", name);
-                    DataStore.putEncrypt("password", pass);
-                    afterLogin();
-                })
-                .exceptionally(e -> {
-                    toggleSpinner(false);
-                    String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
-                    snackBar.show(text, "error", 3000);
-                    return null;
-                });
+//        authenticate(name, pass)
+//                .thenAccept(ignored -> {
+//                    DataStore.put("username", name);
+//                    DataStore.putEncrypt("password", pass);
+//                    afterLogin();
+//                })
+//                .exceptionally(e -> {
+//                    toggleSpinner(false);
+//                    String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
+//                    snackBar.show(text, "error", 3000);
+//                    return null;
+//                });
     }
 
     @FXML private void topBarDragging(MouseEvent event) {
