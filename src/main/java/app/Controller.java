@@ -176,7 +176,7 @@ public class Controller implements Initializable {
         currentTable = bulletinTable;
 
         // bulletin
-        bulletinRead.setCellValueFactory(p -> bulletinRead.validateValue(p) ? p.getValue().getValue().isRead : bulletinRead.getComputedValue(p)); // TODO: shall be optimized
+        bulletinRead.setCellValueFactory(p -> bulletinRead.validateValue(p) ? p.getValue().getValue().isRead : bulletinRead.getComputedValue(p));
         bulletinTitle.setCellValueFactory(p -> bulletinTitle.validateValue(p) ? p.getValue().getValue().name : bulletinTitle.getComputedValue(p));
         bulletinDate.setCellValueFactory(p -> bulletinDate.validateValue(p) ? p.getValue().getValue().time : bulletinDate.getComputedValue(p));
         bulletinTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
