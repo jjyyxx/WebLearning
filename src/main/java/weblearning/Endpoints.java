@@ -8,7 +8,6 @@ import org.jsoup.select.Elements;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Pattern;
 
 public class Endpoints {
     private static final String AUTH = "MultiLanguage/lesson/teacher/loginteacher.jsp";
@@ -17,20 +16,6 @@ public class Endpoints {
     private static final Client client = Client.getInstance();
 
     public static CompletableFuture<Courses> getCurriculum() {
-        //                    Element element = document.getElementById("info_1");
-//                    Elements entries = element.getElementsByTag("tr");
-//                    return entries.subList(2, entries.size())
-//                            .stream()
-//                            .map(entry -> {
-//                                Element link = entry.child(0).child(1);
-//                                String href = link.attr("href");
-//                                String name = link.text();
-//                                String operations = entry.child(1).child(0).text();
-//                                String notices = entry.child(2).child(0).text();
-//                                String files = entry.child(3).child(0).text();
-//                                return new CourseData(href, name, operations, notices, files);
-//                            })
-//                            .toArray(CourseData[]::new);
         return client.getAsync(client.makeUrl(CURRICULUM, "language=cn"))
                 .thenApply(Courses::from);
     }
@@ -58,9 +43,4 @@ public class Endpoints {
                         .build())
                 .thenAccept(Response::close);
     }
-
-    private static final Pattern filenamePattern = Pattern.compile("filename=\"([^\"]*)\"$");
-
-
-
 }

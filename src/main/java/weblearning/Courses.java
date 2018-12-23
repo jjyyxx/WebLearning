@@ -1,17 +1,11 @@
 package weblearning;
 
-import common.Settings;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 
 public class Courses extends LinkedHashMap<String, CourseData> {
-    static {
-        Settings.INSTANCE.coursePathMap.putIfAbsent("DEFAULT", Paths.get(System.getProperty("user.home")));
-    }
-
     void update(Element document) {
         Elements entries = document.getElementById("info_1").getElementsByTag("tr");
         entries.subList(2, entries.size()).forEach(entry -> {
@@ -34,7 +28,6 @@ public class Courses extends LinkedHashMap<String, CourseData> {
             String notices = entry.child(2).child(0).text();
             String files = entry.child(3).child(0).text();
             courses.put(name, new CourseData(href, name, operations, notices, files));
-            Settings.INSTANCE.coursePathMap.putIfAbsent(name, Settings.INSTANCE.coursePathMap.get("DEFAULT"));
         });
 
         return courses;

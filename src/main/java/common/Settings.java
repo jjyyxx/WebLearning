@@ -7,25 +7,22 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class Settings implements Serializable {
-    private static final long serialVersionUID = 4515345;
+    private static final long serialVersionUID = 6425342;
     public static final Settings INSTANCE;
 
     public transient BooleanProperty autologin;
     public transient BooleanProperty autostart;
     public transient BooleanProperty separateByCourse;
-    public Map<String, Path> coursePathMap;
+    public PathRegistry pathRegistry;
 
     private Settings() {
         autologin = new SimpleBooleanProperty(true);
         autostart = new SimpleBooleanProperty(false);
         separateByCourse = new SimpleBooleanProperty(false);
-        coursePathMap = new HashMap<>();
+        pathRegistry = new PathRegistry();
     }
 
     private void writeObject(ObjectOutputStream s) throws IOException {

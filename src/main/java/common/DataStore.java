@@ -59,6 +59,8 @@ public class DataStore {
             out.writeObject(obj);
             out.flush();
             prefs.putByteArray(key, bos.toByteArray());
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

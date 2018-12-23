@@ -57,17 +57,11 @@ public class DownloadManager {
     public static void enqueue(CourseData courseData, FileEntry[] entries, boolean open) {
         Path saveDir;
         if (Settings.INSTANCE.separateByCourse.get()) {
-            saveDir = app.Util.requestDir(Settings.INSTANCE.coursePathMap.get(courseData.getName()));
-            if (saveDir == null) {
-                return;
-            }
-            Settings.INSTANCE.coursePathMap.put(courseData.getName(), saveDir);
+            saveDir = app.Util.requestDir(Settings.INSTANCE.pathRegistry.get(courseData.getName()));
+            Settings.INSTANCE.pathRegistry.put(courseData.getName(), saveDir);
         } else {
-            saveDir = app.Util.requestDir(Settings.INSTANCE.coursePathMap.get("DEFAULT"));
-            if (saveDir == null) {
-                return;
-            }
-            Settings.INSTANCE.coursePathMap.put("DEFAULT", saveDir);
+            saveDir = app.Util.requestDir(Settings.INSTANCE.pathRegistry.get("DEFAULT"));
+            Settings.INSTANCE.pathRegistry.put("DEFAULT", saveDir);
         }
         for (FileEntry entry : entries) {
             download(saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
