@@ -8,10 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SingleHostHttpClient {
     private OkHttpClient client;
     private String host;
+
+    static {
+        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
+    }
+
     protected SingleHostHttpClient(String host) {
         client = new OkHttpClient.Builder()
                 .cookieJar(new CookieJar() {

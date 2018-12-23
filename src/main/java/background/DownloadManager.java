@@ -44,7 +44,7 @@ public class DownloadManager {
     private static final Client client = Client.getInstance();
     private static final Pattern filenamePattern = Pattern.compile("filename=\".*(\\.\\w+)\"$");
 
-    public static CompletableFuture<DownloadInfo> download(Path dir, HttpUrl url, String filename) {
+    private static CompletableFuture<DownloadInfo> download(Path dir, HttpUrl url, String filename) {
         return client.getRawAsync(url).thenApply(response -> {
             String contentDisposition = response.header("Content-Disposition");
             Matcher matcher = filenamePattern.matcher(contentDisposition);

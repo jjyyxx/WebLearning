@@ -84,6 +84,7 @@ public class Controller implements Initializable {
 
     private Stage stage;
     private JFXSnackbar snackBar;
+    private JFXDialog dialog = new JFXDialog();
 
     @FXML private Pane root;
     @FXML private StackPane main;
@@ -460,12 +461,6 @@ public class Controller implements Initializable {
         refreshContent(courseList.getSelectionModel().getSelectedItem());
     }
 
-    public void openSetting(ActionEvent actionEvent) {
-        JFXDialog setting = new JFXDialog();
-        setting.setContent(new SettingPane(t -> setting.close()));
-        setting.show(main);
-    }
-
     public void openBrowser(ActionEvent event) {
         try {
             String url = ((TreeItem<Navigable>) currentTable.getSelectionModel().getSelectedItem()).getValue().getURL().toString();
@@ -481,22 +476,28 @@ public class Controller implements Initializable {
         } catch (NullPointerException | ClassCastException ignored) {}
     }
 
+    public void openSetting(ActionEvent event) {
+        dialog.setContent(SettingPane.INSTANCE);
+        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
+        dialog.show(main);
+    }
+
     public void openProfile(ActionEvent event) {
-        JFXDialog setting = new JFXDialog();
-        setting.setContent(new SettingPane(t -> setting.close()));
-        setting.show(main);
+        dialog.setContent(SettingPane.INSTANCE);
+        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
+        dialog.show(main);
     }
 
     public void openInbox(ActionEvent event) {
-        JFXDialog setting = new JFXDialog();
-        setting.setContent(new SettingPane(t -> setting.close()));
-        setting.show(main);
+        dialog.setContent(SettingPane.INSTANCE);
+        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
+        dialog.show(main);
     }
 
     public void openDownload(ActionEvent event) {
-        JFXDialog setting = new JFXDialog();
-        setting.setContent(new SettingPane(t -> setting.close()));
-        setting.show(main);
+        dialog.setContent(SettingPane.INSTANCE);
+        SettingPane.INSTANCE.setCloseHandler(e -> dialog.close());
+        dialog.show(main);
     }
 
     public void fileOpen(ActionEvent event) {
