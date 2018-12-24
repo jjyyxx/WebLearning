@@ -11,8 +11,8 @@
   <JFXToggleButton fx:id="autologin" layoutX="127.0" layoutY="30.0" text="                           自动登录"/>
   <JFXToggleButton fx:id="autostart" layoutX="127.0" layoutY="88.0" text="                           开机自启"/>
   <JFXToggleButton fx:id="separateByCourse" layoutX="127.0" layoutY="146.0" text="                 分课程目录下载"/>
-  <JFXButton contentDisplay="TEXT_ONLY" layoutX="123.0" layoutY="228.0" onAction="#logout" prefHeight="41.0"
-             prefWidth="222.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="退出登录"
+  <JFXButton fx:id="exit" contentDisplay="TEXT_ONLY" layoutX="123.0" layoutY="228.0" onAction="#logout" prefHeight="41.0"
+             prefWidth="222.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="退出"
              textFill="WHITE">
     <font>
       <Font name="System Bold" size="14.0"/>

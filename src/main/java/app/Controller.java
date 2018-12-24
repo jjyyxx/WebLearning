@@ -2,13 +2,13 @@ package app;
 
 import app.controls.CourseItem;
 import app.controls.InboxPane;
-import app.controls.ProfilePane;
 import app.controls.SettingPane;
 import background.DownloadManager;
 import background.Notification;
 import background.NotificationType;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import common.AuthException;
 import common.DataStore;
 import common.Navigable;
 import common.Settings;
@@ -116,18 +116,18 @@ public class Controller implements Initializable {
         String name = username.getText();
         String pass = password.getText();
         toggleSpinner(true);
-//        authenticate(name, pass)
-//                .thenAccept(ignored -> {
-//                    DataStore.put("username", name);
-//                    DataStore.putEncrypt("password", pass);
-//                    afterLogin();
-//                })
-//                .exceptionally(e -> {
-//                    toggleSpinner(false);
-//                    String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
-//                    snackBar.show(text, "error", 3000);
-//                    return null;
-//                });
+        Endpoints.authenticate(name, pass)
+                .thenAccept(ignored -> {
+                    DataStore.put("username", name);
+                    DataStore.putEncrypt("password", pass);
+                    afterLogin();
+                })
+                .exceptionally(e -> {
+                    toggleSpinner(false);
+                    String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
+                    snackBar.show(text, "error", 3000);
+                    return null;
+                });
     }
 
     @FXML private void topBarDragging(MouseEvent event) {
@@ -284,6 +284,7 @@ public class Controller implements Initializable {
     }
 
     private void afterLogin() {
+        SettingPane.INSTANCE.setName(DataStore.get("username", ""));
         Endpoints.getCurriculum().thenAccept(courseData -> Platform.runLater(() -> {
             toggleSpinner(false);
             courseList.setPrefHeight(courseData.size() * ITEM_HEIGHT);
@@ -481,11 +482,6 @@ public class Controller implements Initializable {
 
     public void openSetting(ActionEvent event) {
         dialog.setContent(SettingPane.INSTANCE);
-        dialog.show(main);
-    }
-
-    public void openProfile(ActionEvent event) {
-        dialog.setContent(ProfilePane.INSTANCE);
         dialog.show(main);
     }
 

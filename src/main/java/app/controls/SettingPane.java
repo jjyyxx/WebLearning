@@ -1,5 +1,6 @@
 package app.controls;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import common.DataStore;
 import common.Settings;
@@ -18,6 +19,7 @@ public class SettingPane extends Pane {
     public JFXToggleButton autologin;
     public JFXToggleButton autostart;
     public JFXToggleButton separateByCourse;
+    public JFXButton exit;
 
     private SettingPane() {
         FXMLLoader fxmlLoader = new FXMLLoader(fxml);
@@ -56,5 +58,9 @@ public class SettingPane extends Pane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setName(String name) {
+        exit.setText("退出当前账户：" + name);
     }
 }
