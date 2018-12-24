@@ -11,7 +11,6 @@ import weblearning.Operation;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -19,31 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DownloadManager {
-    static class DownloadInfo {
-        private final InputStream inputStream;
-        private final Path dir;
-        private final String name;
-        private final String ext;
-        private final Path path;
-
-        public DownloadInfo(Path dir, String name, String ext, InputStream inputStream) {
-            this.dir = dir;
-            this.name = name;
-            this.ext = ext;
-            this.inputStream = inputStream;
-            this.path = getUnexistPath();
-        }
-
-        public Path getUnexistPath() {
-            Path path = dir.resolve(name + ext);
-            int x = 0;
-            while (Files.exists(path)) {
-                path = dir.resolve(name + "(" + ++x + ")" + ext);
-            }
-            return path;
-        }
-    }
-
     private static final Client client = Client.getInstance();
     private static final Pattern filenamePattern = Pattern.compile("filename=\".*(\\.\\w+)\"$");
 
