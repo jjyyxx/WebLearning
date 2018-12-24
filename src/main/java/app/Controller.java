@@ -230,11 +230,10 @@ public class Controller implements Initializable {
             weblearning.Endpoints.authenticate(
                     DataStore.get("username", ""),
                     DataStore.getDecrypt("password", "")
-            ).thenAccept(ignored -> afterLogin()).exceptionally(e -> {
-                e.printStackTrace();
-                return null;
-            });
+            ).thenAccept(ignored -> afterLogin()).exceptionally(e -> null);
         }
+
+        Platform.runLater(() -> SplashScreen.getSplashScreen().close());
     }
 
     private void afterLogin() {
