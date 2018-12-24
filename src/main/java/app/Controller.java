@@ -15,7 +15,6 @@ import common.Settings;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -42,26 +41,22 @@ import java.util.*;
 
 public class Controller implements Initializable {
     private static final String TEMPLATE = "<!doctypehtml><html lang=\"zh\"><meta charset=\"UTF-8\"><title>中转页</title><body><script>fetch(\"https://learn.tsinghua.edu.cn/MultiLanguage/lesson/teacher/loginteacher.jsp\",{credentials:\"include\",headers:{\"content-type\":\"application/x-www-form-urlencoded\"},body:\"userid=jyx17&userpass=DICKdiao123\",method:\"POST\",mode:\"no-cors\"}).then(()=>location.replace(\"URL\"))</script>";
-
     private static final double ITEM_HEIGHT = 68.125;
-    public JFXToggleButton separateByCourse;
-    public JFXButton fileOpen;
-    public JFXButton batchDownload;
-    public JFXButton fileDownload;
-    public JFXTextField fileName1;
-    public JFXTextArea fileDescription;
 
-    public JFXTextArea workRequirement;
-    public Hyperlink workRequirementAttachment;
-    public JFXTextArea workContent;
-    public JFXTextField workAttachment;
-    public JFXButton workCommit;
-    public JFXTextField workName1;
-    public JFXButton workAlert;
-    public JFXButton refreshButton;
-    public JFXButton openInBrowserButton;
-    public JFXTabPane mainTabs;
-
+    @FXML private JFXToggleButton separateByCourse;
+    @FXML private JFXButton fileOpen;
+    @FXML private JFXButton batchDownload;
+    @FXML private JFXButton fileDownload;
+    @FXML private JFXTextField fileName1;
+    @FXML private JFXTextArea fileDescription;
+    @FXML private JFXTextArea workRequirement;
+    @FXML private Hyperlink workRequirementAttachment;
+    @FXML private JFXTextArea workContent;
+    @FXML private JFXTextField workAttachment;
+    @FXML private JFXButton workCommit;
+    @FXML private JFXTextField workName1;
+    @FXML private JFXButton workAlert;
+    @FXML private JFXTabPane mainTabs;
     @FXML private ScrollPane courseListScrollPane;
     @FXML private JFXTreeTableView<Operation> workTable;
     @FXML private JFXTreeTableColumn<Operation, String> workName;
@@ -79,66 +74,25 @@ public class Controller implements Initializable {
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinTitle;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinDate;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinRead;
-    private double sceneX;
-    private double sceneY;
-
-    private Stage stage;
-    public static JFXSnackbar snackBar;
-    private JFXDialog dialog = new JFXDialog();
-
     @FXML private Pane root;
     @FXML private StackPane main;
-    @FXML private Pane loginPane;
     @FXML private Pane coursePane;
     @FXML private Pane mask;
     @FXML private StackPane spinner;
     @FXML private JFXListView<CourseItem> courseList;
-    @FXML private JFXToolbar TopBar;
     @FXML private JFXTextField username;
     @FXML private JFXPasswordField password;
-    @FXML private JFXButton login;
-    private boolean dirtyUpdateFlag = false;
-    private boolean choosingFile = false;
+
+    public static JFXSnackbar snackBar;
+    private final JFXDialog dialog = new JFXDialog();
     private JFXTreeTableView currentTable;
 
-    private List<Path> tempPaths = new ArrayList<>();
-
-    @FXML private void close(ActionEvent event) {
-        stage.close();
-        System.exit(0);
-    }
-
-    @FXML private void minimize(ActionEvent event) {
-        stage.setIconified(true);
-    }
-
-    @FXML private void login(ActionEvent event) {
-        String name = username.getText();
-        String pass = password.getText();
-        toggleSpinner(true);
-        Endpoints.authenticate(name, pass)
-                .thenAccept(ignored -> {
-                    DataStore.put("username", name);
-                    DataStore.putEncrypt("password", pass);
-                    afterLogin();
-                })
-                .exceptionally(e -> {
-                    toggleSpinner(false);
-                    String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
-                    snackBar.show(text, "error", 3000);
-                    return null;
-                });
-    }
-
-    @FXML private void topBarDragging(MouseEvent event) {
-        stage.setX(event.getScreenX() - sceneX);
-        stage.setY(event.getScreenY() - sceneY);
-    }
-
-    @FXML private void topBarPressed(MouseEvent event) {
-        sceneX = event.getSceneX();
-        sceneY = event.getSceneY();
-    }
+    private final List<Path> tempPaths = new ArrayList<>();
+    private boolean dirtyUpdateFlag = false;
+    private boolean choosingFile = false;
+    private double sceneX;
+    private double sceneY;
+    private Stage stage;
 
     @Override public void initialize(URL location, ResourceBundle resources) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -392,17 +346,7 @@ public class Controller implements Initializable {
         }
     }
 
-    @FXML public void addBulletinAlert(ActionEvent actionEvent) {
-        Bulletin currentBulletin = bulletinTable.getSelectionModel().getSelectedItem().getValue();
-        Util.requestTime(main, date -> Notification.addNotification(currentBulletin.name.get(), currentBulletin.content.get(), date, NotificationType.ANNOUNCEMENT));
-    }
-
-    public void addWorkAlert(ActionEvent actionEvent) {
-        Operation currentOperation = workTable.getSelectionModel().getSelectedItem().getValue();
-        Util.requestTime(main, date -> Notification.addNotification(currentOperation.title.get(), "", date, NotificationType.ASSIGNMENT));
-    }
-
-    public void download(boolean batch, boolean open) {
+    private void download(boolean batch, boolean open) {
         FileEntry[] entries;
         if (batch) {
             ObservableList<TreeItem<FileEntry>> selectedItems = fileTable.getSelectionModel().getSelectedItems();
@@ -416,26 +360,6 @@ public class Controller implements Initializable {
         }
         CourseData courseData = courseList.getSelectionModel().selectedItemProperty().get().courseData;
         DownloadManager.enqueue(courseData, entries, open);
-    }
-
-    public void fileDownload(ActionEvent event) {
-        download(false, false);
-    }
-
-    public void batchDownload(ActionEvent event) {
-        download(true, false);
-    }
-
-    public void commit(ActionEvent event) {
-        String file = workAttachment.getText();
-        String text = workContent.getText();
-        Operation operation = workTable.getSelectionModel().getSelectedItem().getValue();
-        (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file))).thenAccept(aVoid -> Platform.runLater(() -> snackBar.show("提交成功！", "success", 3000)));
-    }
-
-    public void attachmentDownload(ActionEvent event) {
-        CourseData courseData = courseList.getSelectionModel().selectedItemProperty().get().courseData;
-        DownloadManager.enqueue(courseData, workTable.getSelectionModel().getSelectedItem().getValue());
     }
 
     private void stateSwitch(int type, boolean state) {
@@ -461,11 +385,41 @@ public class Controller implements Initializable {
         }
     }
 
-    public void refresh(ActionEvent event) {
+    @FXML private void addBulletinAlert() {
+        Bulletin currentBulletin = bulletinTable.getSelectionModel().getSelectedItem().getValue();
+        Util.requestTime(main, date -> Notification.addNotification(currentBulletin.name.get(), currentBulletin.content.get(), date, NotificationType.ANNOUNCEMENT));
+    }
+
+    @FXML private void addWorkAlert() {
+        Operation currentOperation = workTable.getSelectionModel().getSelectedItem().getValue();
+        Util.requestTime(main, date -> Notification.addNotification(currentOperation.title.get(), "", date, NotificationType.ASSIGNMENT));
+    }
+
+    @FXML private void fileDownload() {
+        download(false, false);
+    }
+
+    @FXML private void batchDownload() {
+        download(true, false);
+    }
+
+    @FXML private void commit() {
+        String file = workAttachment.getText();
+        String text = workContent.getText();
+        Operation operation = workTable.getSelectionModel().getSelectedItem().getValue();
+        (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file))).thenAccept(aVoid -> Platform.runLater(() -> snackBar.show("提交成功！", "success", 3000)));
+    }
+
+    @FXML private void attachmentDownload() {
+        CourseData courseData = courseList.getSelectionModel().selectedItemProperty().get().courseData;
+        DownloadManager.enqueue(courseData, workTable.getSelectionModel().getSelectedItem().getValue());
+    }
+
+    @FXML private void refresh() {
         refreshContent(courseList.getSelectionModel().getSelectedItem());
     }
 
-    public void openBrowser(ActionEvent event) {
+    @FXML private void openBrowser() {
         try {
             String url = ((TreeItem<Navigable>) currentTable.getSelectionModel().getSelectedItem()).getValue().getURL().toString();
             String content = TEMPLATE.replace("NAME", DataStore.get("username", ""))
@@ -480,17 +434,54 @@ public class Controller implements Initializable {
         } catch (NullPointerException | ClassCastException ignored) {}
     }
 
-    public void openSetting(ActionEvent event) {
+    @FXML private void openSetting() {
         dialog.setContent(SettingPane.INSTANCE);
         dialog.show(main);
     }
 
-    public void openInbox(ActionEvent event) {
+    @FXML private void openInbox() {
         dialog.setContent(InboxPane.INSTANCE);
         dialog.show(main);
     }
 
-    public void fileOpen(ActionEvent event) {
+    @FXML private void fileOpen() {
         download(false, true);
+    }
+
+    @FXML private void close() {
+        stage.close();
+        System.exit(0);
+    }
+
+    @FXML private void minimize() {
+        stage.setIconified(true);
+    }
+
+    @FXML private void login() {
+        String name = username.getText();
+        String pass = password.getText();
+        toggleSpinner(true);
+        Endpoints.authenticate(name, pass)
+                .thenAccept(ignored -> {
+                    DataStore.put("username", name);
+                    DataStore.putEncrypt("password", pass);
+                    afterLogin();
+                })
+                .exceptionally(e -> {
+                    toggleSpinner(false);
+                    String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
+                    snackBar.show(text, "error", 3000);
+                    return null;
+                });
+    }
+
+    @FXML private void topBarDragging(MouseEvent event) {
+        stage.setX(event.getScreenX() - sceneX);
+        stage.setY(event.getScreenY() - sceneY);
+    }
+
+    @FXML private void topBarPressed(MouseEvent event) {
+        sceneX = event.getSceneX();
+        sceneY = event.getSceneY();
     }
 }

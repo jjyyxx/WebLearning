@@ -14,7 +14,7 @@ public class FileEntry extends RecursiveTreeObject<FileEntry> implements Navigab
     private static final Client client = Client.getInstance();
     private static final String DOWNLOAD = "uploadFile/downloadFile_student.jsp";
 
-    private String args;
+    private final String args;
     public final StringProperty title = new SimpleStringProperty();
     public final StringProperty description = new SimpleStringProperty();
     public final StringProperty size = new SimpleStringProperty();

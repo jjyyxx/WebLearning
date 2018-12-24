@@ -33,17 +33,17 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
     private static final Pattern DELETEPATTERN = Pattern.compile("onclick='check_del\\(\"(\\d+?)\",\".*?\",\"(.*?)\",\"(\\d+?)\"\\)'");
     private static final Client client = Client.getInstance();
 
-    private String args;
+    private final String args;
     public final StringProperty title = new SimpleStringProperty();
     public final StringProperty effectiveDate = new SimpleStringProperty();
     public final StringProperty deadline = new SimpleStringProperty();
     public final StringProperty isHandedIn = new SimpleStringProperty();
     public final StringProperty size = new SimpleStringProperty();
 
-    private String submitArgs;
-    private boolean submitDisabled;
-    private String reviewArgs;
-    private boolean reviewDisabled;
+    private final String submitArgs;
+    private final boolean submitDisabled;
+    private final String reviewArgs;
+    private final boolean reviewDisabled;
 
     private boolean detailsResolved = false;
     private String description;
@@ -123,7 +123,7 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
 
                     MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
                     hiddenFieldsMap.forEach(builder::addFormDataPart);
-                    MediaType mediaType = null;
+                    MediaType mediaType;
                     try {
                         mediaType = MediaType.parse(Files.probeContentType(file.toPath()));
                     } catch (IOException e) {

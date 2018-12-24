@@ -22,7 +22,7 @@ public class SingleHostHttpClient {
     protected SingleHostHttpClient(String host) {
         client = new OkHttpClient.Builder()
                 .cookieJar(new CookieJar() {
-                    Map<String, Cookie> cookieMap = new HashMap<>();
+                    final Map<String, Cookie> cookieMap = new HashMap<>();
                     @Override
                     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
                         for (Cookie cookie : cookies) {

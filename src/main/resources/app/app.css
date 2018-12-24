@@ -54,10 +54,10 @@
     -fx-padding:0;
 }
 
-.noscroll .scroll-bar .increment-arrow,
-.noscroll .scroll-bar .decrement-arrow,
-.noscroll .scroll-bar .increment-button,
-.noscroll .scroll-bar .decrement-button {
+.no-scroll .scroll-bar .increment-arrow,
+.no-scroll .scroll-bar .decrement-arrow,
+.no-scroll .scroll-bar .increment-button,
+.no-scroll .scroll-bar .decrement-button {
     -fx-padding:0;
 }
 

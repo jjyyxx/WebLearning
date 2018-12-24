@@ -23,8 +23,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import app.controls.Logo?>
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
-  <JFXToolbar fx:id="TopBar" onMouseDragged="#topBarDragging" onMousePressed="#topBarPressed" prefHeight="55.0" prefWidth="1000.0" style="-fx-background-color: #2962ff;">
+  <JFXToolbar onMouseDragged="#topBarDragging" onMousePressed="#topBarPressed" prefHeight="55.0" prefWidth="1000.0" style="-fx-background-color: #2962ff;">
     <left>
       <Label prefHeight="32.0" prefWidth="212.0" style="-fx-padding: 0 0 0 30;" text="网络学堂客户端" textFill="WHITE" BorderPane.alignment="CENTER">
         <font>
@@ -34,22 +35,22 @@
     </left>
     <right>
       <Pane prefHeight="55.0" prefWidth="251.0" BorderPane.alignment="CENTER">
-        <JFXButton fx:id="closeButton" contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="8.0" onAction="#close" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="8.0" onAction="#close" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
             <MaterialIconView fill="WHITE" glyphName="CLOSE" size="24" wrappingWidth="24.0" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="minimizeButton" contentDisplay="GRAPHIC_ONLY" layoutX="168.0" layoutY="8.0" onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="168.0" layoutY="8.0" onAction="#minimize" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
             <MaterialIconView fill="WHITE" glyphName="REMOVE" size="24" wrappingWidth="24.0" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="settingButton" contentDisplay="GRAPHIC_ONLY" layoutX="134.0" layoutY="8.0" onAction="#openSetting" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="134.0" layoutY="8.0" onAction="#openSetting" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
             <MaterialIconView fill="WHITE" glyphName="SETTINGS" size="24" wrappingWidth="24.0" />
           </graphic>
         </JFXButton>
-        <JFXButton fx:id="inboxButton" contentDisplay="GRAPHIC_ONLY" layoutX="100.0" layoutY="8.0" onAction="#openInbox" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
+        <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="100.0" layoutY="8.0" onAction="#openInbox" prefHeight="41.0" prefWidth="41.0" ripplerFill="#0039cb" style="-jfx-disable-visual-focus: true;" styleClass="round-button">
           <graphic>
             <MaterialIconView fill="WHITE" glyphName="INBOX" layoutX="28.0" layoutY="70.0" size="24" />
           </graphic>
@@ -147,18 +148,18 @@
         </Tab>
 
       </JFXTabPane>
-      <JFXButton fx:id="refreshButton" contentDisplay="GRAPHIC_ONLY" layoutX="962.0" layoutY="2.0" onAction="#refresh" prefHeight="30.0" prefWidth="7.0" style="-jfx-disable-visual-focus: true;">
+      <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="962.0" layoutY="2.0" onAction="#refresh" prefHeight="30.0" prefWidth="7.0" style="-jfx-disable-visual-focus: true;">
         <graphic>
           <MaterialIconView fill="WHITE" glyphName="REFRESH" size="20" />
         </graphic>
       </JFXButton>
-      <JFXButton fx:id="openInBrowserButton" contentDisplay="GRAPHIC_ONLY" layoutX="926.0" layoutY="2.0" onAction="#openBrowser" prefHeight="30.0" prefWidth="32.0" style="-jfx-disable-visual-focus: true;">
+      <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="926.0" layoutY="2.0" onAction="#openBrowser" prefHeight="30.0" prefWidth="32.0" style="-jfx-disable-visual-focus: true;">
         <graphic>
           <MaterialIconView fill="WHITE" glyphName="OPEN_IN_BROWSER" size="20" />
         </graphic>
       </JFXButton>
     </Pane>
-    <Pane fx:id="loginPane" visible="false">
+    <Pane visible="false">
       <Pane layoutX="120.0" layoutY="155.0">
         <JFXTextField fx:id="username" focusColor="#0039cb" labelFloat="true" layoutX="42.0" onAction="#login" promptText="用户名">
           <font>
@@ -170,7 +171,7 @@
             <Font size="20.0" />
           </font>
         </JFXPasswordField>
-        <JFXButton fx:id="login" buttonType="RAISED" layoutX="42.0" layoutY="194.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" ripplerFill="#1e5dfc" style="-fx-background-color: #0039cb;" text="登录" textFill="WHITE">
+        <JFXButton buttonType="RAISED" layoutX="42.0" layoutY="194.0" onAction="#login" prefHeight="41.0" prefWidth="244.0" ripplerFill="#1e5dfc" style="-fx-background-color: #0039cb;" text="登录" textFill="WHITE">
           <font>
             <Font size="20.0" />
           </font>
@@ -220,6 +221,7 @@
         </Pane>
       </VBox>
       <Pane layoutX="364.0" layoutY="124.0" prefHeight="283.0" prefWidth="286.0">
+        <Logo fill="#8f078126" scaleX="0.6" scaleY="0.6" />
       </Pane>
     </Pane>
   </StackPane>

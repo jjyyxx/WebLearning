@@ -32,7 +32,7 @@ public class CourseData {
     private String id;
     private String name;
 
-    private boolean isNewVer;
+    private final boolean isNewVer;
     private SemesterData semester;
     public final IntegerProperty unsubmittedOperations = new SimpleIntegerProperty();
     public final IntegerProperty unreadBulletins = new SimpleIntegerProperty();
@@ -201,8 +201,8 @@ enum SemesterType {
 }
 
 class SemesterData {
-    private int start;
-    private SemesterType type;
+    private final int start;
+    private final SemesterType type;
     private SemesterData(int start, SemesterType type) {
         this.start = start;
         this.type = type;

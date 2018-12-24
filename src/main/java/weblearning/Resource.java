@@ -10,9 +10,9 @@ import static java.awt.Desktop.getDesktop;
 import static java.awt.Desktop.isDesktopSupported;
 
 public class Resource {
-    private String url;
-    private String title;
-    private String description;
+    private final String url;
+    private final String title;
+    private final String description;
 
     Resource(String url, String title, String description) {
         this.url = url;

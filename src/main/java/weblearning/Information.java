@@ -47,10 +47,10 @@ public class Information {
 }
 
 class Teacher {
-    private String name;
-    private String mail;
-    private String phone;
-    private String introduction;
+    private final String name;
+    private final String mail;
+    private final String phone;
+    private final String introduction;
 
     Teacher(String name, String mail, String phone, String introduction) {
         this.name = name;

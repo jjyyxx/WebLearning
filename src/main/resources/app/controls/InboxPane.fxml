@@ -11,28 +11,26 @@
          prefWidth="604.0" stylesheets="/app/app.css" type="Pane" xmlns="http://javafx.com/javafx/10.0.1"
          xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controls.InboxPane">
   <Pane layoutX="350.0" prefHeight="400.0" prefWidth="255.0">
-    <children>
-      <JFXTextField fx:id="name" editable="false" labelFloat="true" layoutX="12.0" layoutY="20.0" prefHeight="23.0"
-                    prefWidth="231.0" promptText="标题"/>
-      <JFXTextArea fx:id="content" editable="false" labelFloat="true" layoutX="12.0" layoutY="66.0" prefHeight="221.0"
-                   prefWidth="231.0" promptText="内容"/>
-      <JFXButton contentDisplay="TEXT_ONLY" layoutX="12.0" layoutY="347.0" onAction="#cancel" prefHeight="36.0"
-                 prefWidth="109.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="取消提醒"
-                 textFill="WHITE">
-        <font>
-          <Font name="System Bold" size="14.0"/>
-        </font>
-      </JFXButton>
-      <JFXTextField fx:id="date" editable="false" labelFloat="true" layoutX="12.0" layoutY="308.0" prefHeight="23.0"
-                    prefWidth="231.0" promptText="提醒时间"/>
-      <JFXButton contentDisplay="TEXT_ONLY" layoutX="134.0" layoutY="347.0" onAction="#batch" prefHeight="36.0"
-                 prefWidth="109.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="批量取消"
-                 textFill="WHITE">
-        <font>
-          <Font name="System Bold" size="14.0"/>
-        </font>
-      </JFXButton>
-    </children>
+    <JFXTextField fx:id="name" editable="false" labelFloat="true" layoutX="12.0" layoutY="20.0" prefHeight="23.0"
+                  prefWidth="231.0" promptText="标题"/>
+    <JFXTextArea fx:id="content" editable="false" labelFloat="true" layoutX="12.0" layoutY="66.0" prefHeight="221.0"
+                 prefWidth="231.0" promptText="内容"/>
+    <JFXButton contentDisplay="TEXT_ONLY" layoutX="12.0" layoutY="347.0" onAction="#cancel" prefHeight="36.0"
+               prefWidth="109.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="取消提醒"
+               textFill="WHITE">
+      <font>
+        <Font name="System Bold" size="14.0"/>
+      </font>
+    </JFXButton>
+    <JFXTextField fx:id="date" editable="false" labelFloat="true" layoutX="12.0" layoutY="308.0" prefHeight="23.0"
+                  prefWidth="231.0" promptText="提醒时间"/>
+    <JFXButton contentDisplay="TEXT_ONLY" layoutX="134.0" layoutY="347.0" onAction="#batch" prefHeight="36.0"
+               prefWidth="109.0" ripplerFill="#0039cb" style="-fx-background-color: #2962ff;" text="批量取消"
+               textFill="WHITE">
+      <font>
+        <Font name="System Bold" size="14.0"/>
+      </font>
+    </JFXButton>
   </Pane>
-  <JFXListView fx:id="list" prefHeight="400.0" prefWidth="350.0" styleClass="noscroll"/>
+  <JFXListView fx:id="list" prefHeight="400.0" prefWidth="350.0" styleClass="no-scroll"/>
 </fx:root>

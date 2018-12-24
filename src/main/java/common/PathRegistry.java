@@ -10,7 +10,7 @@ public class PathRegistry implements Serializable {
     private static final long serialVersionUID = 3535246;
     public static final String DEFAULT = "DEFAULT";
 
-    private Map<String, String> coursePathMap;
+    private final Map<String, String> coursePathMap;
 
     {
         coursePathMap = new HashMap<>();
