@@ -234,7 +234,7 @@ public class Controller implements Initializable {
                     stateSwitch(2, false);
                     workName1.setText(value.title.get());
                     try {
-                        workCommit.setDisable(new SimpleDateFormat("yyyy-MM-dd").parse(value.deadline.get()).compareTo(new Date()) < 0);
+                        workCommit.setDisable(new SimpleDateFormat("yyyy-MM-dd").parse(value.deadline.get()).getTime()+86400000l<(new Date().getTime()));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
