@@ -12,6 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+/**
+ * 用户设置类，加载、提供、存储用户设置
+ */
 public class Settings implements Serializable {
     private static final long serialVersionUID = 6425342;
     private static final Path STARTUP = Paths.get(System.getProperty("user.home"), "AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/weblearning.bat");

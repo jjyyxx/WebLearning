@@ -1,4 +1,6 @@
 package common;
 
-public class AuthException extends Exception {
-}
+/**
+ * 用户验证失败对应的异常
+ */
+public class AuthException extends Exception {}

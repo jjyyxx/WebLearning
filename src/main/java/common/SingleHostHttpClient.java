@@ -11,6 +11,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * 描述向单个IP进行请求并管理cookie的web请求基类，进行了ResponseFuture的包装
+ */
 public class SingleHostHttpClient {
     private OkHttpClient client;
     private String host;
