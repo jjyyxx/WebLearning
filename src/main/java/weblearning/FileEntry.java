@@ -9,6 +9,9 @@ import org.jsoup.nodes.Element;
 
 import static common.Util.getArg;
 
+/**
+ * 单个文件对应的对象
+ */
 public class FileEntry extends RecursiveTreeObject<FileEntry> implements Navigable {
     public static final String TRUE = "已读";
     private static final Client client = Client.getInstance();
@@ -30,13 +33,11 @@ public class FileEntry extends RecursiveTreeObject<FileEntry> implements Navigab
         this.isRead.set(state);
     }
 
-    /*public CompletableFuture<Boolean> download(Path dir) {
-        return Endpoints.download(dir, DOWNLOAD, args).thenApply(aBoolean -> {
-            this.isRead.set(TRUE);
-            return aBoolean;
-        });
-    }*/
-
+    /**
+     * 从html元素解析文件对象
+     * @param entry 包含文件对象的html元素
+     * @return 文件对象
+     */
     static FileEntry from(Element entry) {
         Element link = entry.child(1).child(0);
         String href = link.attr("href");

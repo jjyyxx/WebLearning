@@ -4,6 +4,9 @@ import org.jsoup.nodes.Element;
 
 import java.util.function.BiFunction;
 
+/**
+ * 课程信息对应对象
+ */
 public class Information {
     public String number;
     public String index;
@@ -46,6 +49,9 @@ public class Information {
     }
 }
 
+/**
+ * 教师信息对应对象
+ */
 class Teacher {
     private final String name;
     private final String mail;

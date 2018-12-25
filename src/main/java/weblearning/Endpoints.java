@@ -9,17 +9,26 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 进行web请求的入口点
+ */
 public class Endpoints {
     private static final String AUTH = "MultiLanguage/lesson/teacher/loginteacher.jsp";
     private static final String PROFILE = "MultiLanguage/vspace/vspace_userinfo1.jsp";
     private static final String CURRICULUM = "MultiLanguage/lesson/student/MyCourse.jsp";
     private static final Client client = Client.getInstance();
 
+    /**
+     * 获取全部课程
+     */
     public static CompletableFuture<Courses> getCurriculum() {
         return client.getAsync(client.makeUrl(CURRICULUM, "language=cn"))
                 .thenApply(Courses::from);
     }
 
+    /**
+     * 获取个人资料
+     */
     public static CompletableFuture<Map<String, String>> getProfile() {
         return client.getAsync(client.makeUrl(PROFILE)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box");
@@ -34,6 +43,9 @@ public class Endpoints {
         });
     }
 
+    /**
+     * 用户身份验证
+     */
     public static CompletableFuture<Void> authenticate(String name, String pass) {
         return client.postRawAsync(client.makeUrl(AUTH),
                 new FormBody.Builder()

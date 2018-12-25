@@ -3,6 +3,9 @@ package weblearning;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 学期类型信息
+ */
 enum Semester {
     None,
     Autumn,
@@ -35,6 +38,9 @@ enum Semester {
     }
 }
 
+/**
+ * 学期具体信息
+ */
 class SemesterData {
     private final int start;
     private final Semester type;

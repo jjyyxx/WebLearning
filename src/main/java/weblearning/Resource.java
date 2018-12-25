@@ -4,11 +4,13 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static java.awt.Desktop.getDesktop;
 import static java.awt.Desktop.isDesktopSupported;
 
+/**
+ * 课程资源对应对象
+ */
 public class Resource {
     private final String url;
     private final String title;
@@ -23,8 +25,8 @@ public class Resource {
     public void browse() {
         if (isDesktopSupported()) {
             try {
-                getDesktop().browse(new URI(url));
-            } catch (URISyntaxException | IOException ignored) {}
+                getDesktop().browse(URI.create(url));
+            } catch (IOException ignored) {}
         }
     }
 

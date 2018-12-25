@@ -6,6 +6,9 @@ import org.jsoup.select.Elements;
 import java.util.LinkedHashMap;
 
 public class Courses extends LinkedHashMap<String, CourseData> {
+    /**
+     * 生成课程列表
+     */
     static Courses from(Element document) {
         Elements entries = document.getElementById("info_1").getElementsByTag("tr");
         Courses courses = new Courses();

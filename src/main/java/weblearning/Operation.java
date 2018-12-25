@@ -20,6 +20,9 @@ import java.util.regex.Pattern;
 
 import static common.Util.*;
 
+/**
+ * 单个作业对应的对象
+ */
 public class Operation extends RecursiveTreeObject<Operation> implements Navigable {
     public static final String TRUE = "已经提交";
     private static final String DETAIL = "MultiLanguage/lesson/student/hom_wk_detail.jsp";
@@ -45,6 +48,7 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
     private final String reviewArgs;
     private final boolean reviewDisabled;
 
+    // 作业详细信息相关内容
     private boolean detailsResolved = false;
     private String description;
     private boolean attachmentExists = true;
@@ -55,6 +59,7 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
     private String submissionAttachmentName;
     private String submissionAttachmentArgs;
 
+    // 作业评价相关内容
     private boolean reviewResolved = false;
     private String reviewer;
     private String reviewTime;
@@ -77,6 +82,9 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
         this.reviewDisabled = reviewDisabled;
     }
 
+    /**
+     * 请求作业详细信息
+     */
     public CompletableFuture<Void> resolveDetail() {
         return client.getAsync(client.makeUrl(DETAIL, args)).thenAccept(document -> {
             Element table = document.getElementById("table_box").child(0);
@@ -106,6 +114,9 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
        return client.makeUrl(DOWNLOAD, attachmentArgs);
     }
 
+    /**
+     * 含附件提交
+     */
     public CompletableFuture<Void> submit(String content, File file) throws IllegalArgumentException {
         return submitDisabled ? CompletableFuture.completedFuture(null) :
                 client.getAsync(client.makeUrl(SUBMIT, submitArgs)).thenCompose(document -> {
@@ -148,6 +159,9 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
                 });
     }
 
+    /**
+     * 无附件提交
+     */
     public CompletableFuture<Void> submit(String content) throws IllegalArgumentException {
         return submitDisabled ? CompletableFuture.completedFuture(null) :
                 client.getAsync(client.makeUrl(SUBMIT, submitArgs)).thenCompose(document -> {
@@ -166,6 +180,9 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
                 });
     }
 
+    /**
+     * 删除作业附件
+     */
     public CompletableFuture<Void> deleteAttachment() {
         return client.getRawAsync(client.makeUrl(SUBMIT, submitArgs)).thenCompose(response -> {
             try (ResponseBody body = response.body()) {
@@ -185,6 +202,9 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
         });
     }
 
+    /**
+     * 获取作业评价
+     */
     public CompletableFuture<Void> resolveReview() {
         return reviewDisabled ? CompletableFuture.completedFuture(null) :
                 client.getAsync(client.makeUrl(DETAIL, args)).thenAccept(document -> {
@@ -223,6 +243,11 @@ public class Operation extends RecursiveTreeObject<Operation> implements Navigab
         return attachmentExists;
     }
 
+    /**
+     * 从html元素解析作业对象
+     * @param entry 包含作业对象的html元素
+     * @return 作业对象
+     */
     public static Operation from(Element entry) {
         Element link = entry.child(0).child(0);
         String href = link.attr("href");

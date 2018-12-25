@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 
 import static common.Util.toLinkedMap;
 
+/**
+ * 老版网络学堂的单个课程
+ */
 public class CourseDataOld extends CourseData {
     private static final Pattern courseIdPattern = Pattern.compile("course_id=(\\d+)");
     private static final Pattern courseNamePattern = Pattern.compile("^(.*)\\((.+)\\)$");
@@ -20,8 +23,8 @@ public class CourseDataOld extends CourseData {
     private static final String RESOURCE = "MultiLanguage/lesson/student/ware_list.jsp";
     private static final String OPERATION = "MultiLanguage/lesson/student/hom_wk_brw.jsp";
     private static final String ALLSCORES = "MultiLanguage/lesson/student/hom_wk_recmark.jsp";
-//    private static final String FAQ = "MultiLanguage/public/bbs/getbbsid_student.jsp";
-//    private static final String DISCUSSION = "MultiLanguage/public/bbs/gettalkid_student.jsp";
+    //    private static final String FAQ = "MultiLanguage/public/bbs/getbbsid_student.jsp";
+    //    private static final String DISCUSSION = "MultiLanguage/public/bbs/gettalkid_student.jsp";
     private static final Client client = Client.getInstance();
 
     CourseDataOld(String url, String name, String unsubmittedOperations, String unreadBulletins, String unreadFiles) {
@@ -44,6 +47,9 @@ public class CourseDataOld extends CourseData {
         }
     }
 
+    /**
+     * 获取课程公告
+     */
     @Override public CompletableFuture<Bulletin[]> resolveBulletins() {
         return client.getAsync(client.makeUrl(BULLETIN, "course_id=" + id)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box");
@@ -63,6 +69,9 @@ public class CourseDataOld extends CourseData {
         });
     }
 
+    /**
+     * 获取课程信息
+     */
     @Override public CompletableFuture<Information> resolveInformation() {
         return client.getAsync(client.makeUrl(INFORMATION, "course_id=" + id)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box").child(0);
@@ -70,6 +79,9 @@ public class CourseDataOld extends CourseData {
         });
     }
 
+    /**
+     * 获取课程文件
+     */
     @Override public CompletableFuture<Map<String, FileEntry[]>> resolveFileEntries() {
         return client.getAsync(client.makeUrl(FILE, "course_id=" + id)).thenApply(document -> {
             Element nextGroup;
@@ -92,6 +104,9 @@ public class CourseDataOld extends CourseData {
         });
     }
 
+    /**
+     * 获取课程资源
+     */
     @Override public CompletableFuture<Resource[]> resolveResources() {
         return client.getAsync(client.makeUrl(RESOURCE, "course_id=" + id)).thenApply(document -> {
             Elements entries = document.getElementById("table_box").nextElementSibling().child(0).children();
@@ -100,6 +115,9 @@ public class CourseDataOld extends CourseData {
         });
     }
 
+    /**
+     * 获取课程作业
+     */
     @Override public CompletableFuture<Operation[]> resolveOperations() {
         return client.getAsync(client.makeUrl(OPERATION, "course_id=" + id)).thenApply(document -> {
             Element tableBox = document.getElementById("table_box");
@@ -120,6 +138,9 @@ public class CourseDataOld extends CourseData {
         });
     }
 
+    /**
+     * 获取课程作业分数
+     */
     @Override public CompletableFuture<Map<String, String>> resolveAllOperationScores() {
         return client.getAsync(client.makeUrl(ALLSCORES, "course_id=" + id)).thenApply(document -> {
             Elements entries = document.getElementById("Layer1").child(0).child(0).children();

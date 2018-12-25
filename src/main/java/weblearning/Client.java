@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 网络学堂的请求客户端
+ */
 public class Client extends SingleHostHttpClient {
     private static final String HOST = "learn.tsinghua.edu.cn";
     private static final String SetCookieHeader = "Set-Cookie";
@@ -55,6 +58,9 @@ public class Client extends SingleHostHttpClient {
         return super.postBaseAsync(url, requestBody).thenCompose(this::wrapDocument);
     }
 
+    /**
+     * 检查是否验证成功
+     */
     private void checkAuth(Response response) throws AuthException {
         List<String> cookies = response.headers(SetCookieHeader);
         for (String cookie : cookies) {

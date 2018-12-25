@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 仅提供基本支持，暂未进一步实现
+ */
 public class CourseData2015 extends CourseData {
     public CourseData2015(String url, String name, String operations, String notices, String files) {
         super(name, Version.V_2015);
