@@ -88,7 +88,9 @@ public class Controller implements Initializable {
     private JFXTreeTableView currentTable;
 
     private final List<Path> tempPaths = new ArrayList<>();
-    private boolean dirtyUpdateFlag = false;
+    private boolean dirtyBulletinUpdateFlag = false;
+    private boolean dirtyFileUpdateFlag = false;
+    private boolean dirtyOperationUpdateFlag = false;
     private boolean choosingFile = false;
     private double sceneX;
     private double sceneY;
@@ -134,7 +136,7 @@ public class Controller implements Initializable {
         bulletinTitle.setCellValueFactory(p -> bulletinTitle.validateValue(p) ? p.getValue().getValue().name : bulletinTitle.getComputedValue(p));
         bulletinDate.setCellValueFactory(p -> bulletinDate.validateValue(p) ? p.getValue().getValue().time : bulletinDate.getComputedValue(p));
         bulletinTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
-            if (dirtyUpdateFlag) return;
+            if (dirtyBulletinUpdateFlag) return;
             if (nV == null) {
                 stateSwitch(0, true);
             } else {
@@ -149,6 +151,8 @@ public class Controller implements Initializable {
             }
         });
         stateSwitch(0, true);
+        bulletinTable.setShowRoot(false);
+        bulletinTable.setEditable(false);
 
         // file
         fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -157,7 +161,7 @@ public class Controller implements Initializable {
         fileSize.setCellValueFactory(p -> fileSize.validateValue(p) ? p.getValue().getValue().size : fileSize.getComputedValue(p));
         fileRead.setCellValueFactory(p -> fileRead.validateValue(p) ? p.getValue().getValue().isRead : fileRead.getComputedValue(p));
         fileTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
-            if (dirtyUpdateFlag) return;
+            if (dirtyFileUpdateFlag) return;
             if (nV == null) {
                 stateSwitch(1, true);
             } else {
@@ -173,13 +177,15 @@ public class Controller implements Initializable {
         });
         stateSwitch(1, true);
         separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
+        fileTable.setShowRoot(false);
+        fileTable.setEditable(false);
 
         // work
         workName.setCellValueFactory(p -> workName.validateValue(p) ? p.getValue().getValue().title : workName.getComputedValue(p));
         workDue.setCellValueFactory(p -> workDue.validateValue(p) ? p.getValue().getValue().deadline : workDue.getComputedValue(p));
         workDone.setCellValueFactory(p -> workDone.validateValue(p) ? p.getValue().getValue().isHandedIn : workDone.getComputedValue(p));
         workTable.getSelectionModel().selectedItemProperty().addListener((o1, oV, nV) -> {
-            if (dirtyUpdateFlag) return;
+            if (dirtyOperationUpdateFlag) return;
             if (nV == null) {
                 stateSwitch(2, true);
             } else {
@@ -222,6 +228,8 @@ public class Controller implements Initializable {
                 workCommit.requestFocus();
             }
         });
+        workTable.setShowRoot(false);
+        workTable.setEditable(false);
 
         JFXScrollPane.smoothScrolling(courseListScrollPane);
 
@@ -232,8 +240,6 @@ public class Controller implements Initializable {
                     DataStore.getDecrypt("password", "")
             ).thenAccept(ignored -> afterLogin()).exceptionally(e -> null);
         }
-
-        Platform.runLater(() -> SplashScreen.getSplashScreen().close());
     }
 
     private void afterLogin() {
@@ -261,28 +267,22 @@ public class Controller implements Initializable {
     private void refreshContent(CourseItem item) {
         // bulletin
         item.courseData.resolveBulletins().thenAccept(bulletins -> Platform.runLater(() -> {
-            dirtyUpdateFlag = true;
+            dirtyBulletinUpdateFlag = true;
             bulletinTable.unGroup(bulletinRead);
             ObservableList<Bulletin> bulletinList = FXCollections.observableArrayList(Arrays.asList(bulletins));
             final TreeItem<Bulletin> root = new RecursiveTreeItem<>(bulletinList, RecursiveTreeObject::getChildren);
             bulletinTable.setRoot(root);
-            bulletinTable.setShowRoot(false);
-            bulletinTable.setEditable(false);
             bulletinTable.group(bulletinRead);
             for (TreeItem<Bulletin> child : bulletinTable.getRoot().getChildren()) {
                 child.setExpanded(true);
             }
-            bulletinTable.getSortOrder().clear();
-            bulletinTable.getSortOrder().add(bulletinRead);
-            bulletinRead.setSortType(TreeTableColumn.SortType.ASCENDING);
-            bulletinRead.setSortable(true);
-            dirtyUpdateFlag = false;
+            dirtyBulletinUpdateFlag = false;
             bulletinTable.getSelectionModel().clearSelection();
         }));
 
         // file
         item.courseData.resolveFileEntries().thenAccept(stringMap -> Platform.runLater(() -> {
-            dirtyUpdateFlag = true;
+            dirtyFileUpdateFlag = true;
             fileTable.unGroup(fileRead);
             List<FileEntry> fileEntries = new ArrayList<>();
             for (Map.Entry<String, FileEntry[]> value : stringMap.entrySet()) {
@@ -291,8 +291,7 @@ public class Controller implements Initializable {
             ObservableList<FileEntry> fileList = FXCollections.observableArrayList(fileEntries);
             final TreeItem<FileEntry> root = new RecursiveTreeItem<>(fileList, RecursiveTreeObject::getChildren);
             fileTable.setRoot(root);
-            fileTable.setShowRoot(false);
-            fileTable.setEditable(false);
+
             fileTable.group(fileRead);
             for (TreeItem<FileEntry> child : fileTable.getRoot().getChildren()) {
                 child.setExpanded(true);
@@ -301,19 +300,17 @@ public class Controller implements Initializable {
             fileTable.getSortOrder().add(fileRead);
             fileRead.setSortType(TreeTableColumn.SortType.ASCENDING);
             fileRead.setSortable(true);
-            dirtyUpdateFlag = false;
+            dirtyFileUpdateFlag = false;
             fileTable.getSelectionModel().clearSelection();
         }));
 
         // operation
         item.courseData.resolveOperations().thenAccept(operations -> Platform.runLater(() -> {
-            dirtyUpdateFlag = true;
+            dirtyOperationUpdateFlag = true;
             workTable.unGroup(workDone);
             ObservableList<Operation> operationList = FXCollections.observableArrayList(Arrays.asList(operations));
             final TreeItem<Operation> root = new RecursiveTreeItem<>(operationList, RecursiveTreeObject::getChildren);
             workTable.setRoot(root);
-            workTable.setShowRoot(false);
-            workTable.setEditable(false);
             workTable.group(workDone);
             for (TreeItem<Operation> child : workTable.getRoot().getChildren()) {
                 child.setExpanded(true);
@@ -322,7 +319,7 @@ public class Controller implements Initializable {
             workTable.getSortOrder().add(workDone);
             workDone.setSortType(TreeTableColumn.SortType.ASCENDING);
             workDone.setSortable(true);
-            dirtyUpdateFlag = false;
+            dirtyOperationUpdateFlag = false;
             workTable.getSelectionModel().clearSelection();
         }));
     }
