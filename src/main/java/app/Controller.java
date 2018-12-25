@@ -39,16 +39,23 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 
+/**
+ * 主要的UI控制器。本项目采用了类似MVC的架构，用Controller处理用户逻辑，fxml中定义UI界面，weblearning的相关类中提供数据模型
+ */
 public class Controller implements Initializable {
-    private static final String TEMPLATE = "<!doctypehtml><html lang=\"zh\"><meta charset=\"UTF-8\"><title>中转页</title><body><script>fetch(\"https://learn.tsinghua.edu.cn/MultiLanguage/lesson/teacher/loginteacher.jsp\",{credentials:\"include\",headers:{\"content-type\":\"application/x-www-form-urlencoded\"},body:\"userid=jyx17&userpass=DICKdiao123\",method:\"POST\",mode:\"no-cors\"}).then(()=>location.replace(\"URL\"))</script>";
+    // 单个列表项的高度，用于计算ScrollPane的高度
     private static final double ITEM_HEIGHT = 68.125;
 
+    // 页面上UI组件的引用
+    // 课程文件部分
     @FXML private JFXToggleButton separateByCourse;
     @FXML private JFXButton fileOpen;
     @FXML private JFXButton batchDownload;
     @FXML private JFXButton fileDownload;
     @FXML private JFXTextField fileName1;
     @FXML private JFXTextArea fileDescription;
+
+    // 课程作业部分
     @FXML private JFXTextArea workRequirement;
     @FXML private Hyperlink workRequirementAttachment;
     @FXML private JFXTextArea workContent;
@@ -56,46 +63,59 @@ public class Controller implements Initializable {
     @FXML private JFXButton workCommit;
     @FXML private JFXTextField workName1;
     @FXML private JFXButton workAlert;
-    @FXML private JFXTabPane mainTabs;
-    @FXML private ScrollPane courseListScrollPane;
+
+    // 课程公告部分
+    @FXML private JFXTextArea bulletinContent;
+    @FXML private JFXTextField bulletinTitle1;
+    @FXML private JFXButton bulletinAlertButton;
+
+    // 课程作业部分的table
     @FXML private JFXTreeTableView<Operation> workTable;
     @FXML private JFXTreeTableColumn<Operation, String> workName;
     @FXML private JFXTreeTableColumn<Operation, String> workDue;
     @FXML private JFXTreeTableColumn<Operation, String> workDone;
+
+    // 课程文件部分的table
     @FXML private JFXTreeTableView<FileEntry> fileTable;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileName;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileDate;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileSize;
     @FXML private JFXTreeTableColumn<FileEntry, String> fileRead;
-    @FXML private JFXTextArea bulletinContent;
-    @FXML private JFXTextField bulletinTitle1;
-    @FXML private JFXButton bulletinAlertButton;
+
+    // 课程公告部分的table
     @FXML private JFXTreeTableView<Bulletin> bulletinTable;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinTitle;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinDate;
     @FXML private JFXTreeTableColumn<Bulletin, String> bulletinRead;
-    @FXML private Pane root;
-    @FXML private StackPane main;
-    @FXML private Pane coursePane;
-    @FXML private Pane mask;
-    @FXML private StackPane spinner;
-    @FXML private JFXListView<CourseItem> courseList;
-    @FXML private JFXTextField username;
-    @FXML private JFXPasswordField password;
 
-    public static JFXSnackbar snackBar;
-    private final JFXDialog dialog = new JFXDialog();
-    private JFXTreeTableView currentTable;
+    @FXML private JFXTabPane mainTabs; // 主TabPane
+    @FXML private ScrollPane courseListScrollPane; // 课程列表的容器
+    @FXML private JFXListView<CourseItem> courseList; // 课程列表
+    @FXML private Pane root; // 根容器
+    @FXML private StackPane main; // 主容器，处理页面间的切换
+    @FXML private Pane coursePane; // 登录后的页面
+    @FXML private Pane mask; // 遮罩层
+    @FXML private StackPane spinner; // 加载提示
+    @FXML private JFXTextField username; // 用户名输入框
+    @FXML private JFXPasswordField password; // 密码输入框
 
-    private final List<Path> tempPaths = new ArrayList<>();
-    private boolean dirtyBulletinUpdateFlag = false;
-    private boolean dirtyFileUpdateFlag = false;
-    private boolean dirtyOperationUpdateFlag = false;
-    private boolean choosingFile = false;
-    private double sceneX;
-    private double sceneY;
-    private Stage stage;
+    public static JFXSnackbar snackBar; // 下方提示条
+    private final JFXDialog dialog = new JFXDialog(); // 用于容纳Setting和Inbox的对话框
+    private JFXTreeTableView currentTable; // 记录当前的Table的变量
 
+    // 非UI变量
+    private final List<Path> tempPaths = new ArrayList<>(); // 生成的临时文件的路径列表，用于退出时清除
+    private boolean dirtyBulletinUpdateFlag = false; // 防止UI更新过程中发生循环操作的标志变量，作用于公告表格
+    private boolean dirtyFileUpdateFlag = false; // 防止UI更新过程中发生循环操作的标志变量，作用于文件表格
+    private boolean dirtyOperationUpdateFlag = false; // 防止UI更新过程中发生循环操作的标志变量，作用于作业表格
+    private boolean choosingFile = false; // 防止由于重新获得焦点而反复触发选择文件的标志变量
+    private double sceneX; // 当前窗口位置的横坐标，用于计算拖动
+    private double sceneY; // 当前窗口位置的纵坐标，用于计算拖动
+    private Stage stage; // 对窗口本身的引用
+
+    /**
+     * 初始化UI组件的函数，此时上方所有的UI组件变量已被赋值
+     */
     @Override public void initialize(URL location, ResourceBundle resources) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -104,6 +124,8 @@ public class Controller implements Initializable {
                 }
             } catch (IOException ignored) {}
         }));
+
+        // 预加载，防止Listener由于JIT的懒加载特性出现工作异常
         try {
             Class.forName("app.controls.InboxPane");
         } catch (ClassNotFoundException e) {
@@ -131,7 +153,7 @@ public class Controller implements Initializable {
         });
         currentTable = bulletinTable;
 
-        // bulletin
+        // 公告页面的初始化
         bulletinRead.setCellValueFactory(p -> bulletinRead.validateValue(p) ? p.getValue().getValue().isRead : bulletinRead.getComputedValue(p));
         bulletinTitle.setCellValueFactory(p -> bulletinTitle.validateValue(p) ? p.getValue().getValue().name : bulletinTitle.getComputedValue(p));
         bulletinDate.setCellValueFactory(p -> bulletinDate.validateValue(p) ? p.getValue().getValue().time : bulletinDate.getComputedValue(p));
@@ -154,7 +176,7 @@ public class Controller implements Initializable {
         bulletinTable.setShowRoot(false);
         bulletinTable.setEditable(false);
 
-        // file
+        // 文件页面的初始化
         fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         fileName.setCellValueFactory(p -> fileName.validateValue(p) ? p.getValue().getValue().title : fileName.getComputedValue(p));
         fileDate.setCellValueFactory(p -> fileDate.validateValue(p) ? p.getValue().getValue().uploadTime : fileSize.getComputedValue(p));
@@ -180,7 +202,7 @@ public class Controller implements Initializable {
         fileTable.setShowRoot(false);
         fileTable.setEditable(false);
 
-        // work
+        // 作业页面的初始化
         workName.setCellValueFactory(p -> workName.validateValue(p) ? p.getValue().getValue().title : workName.getComputedValue(p));
         workDue.setCellValueFactory(p -> workDue.validateValue(p) ? p.getValue().getValue().deadline : workDue.getComputedValue(p));
         workDone.setCellValueFactory(p -> workDone.validateValue(p) ? p.getValue().getValue().isHandedIn : workDone.getComputedValue(p));
@@ -231,9 +253,13 @@ public class Controller implements Initializable {
         workTable.setShowRoot(false);
         workTable.setEditable(false);
 
+        // 课程列表的平滑滚动
         JFXScrollPane.smoothScrolling(courseListScrollPane);
 
+        // 防止输入密码时中文输入法开启
         password.focusedProperty().addListener((observable, oldValue, newValue) -> Imm32.set(newValue));
+
+        // 如果自动登录选项启用，则尝试自动登录
         if (Settings.INSTANCE.autologin.get()) {
             weblearning.Endpoints.authenticate(
                     DataStore.get("username", ""),
@@ -242,6 +268,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * 登录成功后执行的函数，进一步初始化UI组件
+     */
     private void afterLogin() {
         SettingPane.INSTANCE.setName(DataStore.get("username", ""));
         Endpoints.getCurriculum().thenAccept(courseData -> Platform.runLater(() -> {
@@ -264,8 +293,12 @@ public class Controller implements Initializable {
         });
     }
 
+    /**
+     * 选择某一课程之后刷新内容的函数
+     * @param item 被新选中的课程
+     */
     private void refreshContent(CourseItem item) {
-        // bulletin
+        // 公告刷新
         item.courseData.resolveBulletins().thenAccept(bulletins -> Platform.runLater(() -> {
             dirtyBulletinUpdateFlag = true;
             bulletinTable.unGroup(bulletinRead);
@@ -280,7 +313,7 @@ public class Controller implements Initializable {
             bulletinTable.getSelectionModel().clearSelection();
         }));
 
-        // file
+        // 文件刷新
         item.courseData.resolveFileEntries().thenAccept(stringMap -> Platform.runLater(() -> {
             dirtyFileUpdateFlag = true;
             fileTable.unGroup(fileRead);
@@ -304,7 +337,7 @@ public class Controller implements Initializable {
             fileTable.getSelectionModel().clearSelection();
         }));
 
-        // operation
+        // 作业刷新
         item.courseData.resolveOperations().thenAccept(operations -> Platform.runLater(() -> {
             dirtyOperationUpdateFlag = true;
             workTable.unGroup(workDone);
@@ -342,6 +375,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * 文件下载的三种模式的抽象
+     */
     private void download(boolean batch, boolean open) {
         FileEntry[] entries;
         if (batch) {
@@ -381,24 +417,41 @@ public class Controller implements Initializable {
         }
     }
 
+    // 以下均为UI操作的响应函数
+
+    /**
+     * 添加公告提醒
+     */
     @FXML private void addBulletinAlert() {
         Bulletin currentBulletin = bulletinTable.getSelectionModel().getSelectedItem().getValue();
         Util.requestTime(main, date -> Notification.addNotification(currentBulletin.name.get(), currentBulletin.content.get(), date, NotificationType.ANNOUNCEMENT));
     }
 
+    /**
+     * 添加作业提醒
+     */
     @FXML private void addWorkAlert() {
         Operation currentOperation = workTable.getSelectionModel().getSelectedItem().getValue();
         Util.requestTime(main, date -> Notification.addNotification(currentOperation.title.get(), "", date, NotificationType.ASSIGNMENT));
     }
 
+    /**
+     * 文件下载
+     */
     @FXML private void fileDownload() {
         download(false, false);
     }
 
+    /**
+     * 文件批量下载
+     */
     @FXML private void batchDownload() {
         download(true, false);
     }
 
+    /**
+     * 提交作业
+     */
     @FXML private void commit() {
         String file = workAttachment.getText();
         String text = workContent.getText();
@@ -406,15 +459,32 @@ public class Controller implements Initializable {
         (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file))).thenAccept(aVoid -> Platform.runLater(() -> snackBar.show("提交成功！", "success", 3000)));
     }
 
+    /**
+     * 文件打开
+     */
+    @FXML private void fileOpen() {
+        download(false, true);
+    }
+
+    /**
+     * 下载作业要求附件
+     */
     @FXML private void attachmentDownload() {
         CourseData courseData = courseList.getSelectionModel().selectedItemProperty().get().courseData;
         DownloadManager.enqueue(courseData, workTable.getSelectionModel().getSelectedItem().getValue());
     }
 
+    /**
+     * 刷新当前课程内容
+     */
     @FXML private void refresh() {
         refreshContent(courseList.getSelectionModel().getSelectedItem());
     }
 
+    /**
+     * 为在浏览器中打开设计的跳转页
+     */
+    private static final String TEMPLATE = "<!doctypehtml><html lang=\"zh\"><meta charset=\"UTF-8\"><title>中转页</title><body><script>fetch(\"https://learn.tsinghua.edu.cn/MultiLanguage/lesson/teacher/loginteacher.jsp\",{credentials:\"include\",headers:{\"content-type\":\"application/x-www-form-urlencoded\"},body:\"userid=jyx17&userpass=DICKdiao123\",method:\"POST\",mode:\"no-cors\"}).then(()=>location.replace(\"URL\"))</script>";
     @FXML private void openBrowser() {
         try {
             String url = ((TreeItem<Navigable>) currentTable.getSelectionModel().getSelectedItem()).getValue().getURL().toString();
@@ -430,29 +500,40 @@ public class Controller implements Initializable {
         } catch (NullPointerException | ClassCastException ignored) {}
     }
 
+    /**
+     * 打开设置对话框
+     */
     @FXML private void openSetting() {
         dialog.setContent(SettingPane.INSTANCE);
         dialog.show(main);
     }
 
+    /**
+     * 添加通知提醒
+     */
     @FXML private void openInbox() {
         dialog.setContent(InboxPane.INSTANCE);
         dialog.show(main);
     }
 
-    @FXML private void fileOpen() {
-        download(false, true);
-    }
-
+    /**
+     * 关闭
+     */
     @FXML private void close() {
         stage.close();
         System.exit(0);
     }
 
+    /**
+     * 最小化
+     */
     @FXML private void minimize() {
         stage.setIconified(true);
     }
 
+    /**
+     * 登录
+     */
     @FXML private void login() {
         String name = username.getText();
         String pass = password.getText();
@@ -471,11 +552,17 @@ public class Controller implements Initializable {
                 });
     }
 
+    /**
+     * 顶部拖动
+     */
     @FXML private void topBarDragging(MouseEvent event) {
         stage.setX(event.getScreenX() - sceneX);
         stage.setY(event.getScreenY() - sceneY);
     }
 
+    /**
+     * 顶部按下，和上面的方法相互配合
+     */
     @FXML private void topBarPressed(MouseEvent event) {
         sceneX = event.getSceneX();
         sceneY = event.getSceneY();

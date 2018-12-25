@@ -10,6 +10,9 @@ import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * InboxPane的列表中的项目组件
+ */
 public class NotificationItem extends Pane {
     private static final URL fxml = CourseItem.class.getResource("/app/controls/NotificationItem.fxml");
     @FXML private MaterialIconView icon;

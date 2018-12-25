@@ -11,6 +11,9 @@ import weblearning.CourseData;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * 自定义UI部件，课程列表的单个课程
+ */
 public class CourseItem extends Pane {
     private static final URL fxml = CourseItem.class.getResource("/app/controls/CourseItem.fxml");
     @FXML private Label name;
@@ -37,11 +40,15 @@ public class CourseItem extends Pane {
         setBadgeOrHide(announcement, courseData.unreadBulletins.intValue());
         setBadgeOrHide(file, courseData.unreadFiles.intValue());
         setBadgeOrHide(assignment, courseData.unsubmittedOperations.intValue());
+        // 监听变化，进行UI响应
         courseData.unreadBulletins.addListener((o, oV, nV) -> Platform.runLater(() -> setBadgeOrHide(announcement, nV.intValue())));
         courseData.unreadFiles.addListener((o, oV, nV) -> Platform.runLater(() -> setBadgeOrHide(file, nV.intValue())));
         courseData.unsubmittedOperations.addListener((o, oV, nV) -> Platform.runLater(() -> setBadgeOrHide(assignment, nV.intValue())));
     }
 
+    /**
+     * 调整badge的状态，value等于0时隐藏，大于0时出现
+     */
     private void setBadgeOrHide(JFXBadge badge, int value) {
         if (value == 0) {
             badge.getStyleClass().add("hide");

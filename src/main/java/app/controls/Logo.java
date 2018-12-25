@@ -6,6 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * 加载图标并显示于登录页面上
+ */
 public class Logo extends SVGPath {
     private static final String LOGO;
 

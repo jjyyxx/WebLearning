@@ -18,8 +18,12 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.util.Locale;
 
+/**
+ * 集中各类用户提醒的弹出框
+ */
 public class InboxPane extends Pane {
     private static final URL fxml = InboxPane.class.getResource("/app/controls/InboxPane.fxml");
+    // 因为在整个生命周期中是唯一的，使用单例以提升性能
     public static final InboxPane INSTANCE = new InboxPane();
 
     public JFXListView<NotificationItem> list;
@@ -36,6 +40,8 @@ public class InboxPane extends Pane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        // 监听列表中元素的变化作出响应
         Notification.notifications.addListener((ListChangeListener<? super NotificationObj>) change -> {
             ObservableList<NotificationItem> notificationItems = FXCollections.observableArrayList();
             for (NotificationObj notificationObj : change.getList()) {
@@ -48,6 +54,7 @@ public class InboxPane extends Pane {
             notificationItems.add(new NotificationItem(notificationObj));
         }
         list.setItems(notificationItems);
+        // 右侧详细信息的显示与隐藏
         list.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
             if (n != null) {
                 name.setText(n.notificationObj.title);
@@ -59,9 +66,13 @@ public class InboxPane extends Pane {
                 date.setText("");
             }
         });
+        // 允许多选
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    /**
+     * UI中取消按钮的对应处理程序
+     */
     public void cancel() {
         if (list.getSelectionModel().isEmpty()) return;
         NotificationItem selectedItem = list.getSelectionModel().getSelectedItem();
@@ -69,6 +80,9 @@ public class InboxPane extends Pane {
         selectedItem.notificationObj.cancel();
     }
 
+    /**
+     * UI中批量取消按钮的对应处理程序
+     */
     public void batch() {
         if (list.getSelectionModel().isEmpty()) return;
         ObservableList<NotificationItem> selectedItems = FXCollections.observableArrayList(list.getSelectionModel().getSelectedItems());
@@ -76,6 +90,5 @@ public class InboxPane extends Pane {
         for (NotificationItem selectedItem : selectedItems) {
             selectedItem.notificationObj.cancel();
         }
-
     }
 }

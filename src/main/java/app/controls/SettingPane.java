@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
+/**
+ * 设置面板组件，与Common#Settings相绑定
+ * @see common.Settings
+ */
 public class SettingPane extends Pane {
     private static final URL fxml = SettingPane.class.getResource("/app/controls/SettingPane.fxml");
     public static final SettingPane INSTANCE = new SettingPane();
@@ -30,13 +34,18 @@ public class SettingPane extends Pane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        // 与Common#Settings相绑定
         autologin.setSelected(Settings.INSTANCE.autologin.get());
         autostart.setSelected(Settings.INSTANCE.autostart.get());
+        separateByCourse.setSelected(Settings.INSTANCE.separateByCourse.get());
         Settings.INSTANCE.autologin.bind(autologin.selectedProperty());
         Settings.INSTANCE.autostart.bind(autostart.selectedProperty());
         separateByCourse.selectedProperty().bindBidirectional(Settings.INSTANCE.separateByCourse);
     }
 
+    /**
+     * UI中退出按钮的对应处理程序
+     */
     public void logout() {
         DataStore.put("username", "");
         DataStore.putEncrypt("password", "");
@@ -44,6 +53,9 @@ public class SettingPane extends Pane {
         System.exit(0);
     }
 
+    /**
+     * UI中关于我们按钮的对应处理程序
+     */
     public void about() {
         try {
             Desktop.getDesktop().browse(URI.create("https://github.com/jjyyxx/WebLearning"));
@@ -52,6 +64,9 @@ public class SettingPane extends Pane {
         }
     }
 
+    /**
+     * UI中反馈按钮的对应处理程序
+     */
     public void issue() {
         try {
             Desktop.getDesktop().browse(URI.create("https://github.com/jjyyxx/WebLearning/issues"));
