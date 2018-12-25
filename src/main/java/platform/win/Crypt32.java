@@ -5,6 +5,9 @@ import com.sun.jna.platform.win32.WTypes;
 import com.sun.jna.platform.win32.WinCrypt;
 import com.sun.jna.platform.win32.WinDef;
 
+/**
+ * 加密与解密的native函数
+ */
 public class Crypt32 {
     static {
         Native.register("Crypt32.dll");
