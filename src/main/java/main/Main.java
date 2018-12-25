@@ -2,6 +2,9 @@ package main;
 
 import javafx.application.Application;
 
+/**
+ * 程序入口，预加载Endpoints与Notification
+ */
 public class Main {
     public static void main(String[] args) {
         try {
@@ -10,6 +13,7 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        // 启动UI
         Application.launch(app.App.class);
     }
 }
