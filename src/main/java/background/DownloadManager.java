@@ -1,7 +1,6 @@
 package background;
 
-import app.Controller;
-import com.jfoenix.controls.JFXSnackbar;
+import app.Util;
 import common.Settings;
 import okhttp3.HttpUrl;
 import weblearning.Client;
@@ -40,7 +39,7 @@ public class DownloadManager {
             download(saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
                 try {
                     Files.copy(downloadInfo.inputStream, downloadInfo.path);
-                    Controller.snackBar.enqueue(new JFXSnackbar.SnackbarEvent(downloadInfo.path + "下载完成", "success", null, 1000, false, null));
+                    Util.showSnackBar(downloadInfo.path + "下载完成", 1000, "success");
                     if (open) {
                         Desktop.getDesktop().open(downloadInfo.path.toFile());
                     }
@@ -71,7 +70,7 @@ public class DownloadManager {
         download(saveDir, operation.getAttachmentUrl(), operation.getAttachmentName()).thenAccept(downloadInfo -> {
             try {
                 Files.copy(downloadInfo.inputStream, downloadInfo.path);
-                Controller.snackBar.enqueue(new JFXSnackbar.SnackbarEvent(downloadInfo.path + "下载完成", "success", null, 1000, false, null));
+                Util.showSnackBar(downloadInfo.path + "下载完成", 1000, "success");
                 Desktop.getDesktop().open(downloadInfo.path.toFile());
             } catch (IOException e) {
                 e.printStackTrace();

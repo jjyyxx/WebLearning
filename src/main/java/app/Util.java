@@ -1,11 +1,14 @@
 package app;
 
 import com.jfoenix.controls.*;
+import javafx.css.PseudoClass;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -82,7 +85,7 @@ public class Util {
                 consumer = null;
             } else {
                 // 向用户提供反馈
-                Controller.snackBar.enqueue(new JFXSnackbar.SnackbarEvent("时间填写不完整或早于当前时间", "error"));
+                showSnackBar("时间填写不完整或早于当前时间", 3000, "error");
             }
         });
         JFXButton cancel = new JFXButton();
@@ -105,5 +108,16 @@ public class Util {
         Locale.setDefault(Locale.ENGLISH);
         // 显示对话框
         jfxDialog.show(main);
+    }
+
+    private static JFXSnackbar snackBar = new JFXSnackbar(); // 下方提示条
+
+    public static void showSnackBar(String content, int timeout, String pseudoClass) {
+        JFXSnackbarLayout layout = new JFXSnackbarLayout(content);
+        snackBar.enqueue(new JFXSnackbar.SnackbarEvent(layout, Duration.millis(timeout), PseudoClass.getPseudoClass(pseudoClass)));
+    }
+
+    static void initSnackBar(Pane root) {
+        snackBar.registerSnackbarContainer(root);
     }
 }

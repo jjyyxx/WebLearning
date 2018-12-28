@@ -99,7 +99,6 @@ public class Controller implements Initializable {
     @FXML private JFXTextField username; // 用户名输入框
     @FXML private JFXPasswordField password; // 密码输入框
 
-    public static JFXSnackbar snackBar; // 下方提示条
     private final JFXDialog dialog = new JFXDialog(); // 用于容纳Setting和Inbox的对话框
     private JFXTreeTableView currentTable; // 记录当前的Table的变量
 
@@ -132,7 +131,7 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
 
-        snackBar = new JFXSnackbar(root);
+        Util.initSnackBar(root);
 
         ObservableList<Node> children = main.getChildren();
         children.forEach(node -> node.setVisible(false));
@@ -288,7 +287,7 @@ public class Controller implements Initializable {
         });
 
         Platform.runLater(() -> {
-            snackBar.show("登录成功！", "success", 3000);
+            Util.showSnackBar("登录成功！", 3000, "success");
             switchPane(coursePane);
         });
     }
@@ -456,7 +455,7 @@ public class Controller implements Initializable {
         String file = workAttachment.getText();
         String text = workContent.getText();
         Operation operation = workTable.getSelectionModel().getSelectedItem().getValue();
-        (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file))).thenAccept(aVoid -> Platform.runLater(() -> snackBar.show("提交成功！", "success", 3000)));
+        (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file))).thenAccept(aVoid -> Platform.runLater(() -> Util.showSnackBar("提交成功！", 3000, "success")));
     }
 
     /**
@@ -496,7 +495,7 @@ public class Controller implements Initializable {
             Files.write(tempFile, content.getBytes(StandardCharsets.UTF_8));
             Desktop.getDesktop().browse(tempFile.toUri());
         } catch (IOException e) {
-            snackBar.show("无法打开浏览器！", "error", 3000);
+            Util.showSnackBar("无法打开浏览器！", 3000, "error");
         } catch (NullPointerException | ClassCastException ignored) {}
     }
 
@@ -545,9 +544,11 @@ public class Controller implements Initializable {
                     afterLogin();
                 })
                 .exceptionally(e -> {
-                    toggleSpinner(false);
-                    String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
-                    snackBar.show(text, "error", 3000);
+                    Platform.runLater(() -> {
+                        toggleSpinner(false);
+                        String text = e instanceof AuthException ? "用户名或密码不正确，请检查。" : "网络连接不可用，请检查。";
+                        Util.showSnackBar(text, 3000, "error");
+                    });
                     return null;
                 });
     }
