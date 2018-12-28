@@ -15,6 +15,7 @@ import common.Settings;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -381,12 +382,15 @@ public class Controller implements Initializable {
         FileEntry[] entries;
         if (batch) {
             ObservableList<TreeItem<FileEntry>> selectedItems = fileTable.getSelectionModel().getSelectedItems();
-            entries = new FileEntry[selectedItems.size()];
-            for (int i = 0; i < entries.length; i++) {
-                entries[i] = selectedItems.get(i).getValue();
+            FilteredList<TreeItem<FileEntry>> filtered = selectedItems.filtered(fileEntryTreeItem -> fileEntryTreeItem.getValue() instanceof FileEntry);
+            if (filtered.size() == 0) return;
+            entries = new FileEntry[filtered.size()];
+            for (int i = 0; i < filtered.size(); i++) {
+                entries[i] = filtered.get(i).getValue();
             }
         } else {
             TreeItem<FileEntry> selectedItem = fileTable.getSelectionModel().getSelectedItem();
+            if (!(selectedItem.getValue() instanceof FileEntry)) return;
             entries = new FileEntry[]{ selectedItem.getValue() };
         }
         CourseData courseData = courseList.getSelectionModel().selectedItemProperty().get().courseData;
