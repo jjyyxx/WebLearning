@@ -42,7 +42,6 @@ public class CourseDataOld extends CourseData {
         matcher = courseNamePattern.matcher(name);
         if (matcher.find()) {
             this.name = matcher.group(1);
-            semester = SemesterData.valueOf(matcher.group(2));
         } else {
             throw new IllegalArgumentException();
         }
@@ -60,23 +59,13 @@ public class CourseDataOld extends CourseData {
             }
             Bulletin[] bulletins = new Bulletin[entries.size() - 1];
             for (int i = 1; i < entries.size(); i++) {
-                Bulletin bulletin = BulletinT.from(entries.get(i));
-                if (!bulletin.isRead.get().equals(BulletinT.TRUE)) {
+                Bulletin bulletin = BulletinOld.from(entries.get(i));
+                if (!bulletin.isRead.get().equals(BulletinOld.TRUE)) {
                     bulletin.isRead.addListener((o, oV, nV) -> unreadBulletins.set(unreadBulletins.get() - 1));
                 }
                 bulletins[i - 1] = bulletin;
             }
             return bulletins;
-        });
-    }
-
-    /**
-     * 获取课程信息
-     */
-    @Override public CompletableFuture<Information> resolveInformation() {
-        return client.getAsync(client.makeUrl(INFORMATION, "course_id=" + id)).thenApply(document -> {
-            Element tableBox = document.getElementById("table_box").child(0);
-            return Information.from(tableBox);
         });
     }
 
@@ -93,8 +82,8 @@ public class CourseDataOld extends CourseData {
                 entries.remove(0);
                 FileEntry[] fileEntries = new FileEntry[entries.size()];
                 for (int i = 0; i < entries.size(); i++) {
-                    FileEntry fileEntry = FileEntryT.from(entries.get(i));
-                    if (!fileEntry.isRead.get().equals(FileEntryT.TRUE)) {
+                    FileEntry fileEntry = FileEntryOld.from(entries.get(i));
+                    if (!fileEntry.isRead.get().equals(FileEntryOld.TRUE)) {
                         fileEntry.isRead.addListener((o, oV, nV) -> unreadFiles.set(unreadFiles.get() - 1));
                     }
                     fileEntries[i] = fileEntry;
@@ -102,17 +91,6 @@ public class CourseDataOld extends CourseData {
                 map.put(nextGroup.text(), fileEntries);
             }
             return map;
-        });
-    }
-
-    /**
-     * 获取课程资源
-     */
-    @Override public CompletableFuture<Resource[]> resolveResources() {
-        return client.getAsync(client.makeUrl(RESOURCE, "course_id=" + id)).thenApply(document -> {
-            Elements entries = document.getElementById("table_box").nextElementSibling().child(0).children();
-            entries.remove(entries.size() - 1);
-            return entries.stream().map(Resource::from).toArray(Resource[]::new);
         });
     }
 
@@ -129,8 +107,8 @@ public class CourseDataOld extends CourseData {
             entries.remove(entries.size() - 1);
             Operation[] operations = new Operation[entries.size()];
             for (int i = 0; i < entries.size(); i++) {
-                Operation operation = OperationT.from(entries.get(i));
-                if (!operation.isHandedIn.get().equals(OperationT.TRUE)) {
+                Operation operation = OperationOld.from(entries.get(i));
+                if (!operation.isHandedIn.get().equals(OperationOld.TRUE)) {
                     operation.isHandedIn.addListener((o, oV, nV) -> unsubmittedOperations.set(unsubmittedOperations.get() - 1));
                 }
                 operations[i] = operation;

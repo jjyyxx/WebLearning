@@ -10,12 +10,12 @@ import static common.Util.getArg;
 /**
  * 单个文件对应的对象
  */
-public class FileEntryT extends FileEntry {
+public class FileEntryOld extends FileEntry {
     public static final String TRUE = "已读";
     private static final Client client = Client.getInstance();
     private static final String DOWNLOAD = "uploadFile/downloadFile_student.jsp";
 
-    protected FileEntryT(String url, String title, String description, String size, String uploadTime, String state) {
+    protected FileEntryOld(String url, String title, String description, String size, String uploadTime, String state) {
         this.args = getArg(url);
         this.title.set(title);
         this.description.set(description);
@@ -37,7 +37,7 @@ public class FileEntryT extends FileEntry {
         String size = entry.child(3).text();
         String time = entry.child(4).text();
         String state = entry.child(5).text().equals("新文件") ? "未读" : "已读";
-        return new FileEntryT(href, title, description, size, time, state);
+        return new FileEntryOld(href, title, description, size, time, state);
     }
 
     @Override public HttpUrl getURL() {

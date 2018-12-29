@@ -13,13 +13,13 @@ import static common.Util.getArg;
 /**
  * 单个公告对应的对象
  */
-public class BulletinT extends Bulletin {
+public class BulletinOld extends Bulletin {
     public static final String TRUE = "已读";
     public static final Client client = Client.getInstance();
 
     public static final String BULLETIN = "MultiLanguage/public/bbs/note_reply.jsp";
 
-    public BulletinT(String url, String name, String publisher, String time, String state) {
+    public BulletinOld(String url, String name, String publisher, String time, String state) {
         this.args = getArg(url);
         this.name.set(name);
         this.publisher.set(publisher);
@@ -70,7 +70,7 @@ public class BulletinT extends Bulletin {
         String publisher = entry.child(2).text();
         String time = entry.child(3).text();
         String state = entry.child(4).text();
-        return new BulletinT(href, title, publisher, time, state);
+        return new BulletinOld(href, title, publisher, time, state);
     }
 
     @Override public HttpUrl getURL() {

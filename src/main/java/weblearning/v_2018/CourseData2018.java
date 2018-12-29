@@ -18,16 +18,8 @@ public class CourseData2018 extends CourseData {
         return CompletableFuture.completedFuture(new Bulletin[]{});
     }
 
-    @Override public CompletableFuture<Information> resolveInformation() {
-        return null;
-    }
-
     @Override public CompletableFuture<Map<String, FileEntry[]>> resolveFileEntries() {
         return CompletableFuture.completedFuture(new HashMap<>());
-    }
-
-    @Override public CompletableFuture<Resource[]> resolveResources() {
-        return null;
     }
 
     @Override public CompletableFuture<Operation[]> resolveOperations() {

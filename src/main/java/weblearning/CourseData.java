@@ -17,7 +17,6 @@ public abstract class CourseData {
     protected String id;
     protected String name;
     protected Version version;
-    protected SemesterData semester;
     public final IntegerProperty unsubmittedOperations = new SimpleIntegerProperty();
     public final IntegerProperty unreadBulletins = new SimpleIntegerProperty();
     public final IntegerProperty unreadFiles = new SimpleIntegerProperty();
@@ -33,19 +32,9 @@ public abstract class CourseData {
     public abstract CompletableFuture<Bulletin[]> resolveBulletins();
 
     /**
-     * 获取课程信息
-     */
-    public abstract CompletableFuture<Information> resolveInformation();
-
-    /**
      * 获取课程文件
      */
     public abstract CompletableFuture<Map<String, FileEntry[]>> resolveFileEntries();
-
-    /**
-     * 获取课程资源
-     */
-    public abstract CompletableFuture<Resource[]> resolveResources();
 
     /**
      * 获取课程作业
@@ -65,10 +54,6 @@ public abstract class CourseData {
 
     public Version getVersion() {
         return version;
-    }
-
-    public SemesterData getSemester() {
-        return semester;
     }
 
     /**

@@ -21,7 +21,7 @@ import static common.Util.*;
 /**
  * 单个作业对应的对象
  */
-public class OperationT extends Operation {
+public class OperationOld extends Operation {
     public static final String TRUE = "已经提交";
     private static final String DETAIL = "MultiLanguage/lesson/student/hom_wk_detail.jsp";
     private static final String SUBMIT = "MultiLanguage/lesson/student/hom_wk_submit.jsp";
@@ -34,7 +34,7 @@ public class OperationT extends Operation {
     private static final Pattern DELETEPATTERN = Pattern.compile("onclick='check_del\\(\"(\\d+?)\",\".*?\",\"(.*?)\",\"(\\d+?)\"\\)'");
     private static final Client client = Client.getInstance();
 
-    public OperationT(String url, String title, String effectiveDate, String deadline, String isHandedIn, String size, String submitUrl, boolean submitDisabled, String reviewUrl, boolean reviewDisabled) {
+    public OperationOld(String url, String title, String effectiveDate, String deadline, String isHandedIn, String size, String submitUrl, boolean submitDisabled, String reviewUrl, boolean reviewDisabled) {
         this.args = getArg(url);
         this.title.set(title);
         this.effectiveDate.set(effectiveDate);
@@ -208,7 +208,7 @@ public class OperationT extends Operation {
 //        if (state.equals("尚未提交") && Notification.notifications.filtered(notificationObj -> notificationObj.title.equals(title)).size() == 0) {
 //            Notification.addNotification(title, "", Date.from(LocalDateTime.parse(deadline).minusHours(6).atZone(ZoneId.systemDefault()).toInstant()), NotificationType.ASSIGNMENT);
 //        }
-        return new OperationT(href, title, effectiveDate, deadline, state, size, submitUrl, submitDisabled, reviewUrl, reviewDisabled);
+        return new OperationOld(href, title, effectiveDate, deadline, state, size, submitUrl, submitDisabled, reviewUrl, reviewDisabled);
     }
 
     @Override public HttpUrl getURL() {
