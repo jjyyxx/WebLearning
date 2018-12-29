@@ -459,7 +459,12 @@ public class Controller implements Initializable {
         String file = workAttachment.getText();
         String text = workContent.getText();
         Operation operation = workTable.getSelectionModel().getSelectedItem().getValue();
-        (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file))).thenAccept(aVoid -> Platform.runLater(() -> Util.showSnackBar("提交成功！", 3000, "success")));
+        (file.isEmpty() ? operation.submit(text) : operation.submit(text, new File(file)))
+                .thenAccept(aVoid -> Platform.runLater(() -> Util.showSnackBar("提交成功！", 3000, "success")))
+                .exceptionally(throwable -> {
+                    Util.showSnackBar("提交失败！", 3000, "error");
+                    return null;
+                });
     }
 
     /**
