@@ -3,6 +3,9 @@ package weblearning;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jsoup.nodes.Element;
+import weblearning.v_2015.CourseData2015;
+import weblearning.v_2018.CourseData2018;
+import weblearning.v_old.CourseDataOld;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -19,7 +22,7 @@ public abstract class CourseData {
     public final IntegerProperty unreadBulletins = new SimpleIntegerProperty();
     public final IntegerProperty unreadFiles = new SimpleIntegerProperty();
 
-    CourseData(String name, Version version) {
+    protected CourseData(String name, Version version) {
         this.name = name;
         this.version = version;
     }

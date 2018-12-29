@@ -40,7 +40,7 @@ public class Client extends SingleHostHttpClient {
         return super.getBaseAsync(url).thenCompose(this::wrapResponse);
     }
 
-    CompletableFuture<Document> getAsync(HttpUrl url) {
+    public CompletableFuture<Document> getAsync(HttpUrl url) {
         return super.getBaseAsync(url).thenCompose(this::wrapDocument);
     }
 
@@ -50,7 +50,7 @@ public class Client extends SingleHostHttpClient {
         return response;
     }
 
-    CompletableFuture<Response> postRawAsync(HttpUrl url, RequestBody requestBody) {
+    public CompletableFuture<Response> postRawAsync(HttpUrl url, RequestBody requestBody) {
         return super.postBaseAsync(url, requestBody).thenCompose(this::wrapResponse);
     }
 

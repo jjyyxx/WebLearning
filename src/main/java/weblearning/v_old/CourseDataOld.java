@@ -1,7 +1,8 @@
-package weblearning;
+package weblearning.v_old;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import weblearning.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class CourseDataOld extends CourseData {
     //    private static final String DISCUSSION = "MultiLanguage/public/bbs/gettalkid_student.jsp";
     private static final Client client = Client.getInstance();
 
-    CourseDataOld(String url, String name, String unsubmittedOperations, String unreadBulletins, String unreadFiles) {
+    public CourseDataOld(String url, String name, String unsubmittedOperations, String unreadBulletins, String unreadFiles) {
         super(name, Version.V_OLD);
         this.unsubmittedOperations.set(Integer.valueOf(unsubmittedOperations));
         this.unreadBulletins.set(Integer.valueOf(unreadBulletins));
@@ -59,8 +60,8 @@ public class CourseDataOld extends CourseData {
             }
             Bulletin[] bulletins = new Bulletin[entries.size() - 1];
             for (int i = 1; i < entries.size(); i++) {
-                Bulletin bulletin = Bulletin.from(entries.get(i));
-                if (!bulletin.isRead.get().equals(Bulletin.TRUE)) {
+                Bulletin bulletin = BulletinT.from(entries.get(i));
+                if (!bulletin.isRead.get().equals(BulletinT.TRUE)) {
                     bulletin.isRead.addListener((o, oV, nV) -> unreadBulletins.set(unreadBulletins.get() - 1));
                 }
                 bulletins[i - 1] = bulletin;
@@ -92,8 +93,8 @@ public class CourseDataOld extends CourseData {
                 entries.remove(0);
                 FileEntry[] fileEntries = new FileEntry[entries.size()];
                 for (int i = 0; i < entries.size(); i++) {
-                    FileEntry fileEntry = FileEntry.from(entries.get(i));
-                    if (!fileEntry.isRead.get().equals(FileEntry.TRUE)) {
+                    FileEntry fileEntry = FileEntryT.from(entries.get(i));
+                    if (!fileEntry.isRead.get().equals(FileEntryT.TRUE)) {
                         fileEntry.isRead.addListener((o, oV, nV) -> unreadFiles.set(unreadFiles.get() - 1));
                     }
                     fileEntries[i] = fileEntry;
@@ -128,8 +129,8 @@ public class CourseDataOld extends CourseData {
             entries.remove(entries.size() - 1);
             Operation[] operations = new Operation[entries.size()];
             for (int i = 0; i < entries.size(); i++) {
-                Operation operation = Operation.from(entries.get(i));
-                if (!operation.isHandedIn.get().equals(Operation.TRUE)) {
+                Operation operation = OperationT.from(entries.get(i));
+                if (!operation.isHandedIn.get().equals(OperationT.TRUE)) {
                     operation.isHandedIn.addListener((o, oV, nV) -> unsubmittedOperations.set(unsubmittedOperations.get() - 1));
                 }
                 operations[i] = operation;

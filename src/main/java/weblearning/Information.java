@@ -23,7 +23,7 @@ public class Information {
     public String introduction;
     public String calendar;
 
-    static Information from(Element element) {
+    public static Information from(Element element) {
         Information info = new Information();
         BiFunction<Integer, Integer, String> getCellText = (row, col) -> element.child(row).child(col).text();
         info.number = getCellText.apply(0, 1);
