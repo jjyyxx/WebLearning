@@ -16,10 +16,26 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 在后台执行下载任务，管理各类下载请求
+ */
 public class DownloadManager {
+    /**
+     * 当前下载所使用的HTTP客户端
+     */
     private static final Client client = Client.getInstance();
+    /**
+     * 正则表达式，用于寻找文件后缀名
+     */
     private static final Pattern filenamePattern = Pattern.compile("filename=\".*(\\.\\w+)\"$");
 
+    /**
+     * 用于将url的文件下载至dir目录下的filename文件
+     * @param dir 目标目录
+     * @param url 下载链接
+     * @param filename 文件名（不含后缀）
+     * @return 包含DownloadInfo的CompletableFuture
+     */
     private static CompletableFuture<DownloadInfo> download(Path dir, HttpUrl url, String filename) {
         return client.getRawAsync(url).thenApply(response -> {
             String contentDisposition = response.header("Content-Disposition");
@@ -30,6 +46,12 @@ public class DownloadManager {
         });
     }
 
+    /**
+     * 下载并打开文件
+     * @param courseData 文件所属课程
+     * @param entries 所需要下载的文件
+     * @param open 是否需要打开
+     */
     public static void enqueue(CourseData courseData, FileEntry[] entries, boolean open) {
         Path saveDir = getPath(courseData);
         if (saveDir == null) {
@@ -50,6 +72,11 @@ public class DownloadManager {
         }
     }
 
+    /**
+     * 获取用户选择的存储地址并记录为下一次下载的默认地址
+     * @param courseData 文件所属课程
+     * @return 下载的目标目录
+     */
     private static Path getPath(CourseData courseData) {
         Path saveDir;
         if (Settings.INSTANCE.separateByCourse.get()) {
@@ -62,6 +89,11 @@ public class DownloadManager {
         return saveDir;
     }
 
+    /**
+     * 下载并打开作业附件
+     * @param courseData 作业所属课程
+     * @param operation 所需要下载附件所属的作业
+     */
     public static void enqueue(CourseData courseData, Operation operation) {
         Path saveDir = getPath(courseData);
         if (saveDir == null) {

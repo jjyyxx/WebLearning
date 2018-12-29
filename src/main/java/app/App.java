@@ -14,13 +14,29 @@ import javafx.stage.StageStyle;
  * @see javafx.application.Application
  */
 public class App extends Application {
+    /**
+     * 主窗口
+     */
     public static Stage stage;
-    private static final String TITLE = "网络学堂"; // 显示在taskbar中的标题
-    private static final int WIDTH = 1000; // UI界面的宽度
-    private static final int HEIGHT = 600; // UI界面的高度
+    /**
+     * 显示在taskbar中的标题
+     */
+    private static final String TITLE = "网络学堂";
+    /**
+     * UI界面的宽度
+     */
+    private static final int WIDTH = 1000;
+    /**
+     * UI界面的高度
+     */
+    private static final int HEIGHT = 600;
 
-    @Override
-    public void start(Stage stage) throws Exception{
+    /**
+     * JavaFX线程启动函数
+     * @param stage 主窗口
+     * @throws Exception 任何可能抛出的异常
+     */
+    @Override public void start(Stage stage) throws Exception {
         App.stage = stage;
         Platform.setImplicitExit(false);
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/main.png"))); // 应用图标

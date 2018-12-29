@@ -15,9 +15,21 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class Notification {
+    /**
+     * 系统任务栏实例
+     */
     private static final SystemTray tray;
+    /**
+     * 本应用对应图标
+     */
     public static final TrayIcon icon;
+    /**
+     * 任务栏图标的名称
+     */
     private static final String TITLE = "网络学堂";
+    /**
+     * 在等待触发的提醒列表
+     */
     public static final ObservableList<NotificationObj> notifications = FXCollections.observableArrayList(Objects.requireNonNullElseGet(DataStore.getObj("notifications"), (Supplier<ArrayList<NotificationObj>>) ArrayList::new));
 
     static {
@@ -51,6 +63,13 @@ public class Notification {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> DataStore.putObj("notifications", new ArrayList<>(notifications))));
     }
 
+    /**
+     * 增加新的提醒
+     * @param title 提醒的标题
+     * @param content 提醒的内容
+     * @param date 提醒触发的时间
+     * @param type 提醒种类
+     */
     public static void addNotification(String title, String content, Date date, NotificationType type) {
         new NotificationObj(title, content, date, type).schedule();
     }

@@ -61,8 +61,13 @@ public class Util {
         return file == null ? null : file.toPath();
     }
 
-    // 避免重复构造，提升性能，见static initializer
+    /**
+     * 避免重复构造，提升性能，见static initializer
+     */
     private static final JFXDialog jfxDialog;
+    /**
+     * 存储时间选定的回调
+     */
     private static Consumer<Date> consumer;
 
     static {
@@ -101,6 +106,11 @@ public class Util {
         jfxDialog.setContent(layout);
     }
 
+    /**
+     * 向用户获取一个时间
+     * @param main 附加在其上的UI节点
+     * @param consumer 时间选定的回调
+     */
     static void requestTime(StackPane main, Consumer<Date> consumer) {
         // 异步操作的回调函数，接受一个Date类型的返回值，避免阻塞主线程
         Util.consumer = consumer;
@@ -110,13 +120,26 @@ public class Util {
         jfxDialog.show(main);
     }
 
-    private static JFXSnackbar snackBar = new JFXSnackbar(); // 下方提示条
+    /**
+     * 下方提示条
+     */
+    private static JFXSnackbar snackBar = new JFXSnackbar();
 
+    /**
+     * 下方提示条显示内容的抽象
+     * @param content 内容
+     * @param timeout 时长
+     * @param pseudoClass 样式
+     */
     public static void showSnackBar(String content, int timeout, String pseudoClass) {
         JFXSnackbarLayout layout = new JFXSnackbarLayout(content);
         snackBar.enqueue(new JFXSnackbar.SnackbarEvent(layout, Duration.millis(timeout), PseudoClass.getPseudoClass(pseudoClass)));
     }
 
+    /**
+     * 首次使用前，制定根容器
+     * @param root 根容器
+     */
     static void initSnackBar(Pane root) {
         snackBar.registerSnackbarContainer(root);
     }

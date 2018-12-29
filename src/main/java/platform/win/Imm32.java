@@ -21,12 +21,16 @@ public final class Imm32 {
             Pointer himc
     );
 
+    /**
+     * 初始化
+     */
     public static void init() {
         hwnd = User32.INSTANCE.FindWindow(null, "网络学堂");
     }
 
     /**
      * 在禁用与启用间切换
+     * @param disable 禁用或启用
      */
     public static void set(boolean disable) {
         if (hwnd == null) {

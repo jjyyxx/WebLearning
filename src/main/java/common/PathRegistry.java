@@ -22,6 +22,7 @@ public class PathRegistry implements Serializable {
 
     /**
      * 按课程名获取路径，默认与DEFAULT相同
+     * @param key 课程名
      */
     public Path get(String key) {
         String path = coursePathMap.get(key);
@@ -32,6 +33,11 @@ public class PathRegistry implements Serializable {
         }
     }
 
+    /**
+     * 按课程名设置路径，为null无效
+     * @param key 课程名
+     * @param value 路径
+     */
     public void put(String key, Path value) {
         if (value != null) {
             coursePathMap.put(key, value.toString());

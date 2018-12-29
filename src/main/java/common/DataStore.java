@@ -16,6 +16,8 @@ public class DataStore {
 
     /**
      * 以加密方式存储，针对重要信息
+     * @param key 键
+     * @param value 值
      */
     public static void putEncrypt(String key, String value) {
         WinCrypt.DATA_BLOB in = new WinCrypt.DATA_BLOB(value);
@@ -29,6 +31,8 @@ public class DataStore {
 
     /**
      * 解密读取，针对重要信息
+     * @param key 键
+     * @param defaultValue 默认值
      */
     public static String getDecrypt(String key, String defaultValue) {
         WinCrypt.DATA_BLOB in = new WinCrypt.DATA_BLOB(prefs.getByteArray(key, fakeDef));
@@ -41,16 +45,27 @@ public class DataStore {
         }
     }
 
+    /**
+     * 存储普通信息
+     * @param key 键
+     * @param value 值
+     */
     public static void put(String key, String value) {
         prefs.put(key, value);
     }
 
+    /**
+     * 读取普通信息
+     * @param key 键
+     * @param defaultValue 默认值
+     */
     public static String get(String key, String defaultValue) {
         return prefs.get(key, defaultValue);
     }
 
     /**
      * 读取可序列化的对象
+     * @param key 键
      */
     public static <T> T getObj(String key) {
         byte[] byteArray = prefs.getByteArray(key, null);
@@ -67,6 +82,8 @@ public class DataStore {
 
     /**
      * 存储可序列化的对象
+     * @param key 键
+     * @param obj 值
      */
     public static void putObj(String key, Object obj) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
