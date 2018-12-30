@@ -65,9 +65,7 @@ public abstract class CourseData {
         Element link = entry.child(0).child(1);
         String href = link.attr("href");
         String name = link.text();
-        if (href.startsWith("http://learn2018.")) {
-            return new CourseData2018(href, name, "0", "0", "0");
-        } else {
+        try {
             String operations = entry.child(1).child(0).text();
             String notices = entry.child(2).child(0).text();
             String files = entry.child(3).child(0).text();
@@ -76,6 +74,8 @@ public abstract class CourseData {
             } else {
                 return new CourseDataOld(href, name, operations, notices, files);
             }
+        } catch (IndexOutOfBoundsException e) {
+            return new CourseData2018(href, name, "0", "0", "0");
         }
     }
 }
