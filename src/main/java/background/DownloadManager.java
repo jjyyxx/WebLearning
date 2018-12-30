@@ -20,23 +20,18 @@ import java.util.regex.Pattern;
  * 在后台执行下载任务，管理各类下载请求
  */
 public class DownloadManager {
-    /**
-     * 当前下载所使用的HTTP客户端
-     */
-    private static final Client client = Client.getInstance();
-    /**
-     * 正则表达式，用于寻找文件后缀名
-     */
     private static final Pattern filenamePattern = Pattern.compile("filename=\".*(\\.\\w+)\"$");
 
+    private static CompletableFuture<DownloadInfo> download(Client client, Path dir, HttpUrl url, String filename) {
     /**
      * 用于将url的文件下载至dir目录下的filename文件
+     * @param client 对应的web请求客户端
      * @param dir 目标目录
      * @param url 下载链接
      * @param filename 文件名（不含后缀）
      * @return 包含DownloadInfo的CompletableFuture
      */
-    private static CompletableFuture<DownloadInfo> download(Path dir, HttpUrl url, String filename) {
+    private static CompletableFuture<DownloadInfo> download(Client client, Path dir, HttpUrl url, String filename) {
         return client.getRawAsync(url).thenApply(response -> {
             String contentDisposition = response.header("Content-Disposition");
             Matcher matcher = filenamePattern.matcher(contentDisposition);
@@ -58,7 +53,7 @@ public class DownloadManager {
             return;
         }
         for (FileEntry entry : entries) {
-            download(saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
+            download(courseData.getClient(), saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
                 try {
                     Files.copy(downloadInfo.inputStream, downloadInfo.path);
                     Util.showSnackBar(downloadInfo.path + "下载完成", 1000, "success");
@@ -99,7 +94,7 @@ public class DownloadManager {
         if (saveDir == null) {
             return;
         }
-        download(saveDir, operation.getAttachmentUrl(), operation.getAttachmentName()).thenAccept(downloadInfo -> {
+        download(courseData.getClient(), saveDir, operation.getAttachmentUrl(), operation.getAttachmentName()).thenAccept(downloadInfo -> {
             try {
                 Files.copy(downloadInfo.inputStream, downloadInfo.path);
                 Util.showSnackBar(downloadInfo.path + "下载完成", 1000, "success");

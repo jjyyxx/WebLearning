@@ -3,6 +3,9 @@ package weblearning;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.jsoup.nodes.Element;
+import weblearning.v_2015.CourseData2015;
+import weblearning.v_2018.CourseData2018;
+import weblearning.v_old.CourseDataOld;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -14,12 +17,11 @@ public abstract class CourseData {
     protected String id;
     protected String name;
     protected Version version;
-    protected SemesterData semester;
     public final IntegerProperty unsubmittedOperations = new SimpleIntegerProperty();
     public final IntegerProperty unreadBulletins = new SimpleIntegerProperty();
     public final IntegerProperty unreadFiles = new SimpleIntegerProperty();
 
-    CourseData(String name, Version version) {
+    protected CourseData(String name, Version version) {
         this.name = name;
         this.version = version;
     }
@@ -30,19 +32,9 @@ public abstract class CourseData {
     public abstract CompletableFuture<Bulletin[]> resolveBulletins();
 
     /**
-     * 获取课程信息
-     */
-    public abstract CompletableFuture<Information> resolveInformation();
-
-    /**
      * 获取课程文件
      */
     public abstract CompletableFuture<Map<String, FileEntry[]>> resolveFileEntries();
-
-    /**
-     * 获取课程资源
-     */
-    public abstract CompletableFuture<Resource[]> resolveResources();
 
     /**
      * 获取课程作业
@@ -64,9 +56,7 @@ public abstract class CourseData {
         return version;
     }
 
-    public SemesterData getSemester() {
-        return semester;
-    }
+    public abstract Client getClient();
 
     /**
      * 将课程分流到具体元素上

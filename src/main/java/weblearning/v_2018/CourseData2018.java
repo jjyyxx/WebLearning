@@ -1,4 +1,6 @@
-package weblearning;
+package weblearning.v_2018;
+
+import weblearning.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,16 +18,8 @@ public class CourseData2018 extends CourseData {
         return CompletableFuture.completedFuture(new Bulletin[]{});
     }
 
-    @Override public CompletableFuture<Information> resolveInformation() {
-        return null;
-    }
-
     @Override public CompletableFuture<Map<String, FileEntry[]>> resolveFileEntries() {
         return CompletableFuture.completedFuture(new HashMap<>());
-    }
-
-    @Override public CompletableFuture<Resource[]> resolveResources() {
-        return null;
     }
 
     @Override public CompletableFuture<Operation[]> resolveOperations() {
@@ -37,6 +31,10 @@ public class CourseData2018 extends CourseData {
     }
 
     @Override public String getUrl() {
+        return null;
+    }
+
+    @Override public Client getClient() {
         return null;
     }
 }
