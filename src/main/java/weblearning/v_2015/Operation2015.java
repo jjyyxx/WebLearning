@@ -64,7 +64,7 @@ public class Operation2015 extends Operation {
             MediaType mediaType;
             try {
                 mediaType = MediaType.parse(Files.probeContentType(file.toPath()));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 mediaType = MediaType.parse("application/octet-stream");
             }
             return client.postRawAsync(HttpUrl.get(String.format(UPLOAD, courseId, id)), new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("uploadfile", file.getName(), RequestBody.create(mediaType, file)).build()).thenCompose(response1 -> {
