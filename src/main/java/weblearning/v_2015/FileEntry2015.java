@@ -2,6 +2,7 @@ package weblearning.v_2015;
 
 import okhttp3.HttpUrl;
 import weblearning.FileEntry;
+import weblearning.Util;
 import weblearning.v_2015.message_model.BaseMessage;
 
 /**
@@ -30,7 +31,7 @@ public class FileEntry2015 extends FileEntry {
         String title = entry.title;
         String description = entry.detail;
         String size = entry.resourcesMappingByFileId.fileSize;
-        String time = Operation2015.toSimpleDate(entry.resourcesMappingByFileId.regDate);
+        String time = Util.toSimpleDate(entry.resourcesMappingByFileId.regDate);
         String state = "已读"; // ???
         return new FileEntry2015(fileId, title, description, size, time, state);
     }

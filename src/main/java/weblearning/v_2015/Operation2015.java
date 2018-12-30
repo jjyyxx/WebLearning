@@ -4,16 +4,13 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import weblearning.Client;
 import weblearning.Operation;
+import weblearning.Util;
 import weblearning.v_2015.message_model.BaseMessage;
 import weblearning.v_2015.message_model.HomeworkMessage;
 import weblearning.v_2015.message_model.IdMessage;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -61,12 +58,7 @@ public class Operation2015 extends Operation {
         return client.postRawAsync(STUID, RequestBody.create(null, new byte[0])).thenCompose(response -> {
             final BaseMessage<IdMessage> message = CourseData2015.toModel(response, IdMessage);
             final String id = message.dataSingle.id;
-            MediaType mediaType;
-            try {
-                mediaType = MediaType.parse(Files.probeContentType(file.toPath()));
-            } catch (Exception e) {
-                mediaType = MediaType.parse("application/octet-stream");
-            }
+            MediaType mediaType = Util.probeMediaType(file);
             return client.postRawAsync(HttpUrl.get(String.format(UPLOAD, courseId, id)), new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("uploadfile", file.getName(), RequestBody.create(mediaType, file)).build()).thenCompose(response1 -> {
                 final BaseMessage<String> message1 = CourseData2015.toModel(response1, UploadMessage);
                 final String fileId = message1.result;
@@ -119,8 +111,8 @@ public class Operation2015 extends Operation {
      */
     public static Operation from(String courseId, HomeworkMessage entry) {
         final String title = entry.courseHomeworkInfo.title;
-        final String effectiveDate = toSimpleDate(entry.courseHomeworkInfo.beginDate);
-        final String deadline = toSimpleDate(entry.courseHomeworkInfo.endDate);
+        final String effectiveDate = Util.toSimpleDate(entry.courseHomeworkInfo.beginDate);
+        final String deadline = Util.toSimpleDate(entry.courseHomeworkInfo.endDate);
         final String state = entry.courseHomeworkRecord.status.equals("0") ? "尚未提交" : TRUE;
         final String size = state == TRUE ? entry.courseHomeworkRecord.resourcesMappingByHomewkAffix.fileSize : null;
         final String detail = entry.courseHomeworkInfo.detail;
@@ -130,10 +122,5 @@ public class Operation2015 extends Operation {
 
     @Override public HttpUrl getURL() {
         return client.makeUrl("", args);
-    }
-
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    static String toSimpleDate(long date) {
-        return FORMAT.format(new Date(date));
     }
 }

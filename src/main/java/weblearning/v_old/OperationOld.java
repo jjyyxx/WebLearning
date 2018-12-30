@@ -4,12 +4,12 @@ import okhttp3.*;
 import org.jsoup.nodes.Element;
 import weblearning.Client;
 import weblearning.Operation;
+import weblearning.Util;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -97,12 +97,7 @@ public class OperationOld extends Operation {
 
                     MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
                     hiddenFieldsMap.forEach(builder::addFormDataPart);
-                    MediaType mediaType;
-                    try {
-                        mediaType = MediaType.parse(Files.probeContentType(file.toPath()));
-                    } catch (IOException e) {
-                        mediaType = MediaType.parse("application/octet-stream");
-                    }
+                    MediaType mediaType = Util.probeMediaType(file);
                     builder.addFormDataPart("post_rec_homewk_detail", content)
                             .addFormDataPart("upfile", file.getName(),
                                     RequestBody.create(mediaType, file))
