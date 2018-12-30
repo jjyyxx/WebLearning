@@ -242,7 +242,13 @@ public class Controller implements Initializable {
             if (nV && !choosingFile) {
                 choosingFile = true;
                 workAttachment.setText("");
-                Path file = Util.requestOpenFile(null);
+                Path commitDir;
+                if (Settings.INSTANCE.separateByCourse.get()) {
+                    commitDir = Settings.INSTANCE.pathRegistry.get(courseList.getSelectionModel().getSelectedItem().courseData.getName());
+                } else {
+                    commitDir = Settings.INSTANCE.pathRegistry.get("DEFAULT");
+                }
+                Path file = Util.requestOpenFile(commitDir);
                 if (file != null) {
                     workAttachment.setText(file.toString());
                 }
