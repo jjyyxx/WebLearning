@@ -27,11 +27,11 @@ public class FileMessage {
         public Object zipCode;
     }
 
-    long nodeId;
-    String nodeName;
-    int position;
-    Teacher teacherInfoView;
-    Map<String, FileContainer> childMapData;
+    public long nodeId;
+    public String nodeName;
+    public int position;
+    public Teacher teacherInfoView;
+    public Map<String, FileContainer> childMapData;
 }
 
 // Map<String, FileMessage>

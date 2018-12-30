@@ -4,6 +4,8 @@ import okhttp3.FormBody;
 import okhttp3.Response;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import weblearning.v_2015.Client2015;
+import weblearning.v_old.ClientOld;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,14 +18,14 @@ public class Endpoints {
     private static final String AUTH = "MultiLanguage/lesson/teacher/loginteacher.jsp";
     private static final String PROFILE = "MultiLanguage/vspace/vspace_userinfo1.jsp";
     private static final String CURRICULUM = "MultiLanguage/lesson/student/MyCourse.jsp";
-    private static final Client client = Client.getInstance();
+    private static final Client client = ClientOld.getInstance();
 
     /**
      * 获取全部课程
      */
     public static CompletableFuture<Courses> getCurriculum() {
         return client.getAsync(client.makeUrl(CURRICULUM, "language=cn"))
-                .thenApply(Courses::from);
+                .thenCompose(document -> Client2015.initialize(document.getElementsByTag("iframe").get(0).attr("src")).thenApply(v -> Courses.from(document)));
     }
 
     /**

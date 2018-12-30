@@ -17,10 +17,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DownloadManager {
-    private static final Client client = Client.getInstance();
+//    private static final Client client = Client.getInstance();
     private static final Pattern filenamePattern = Pattern.compile("filename=\".*(\\.\\w+)\"$");
 
-    private static CompletableFuture<DownloadInfo> download(Path dir, HttpUrl url, String filename) {
+    private static CompletableFuture<DownloadInfo> download(Client client, Path dir, HttpUrl url, String filename) {
         return client.getRawAsync(url).thenApply(response -> {
             String contentDisposition = response.header("Content-Disposition");
             Matcher matcher = filenamePattern.matcher(contentDisposition);
@@ -36,7 +36,7 @@ public class DownloadManager {
             return;
         }
         for (FileEntry entry : entries) {
-            download(saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
+            download(courseData.getClient(), saveDir, entry.getURL(), entry.title.get()).thenAccept(downloadInfo -> {
                 try {
                     Files.copy(downloadInfo.inputStream, downloadInfo.path);
                     Util.showSnackBar(downloadInfo.path + "下载完成", 1000, "success");
@@ -67,7 +67,7 @@ public class DownloadManager {
         if (saveDir == null) {
             return;
         }
-        download(saveDir, operation.getAttachmentUrl(), operation.getAttachmentName()).thenAccept(downloadInfo -> {
+        download(courseData.getClient(), saveDir, operation.getAttachmentUrl(), operation.getAttachmentName()).thenAccept(downloadInfo -> {
             try {
                 Files.copy(downloadInfo.inputStream, downloadInfo.path);
                 Util.showSnackBar(downloadInfo.path + "下载完成", 1000, "success");

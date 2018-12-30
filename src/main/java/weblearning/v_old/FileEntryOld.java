@@ -12,7 +12,7 @@ import static common.Util.getArg;
  */
 public class FileEntryOld extends FileEntry {
     public static final String TRUE = "已读";
-    private static final Client client = Client.getInstance();
+    private static final Client client = ClientOld.getInstance();
     private static final String DOWNLOAD = "uploadFile/downloadFile_student.jsp";
 
     protected FileEntryOld(String url, String title, String description, String size, String uploadTime, String state) {

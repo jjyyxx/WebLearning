@@ -9,29 +9,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * 网络学堂的请求客户端
- */
-public class Client extends SingleHostHttpClient {
-    private static final String HOST = "learn.tsinghua.edu.cn";
-    private static final String SetCookieHeader = "Set-Cookie";
-    private static final String IdentityCookieName = "THNSV2COOKIE";
-
-    private static final Client ourInstance = new Client();
-
-    public static Client getInstance() {
-        return ourInstance;
-    }
-
-    private Client() {
-        super(HOST);
+public abstract class Client extends SingleHostHttpClient {
+    protected Client(String host) {
+        super(host);
     }
 
     Response getSync(HttpUrl url) throws IOException, AuthException {
-        Response response = super.get(url);
+        Response response = get(url);
         checkAuth(response);
         return response;
     }
@@ -45,7 +31,7 @@ public class Client extends SingleHostHttpClient {
     }
 
     Response postSync(HttpUrl url, RequestBody requestBody) throws IOException, AuthException {
-        Response response = super.post(url, requestBody);
+        Response response = post(url, requestBody);
         checkAuth(response);
         return response;
     }
@@ -58,19 +44,7 @@ public class Client extends SingleHostHttpClient {
         return super.postBaseAsync(url, requestBody).thenCompose(this::wrapDocument);
     }
 
-    /**
-     * 检查是否验证成功
-     */
-    private void checkAuth(Response response) throws AuthException {
-        List<String> cookies = response.headers(SetCookieHeader);
-        for (String cookie : cookies) {
-            if (cookie.startsWith(IdentityCookieName)) {
-                return;
-            }
-        }
-        response.close();
-        throw new AuthException();
-    }
+    protected abstract void checkAuth(Response response) throws AuthException;
 
     private CompletableFuture<Response> wrapResponse(Response response) {
         CompletableFuture<Response> future = new CompletableFuture<>();

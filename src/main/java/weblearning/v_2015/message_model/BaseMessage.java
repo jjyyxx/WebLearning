@@ -18,6 +18,8 @@ public class BaseMessage<T> {
     public String message;
     public T resultList;
     public Pagination<T> paginationList;
+    public T dataSingle;
+    public T result;
 
     public static class CourseCourseware {
         public String categoryId;

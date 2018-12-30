@@ -56,6 +56,8 @@ public abstract class CourseData {
         return version;
     }
 
+    public abstract Client getClient();
+
     /**
      * 将课程分流到具体元素上
      */

@@ -15,7 +15,7 @@ import static common.Util.getArg;
  */
 public class BulletinOld extends Bulletin {
     public static final String TRUE = "已读";
-    public static final Client client = Client.getInstance();
+    public static final Client client = ClientOld.getInstance();
 
     public static final String BULLETIN = "MultiLanguage/public/bbs/note_reply.jsp";
 

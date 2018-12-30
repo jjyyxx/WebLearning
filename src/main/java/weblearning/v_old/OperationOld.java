@@ -32,7 +32,7 @@ public class OperationOld extends Operation {
     private static final String DELETE = "/uploadFile/delFile_kczy.jsp";
 
     private static final Pattern DELETEPATTERN = Pattern.compile("onclick='check_del\\(\"(\\d+?)\",\".*?\",\"(.*?)\",\"(\\d+?)\"\\)'");
-    private static final Client client = Client.getInstance();
+    private static final Client client = ClientOld.getInstance();
 
     public OperationOld(String url, String title, String effectiveDate, String deadline, String isHandedIn, String size, String submitUrl, boolean submitDisabled, String reviewUrl, boolean reviewDisabled) {
         this.args = getArg(url);

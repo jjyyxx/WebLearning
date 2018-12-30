@@ -14,8 +14,8 @@ public class HomeworkMessage {
         public Object regDate;
         public Object replyDate;
         public Object replyDetail;
-        public Object resourcesMappingByHomewkAffix;
-        public Object resourcesMappingByReplyAffix;
+        public BaseMessage.ResourcesMappingByFileId resourcesMappingByHomewkAffix;
+        public BaseMessage.ResourcesMappingByFileId resourcesMappingByReplyAffix;
         public Long seqId;
         public String status;
         public String studentId;
@@ -31,7 +31,7 @@ public class HomeworkMessage {
         public String courseId;
         public Object courseKnowledge;
         public String courseSource;
-        public Object detail;
+        public String detail;
         public Long endDate;
         public Object homewkAffix;
         public Object homewkAffixFilename;
@@ -49,6 +49,6 @@ public class HomeworkMessage {
         public Long yiYue;
     }
 
-    private CourseHomeworkInfo courseHomeworkInfo;
-    private CourseHomeworkRecord courseHomeworkRecord;
+    public CourseHomeworkInfo courseHomeworkInfo;
+    public CourseHomeworkRecord courseHomeworkRecord;
 }

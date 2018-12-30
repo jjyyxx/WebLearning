@@ -26,7 +26,7 @@ public class CourseDataOld extends CourseData {
     private static final String ALLSCORES = "MultiLanguage/lesson/student/hom_wk_recmark.jsp";
     //    private static final String FAQ = "MultiLanguage/public/bbs/getbbsid_student.jsp";
     //    private static final String DISCUSSION = "MultiLanguage/public/bbs/gettalkid_student.jsp";
-    private static final Client client = Client.getInstance();
+    private static final Client client = ClientOld.getInstance();
 
     public CourseDataOld(String url, String name, String unsubmittedOperations, String unreadBulletins, String unreadFiles) {
         super(name, Version.V_OLD);
@@ -130,5 +130,9 @@ public class CourseDataOld extends CourseData {
 
     @Override public String getUrl() {
         return "/MultiLanguage/lesson/student/course_locate.jsp?course_id=" + id;
+    }
+
+    @Override public Client getClient() {
+        return client;
     }
 }

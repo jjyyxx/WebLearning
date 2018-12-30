@@ -33,4 +33,8 @@ public class CourseData2018 extends CourseData {
     @Override public String getUrl() {
         return null;
     }
+
+    @Override public Client getClient() {
+        return null;
+    }
 }
