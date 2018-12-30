@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 public class DownloadManager {
     private static final Pattern filenamePattern = Pattern.compile("filename=\".*(\\.\\w+)\"$");
 
-    private static CompletableFuture<DownloadInfo> download(Client client, Path dir, HttpUrl url, String filename) {
     /**
      * 用于将url的文件下载至dir目录下的filename文件
      * @param client 对应的web请求客户端
